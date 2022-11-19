@@ -16,21 +16,6 @@ var vis = {
   "GTzero": 2
 }
 
-/*
-{
-  "wood":     [0, "vis.GTzero"],  //"bundles of"
-  "trees":    [9999, "vis.never"],
-  "fire":     [0, "vis.GTzero"],  //"hours of"
-  "club":     [0, "vis.GTzero"],  //"weapon of"
-  "bow":      [0, "vis.GTzero"],  //"weapon of"  
-  "arrows":   [0, "vis.GTzero"],
-  "worms":    [0, "vis.GTzero"],
-  "fish":     [0, "vis.GTzero"],  //"heads of" 
-  "H20":      [0, "vis.GTzero"],  //"cups of"
-  "none":     [0, "vis.never"]
-};
-*/
-
 var vitals = {
   "hunger":   [10, vis.always],
   "thirst":   [10, vis.always],
