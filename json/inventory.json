@@ -1,12 +1,12 @@
 {
-  "wood":     [0, "vis.GTzero"],
-  "trees":    [9999, "vis.never"],
-  "fire":     [0, "vis.GTzero"],  
-  "club":     [0, "vis.GTzero"],  
-  "bow":      [0, "vis.GTzero"],  
-  "arrows":   [0, "vis.GTzero"],
-  "worms":    [0, "vis.GTzero"],
-  "fish":     [0, "vis.GTzero"],  
-  "H20":      [0, "vis.GTzero"],  
-  "none":     [0, "vis.never"]
+  "wood":     [0, "GTzero"],
+  "trees":    [9999, "never"],
+  "fire":     [0, "GTzero"],  
+  "club":     [0, "GTzero"],  
+  "bow":      [0, "GTzero"],  
+  "arrows":   [0, "GTzero"],
+  "worms":    [0, "GTzero"],
+  "fish":     [0, "GTzero"],  
+  "H20":      [0, "GTzero"],  
+  "none":     [0, "never"]
 }
