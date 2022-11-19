@@ -82,7 +82,12 @@ var actions = {
     "from": ["none",  "=", "0"],
     "to":   ["worms",  "+", "1"],
     "verb": "found a worm (+1)"
-  }
+  },
+  "fetch": {
+    "from": ["none",  "=", "0"],
+    "to":   ["H20",  "+", "1"],
+    "verb": "fetched some water (+1)"
+  }  
 };
 
 l();
@@ -156,32 +161,47 @@ function printStats1(verb){
     msg+= "You've got:";
   }
   l(msg);
-  l("--------------------");  
+  l("---------------------------------");  
   printStats2(vitals);
-  l("===================================");
+  l("==========================================================================");
   if (printStats2(inventory) == 0) {
     l("No possessions at the moment!");
   }
-  l("===================================");
+  l("==========================================================================");
   l();
 }
 
 function printStats2(list){
   var numListItems=0;
+
+  var msg ="  ";
+  
   for (key in list){
     var val = list[key];
     var amt = val[0];
     var visible = val[1];
     //if (visible!=null && amt > 0 ){
+
     if (visible == vis.never) continue;
     if (visible == vis.GTzero && amt < 1) continue;    
     if (  (visible == vis.GTzero && amt > 0)
       ||  (visible == vis.always)
     ){
-      //l("%i %s %s", amt, visible, key);
-      l("%s: %i", key, amt);
       numListItems++;
+      var lMsg = "";
+      //l("%i %s %s", amt, visible, key);
+      lMsg+= key + ": " + amt;
+      lMsg = lMsg.padEnd(14," ");
+      if (numListItems % 5 == 0 && numListItems != 0) {
+        msg+=lMsg;
+        msg+="\n  ";
+        //l(msg);
+      } else {
+        msg+=lMsg;
+      }
+      
     }
   }
+  if (msg !="") l(msg);
   return numListItems;
 }
