@@ -1,62 +1,64 @@
 {
   "chop":  {
-    "from": ["trees", "-", "1"],
-    "to":   ["wood", "+", "1"],
+    "fromInv": ["trees", "-", "1"],
+    "toInv":   ["wood", "+", "1"],
     "verb": "chopped wood (wood +1)"
   },
   "light": {
-    "from": ["wood", "-", "1"],
-    "to":   ["fire", "+", "3"],
+    "fromInv": ["wood", "-", "1"],
+    "toInv":   ["fire", "+", "3"],
     "verb": "lit a fire (fire +3)"    
   },
   "feed": {
-    "from": ["wood", "-", "1"],
-    "to":   ["fire", "+", "5"],
+    "fromInv": ["wood", "-", "1"],
+    "toInv":   ["fire", "+", "5"],
     "verb": "fed the fire (fed +5)"
   },
   "make club":  {
-    "from": ["wood", "-", "3"],
-    "to":   ["club", "=", "1"],
+    "fromInv": ["wood", "-", "3"],
+    "toInv":   ["club", "=", "1"],
     "verb": "made a club (club +1)"
   },    
   "make bow":  {
-    "from": ["wood", "-", "10"],
-    "to":   ["bow", "=", "1"],
+    "fromInv": ["wood", "-", "10"],
+    "toInv":   ["bow", "=", "1"],
     "verb": "made a bow (bow +1)"
   },    
   "make arrows":  {
-    "from": ["wood", "-", "2"],
-    "to":   ["arrows", "=", "4"],
+    "fromInv": ["wood", "-", "2"],
+    "toInv":   ["arrows", "=", "4"],
     "verb": "made arrows (arrows +4)"    
   },    
   "douse":  {
-    "from": ["none",  "=", "0"],
-    "to":   ["fire", "=", "0"],
+    "fromInv": ["none",  "=", "0"],
+    "toInv":   ["fire", "=", "0"],
     "verb": "put out the fire"
   },
   "fish": {
-    "from": ["worms",  "-", "1"],
-    "to":   ["fish",  "+", "1"],
+    "fromInv": ["worms",  "-", "1"],
+    "toInv":   ["fish",  "+", "1"],
     "verb": "caught a fish (fish +1)"
   },
   "dig": {
-    "from": ["none",  "=", "0"],
-    "to":   ["worms",  "+", "1"],
+    "fromInv": ["none",  "=", "0"],
+    "toInv":   ["worms",  "+", "1"],
     "verb": "found a worm (worms +1)"
   },
   "fetch": {
-    "from": ["none",  "=", "0"],
-    "to":   ["H20",  "+", "1"],
+    "fromInv": ["none",  "=", "0"],
+    "toInv":   ["H20",  "+", "1"],
     "verb": "fetched some water (H20 +1)"
   },  
   "drink": {
-    "from": ["none",  "=", "0"],
-    "to":   ["H20",  "-", "1"],
+    "fromInv": ["H20",  "-", "1"],
+    "toInv":   ["none",  "=", "0"],
+    "vitals":   ["thirst",  "-", "5"],
     "verb": "Ahhhh, you drank some water - you feel refreshed! (thirst -5)"
   },
   "eat": {
-    "from": ["none",  "=", "0"],
-    "to":   ["H20",  "+", "1"],
-    "verb": "Yummy, you ate somthing - your tummy is fuller (hunger -5)"
+    "fromInv": ["fish",  "-", "1"],
+    "toInv":   ["none",  "=", "0"],
+    "vitals":   ["hunger",  "-", "5"],
+    "verb": "Yummy, you ate something - your tummy is fuller (hunger -5)"
   }  
 }

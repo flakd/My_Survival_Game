@@ -16,12 +16,6 @@ var vis = {
   "GTzero": 2
 }
 
-var vitals = {
-  "hunger":   [10, "always"],
-  "thirst":   [10, "always"],
-  "warmth":   [100, "always"],
-  "security": [10, "always"]
-};
 var time = 0;   //12 midnight
 var timeInterval = 1;  //1 hour
 
@@ -29,6 +23,9 @@ parseJSONs.print();
 parseJSONs.loadJSONs();
 var inventory = parseJSONs.Objects.inventory;
 var i = inventory;
+var actions = parseJSONs.Objects.actions; 
+var vitals = parseJSONs.Objects.vitals; 
+
 l();
 l("Welcome to the game!");
 l();
@@ -43,29 +40,29 @@ rl.on('line', (line) => {
   //if (!actions[line] || action[line].length==0) return;
   var action = actions[line];
   if (action) {
-    var fromGameItem = "i." + action.from[0] + "[0]";
-    var fromOperator = action.from[1];
-    var fromAmount = action.from[2];
+    var fromInvGameItem = "i." + action.fromInv[0] + "[0]";
+    var fromInvOperator = action.fromInv[1];
+    var fromInvAmount = action.fromInv[2];
 
-    var toGameItem = "i." + action.to[0] + "[0]";
-    var toOperator = action.to[1];
-    var toAmount = action.to[2];  
+    var toInvGameItem = "i." + action.toInv[0] + "[0]";
+    var toInvOperator = action.toInv[1];
+    var toInvAmount = action.toInv[2];  
 
-    var fromEvalStrCond = fromGameItem + fromOperator + fromAmount;
-    if (eval(fromEvalStrCond) < 0) {
-      console.log("Sorry, you only have %i %s.  But, you need to have %i %s to do that.", i.wood, action.from[0], action.from[2], action.from[0] )
+    var fromInvEvalStrCond = fromInvGameItem + fromInvOperator + fromInvAmount;
+    if (eval(fromInvEvalStrCond) < 0) {
+      console.log("Sorry, you only have %i %s.  But, you need to have %i %s to do that.", i[action.fromInv[0]], action.fromInv[0], action.fromInv[2], action.fromInv[0] )
       return;
     } else {
-      var fromEvalStrDo = fromGameItem +  ( (fromOperator != "=") ? 
-                                    ("=" + fromGameItem + fromOperator + fromAmount) :
-                                    (fromOperator + fromAmount)
+      var fromInvEvalStrDo = fromInvGameItem +  ( (fromInvOperator != "=") ? 
+                                    ("=" + fromInvGameItem + fromInvOperator + fromInvAmount) :
+                                    (fromInvOperator + fromInvAmount)
       );   
-      var toEvalStrDo = toGameItem +  ( (toOperator != "=") ? 
-                                    ("=" + toGameItem + toOperator + toAmount) :
-                                    (toOperator + toAmount)
+      var toInvEvalStrDo = toInvGameItem +  ( (toInvOperator != "=") ? 
+                                    ("=" + toInvGameItem + toInvOperator + toInvAmount) :
+                                    (toInvOperator + toInvAmount)
       );          
-      eval(fromEvalStrDo);
-      eval(toEvalStrDo);
+      eval(fromInvEvalStrDo);
+      eval(toInvEvalStrDo);
     }
     time+=timeInterval;
     printStats1(action.verb);

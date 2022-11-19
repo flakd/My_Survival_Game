@@ -4,9 +4,9 @@ const l = console.log;
 let parseJSONs = {
   path: "./json/",
   Objects: {
-    "inventory": {}//,
-    //"vitals": {}, 
-    //"actions": {}
+    "inventory":{},
+    "vitals":   {}, 
+    "actions":  {}
   },
   loadJSONs: function loadJSONs(){
     //   FIGURE OUT THE BELOW

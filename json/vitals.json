@@ -1,0 +1,6 @@
+{
+  "hunger":   [10, "always"],
+  "thirst":   [10, "always"],
+  "warmth":   [100, "always"],
+  "security": [10, "always"]
+}
