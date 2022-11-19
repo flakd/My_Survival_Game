@@ -1,0 +1,62 @@
+{
+  "chop":  {
+    "from": ["trees", "-", "1"],
+    "to":   ["wood", "+", "1"],
+    "verb": "chopped wood (wood +1)"
+  },
+  "light": {
+    "from": ["wood", "-", "1"],
+    "to":   ["fire", "+", "3"],
+    "verb": "lit a fire (fire +3)"    
+  },
+  "feed": {
+    "from": ["wood", "-", "1"],
+    "to":   ["fire", "+", "5"],
+    "verb": "fed the fire (fed +5)"
+  },
+  "make club":  {
+    "from": ["wood", "-", "3"],
+    "to":   ["club", "=", "1"],
+    "verb": "made a club (club +1)"
+  },    
+  "make bow":  {
+    "from": ["wood", "-", "10"],
+    "to":   ["bow", "=", "1"],
+    "verb": "made a bow (bow +1)"
+  },    
+  "make arrows":  {
+    "from": ["wood", "-", "2"],
+    "to":   ["arrows", "=", "4"],
+    "verb": "made arrows (arrows +4)"    
+  },    
+  "douse":  {
+    "from": ["none",  "=", "0"],
+    "to":   ["fire", "=", "0"],
+    "verb": "put out the fire"
+  },
+  "fish": {
+    "from": ["worms",  "-", "1"],
+    "to":   ["fish",  "+", "1"],
+    "verb": "caught a fish (fish +1)"
+  },
+  "dig": {
+    "from": ["none",  "=", "0"],
+    "to":   ["worms",  "+", "1"],
+    "verb": "found a worm (worms +1)"
+  },
+  "fetch": {
+    "from": ["none",  "=", "0"],
+    "to":   ["H20",  "+", "1"],
+    "verb": "fetched some water (H20 +1)"
+  },  
+  "drink": {
+    "from": ["none",  "=", "0"],
+    "to":   ["H20",  "-", "1"],
+    "verb": "Ahhhh, you drank some water - you feel refreshed! (thirst -5)"
+  },
+  "eat": {
+    "from": ["none",  "=", "0"],
+    "to":   ["H20",  "+", "1"],
+    "verb": "Yummy, you ate somthing - your tummy is fuller (hunger -5)"
+  }  
+}

@@ -25,60 +25,6 @@ var vitals = {
 var time = 0;   //12 midnight
 var timeInterval = 1;  //1 hour
 
-var actions = {
-  //"chop tree":  {
-  "chop":  {
-    "from": ["trees", "-", "1"],
-    "to":   ["wood", "+", "1"],
-    "verb": "chopped wood (+1)"
-  },
-  "light": {
-    "from": ["wood", "-", "1"],
-    "to":   ["fire", "+", "3"],
-    "verb": "lit a fire (+3)"    
-  },
-  "feed": {
-    "from": ["wood", "-", "1"],
-    "to":   ["fire", "+", "5"],
-    "verb": "fed the fire (+5)"
-  },
-  "make club":  {
-    "from": ["wood", "-", "3"],
-    "to":   ["club", "=", "1"],
-    "verb": "made a club (+1)"
-  },    
-  "make bow":  {
-    "from": ["wood", "-", "10"],
-    "to":   ["bow", "=", "1"],
-    "verb": "made a bow (+1)"
-  },    
-  "make arrows":  {
-    "from": ["wood", "-", "2"],
-    "to":   ["arrows", "=", "4"],
-    "verb": "made arrows (+4)"    
-  },    
-  "douse":  {
-    "from": ["none",  "=", "0"],
-    "to":   ["fire", "=", "0"],
-    "verb": "put out the fire"
-  },
-  "fish": {
-    "from": ["worms",  "-", "1"],
-    "to":   ["fish",  "+", "1"],
-    "verb": "caught a fish (+1)"
-  },
-  "dig": {
-    "from": ["none",  "=", "0"],
-    "to":   ["worms",  "+", "1"],
-    "verb": "found a worm (+1)"
-  },
-  "fetch": {
-    "from": ["none",  "=", "0"],
-    "to":   ["H20",  "+", "1"],
-    "verb": "fetched some water (+1)"
-  }  
-};
-
 parseJSONs.print();
 parseJSONs.loadJSONs();
 var inventory = parseJSONs.Objects.inventory;
