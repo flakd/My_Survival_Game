@@ -8,113 +8,180 @@ const rl = readline.createInterface({
 });
 const l=console.log;
 
-var lvl = 0;
-
+var vis = {
+  "never": 0,
+  "always": 1,
+  "GTzero": 2
+}
 var inventory = {
-  "wood":     [0, "logs of"],
-  "trees":    [9999, null],
-  "fire":     [0, "hours of"],
-  "club":     [0, "weapon of"],
-  "livefish": [20, null],
-  "fish":     [0, "heads of"], 
-  "H20":      [0, "cups of"],
-  "hunger":   [0, null],
-  "thirst":   [0, null],
-  "none":     [0, null]
+  "wood":     [0, vis.GTzero],  //"bundles of"
+  "trees":    [9999, vis.never],
+  "fire":     [0, vis.GTzero],  //"hours of"
+  "club":     [0, vis.GTzero],  //"weapon of"
+  "bow":      [0, vis.GTzero],  //"weapon of"  
+  "arrows":   [0, vis.GTzero],
+  "worms":    [0, vis.GTzero],
+  "fish":     [0, vis.GTzero],  //"heads of" 
+  "H20":      [0, vis.GTzero],  //"cups of"
+  "none":     [0, vis.never]
 };
 var i=inventory;
 
-var verbOK = false;
+var vitals = {
+  "hunger":   [10, vis.always],
+  "thirst":   [10, vis.always],
+  "warmth":   [100, vis.always],
+  "security": [10, vis.always]
+};
+var time = 0;   //12 midnight
+var timeInterval = 1;  //1 hour
 
 var actions = {
-  "chop tree":  {
+  //"chop tree":  {
+  "chop":  {
     "from": ["trees", "-", "1"],
-    "to":   ["wood", "+", "1"]
+    "to":   ["wood", "+", "1"],
+    "verb": "chopped wood (+1)"
   },
-  "light fire": {
+  "light": {
     "from": ["wood", "-", "1"],
-    "to":   ["fire", "+", "3"]
+    "to":   ["fire", "+", "3"],
+    "verb": "lit a fire (+3)"    
   },
-  "add wood": {
+  "feed": {
     "from": ["wood", "-", "1"],
-    "to":   ["fire", "+", "5"]    
+    "to":   ["fire", "+", "5"],
+    "verb": "fed the fire (+5)"
   },
   "make club":  {
     "from": ["wood", "-", "3"],
-    "to":   ["club", "=", "1"]   
+    "to":   ["club", "=", "1"],
+    "verb": "made a club (+1)"
   },    
-  "quelch fire":  {
-    "from": ["H20",  "=", "0"],
-    "to":   ["fire", "=", "0"]   
+  "make bow":  {
+    "from": ["wood", "-", "10"],
+    "to":   ["bow", "=", "1"],
+    "verb": "made a bow (+1)"
+  },    
+  "make arrows":  {
+    "from": ["wood", "-", "2"],
+    "to":   ["arrows", "=", "4"],
+    "verb": "made arrows (+4)"    
+  },    
+  "douse":  {
+    "from": ["none",  "=", "0"],
+    "to":   ["fire", "=", "0"],
+    "verb": "put out the fire"
   },
   "fish": {
-    "from": ["livefish",  "-", "1"],
-    "to":   ["deadfish",  "+", "1"]   
+    "from": ["worms",  "-", "1"],
+    "to":   ["fish",  "+", "1"],
+    "verb": "caught a fish (+1)"
+  },
+  "dig": {
+    "from": ["none",  "=", "0"],
+    "to":   ["worms",  "+", "1"],
+    "verb": "found a worm (+1)"
   }
 };
 
 l();
-printInventory();
+l("Welcome to the game!");
+l();
+printStats1();
 rl.on('line', (line) => {
   if (line=="c") {
     //break;
     console.log("action canceled");
-    lvl=0;
+    printStats1();
     return;
   }
   //if (!actions[line] || action[line].length==0) return;
   var action = actions[line];
-  if (!action) return;
-  
-  var fromGameItem = "i." + action.from[0];
-  var fromOperator = action.from[1];
-  var fromAmount = action.from[2];
+  if (action) {
+    var fromGameItem = "i." + action.from[0] + "[0]";
+    var fromOperator = action.from[1];
+    var fromAmount = action.from[2];
 
-  var toGameItem = "i." + action.to[0];
-  var toOperator = action.to[1];
-  var toAmount = action.to[2];  
+    var toGameItem = "i." + action.to[0] + "[0]";
+    var toOperator = action.to[1];
+    var toAmount = action.to[2];  
 
-  var fromEvalStrCond = fromGameItem + fromOperator + fromAmount;
-  if (eval(fromEvalStrCond) < 0) {
-    console.log("Sorry, you only have %i wood.  But, you need to have %i wood to do that.", i.wood, action.from[2] )
+    var fromEvalStrCond = fromGameItem + fromOperator + fromAmount;
+    if (eval(fromEvalStrCond) < 0) {
+      console.log("Sorry, you only have %i %s.  But, you need to have %i %s to do that.", i.wood, action.from[0], action.from[2], action.from[0] )
+      return;
+    } else {
+      var fromEvalStrDo = fromGameItem +  ( (fromOperator != "=") ? 
+                                    ("=" + fromGameItem + fromOperator + fromAmount) :
+                                    (fromOperator + fromAmount)
+      );   
+      var toEvalStrDo = toGameItem +  ( (toOperator != "=") ? 
+                                    ("=" + toGameItem + toOperator + toAmount) :
+                                    (toOperator + toAmount)
+      );          
+      eval(fromEvalStrDo);
+      eval(toEvalStrDo);
+    }
+    time+=timeInterval;
+    printStats1(action.verb);
     return;
-  } else {
-    var fromEvalStrDo = fromGameItem +  ( (fromOperator != "=") ? 
-                                  ("=" + fromGameItem + fromOperator + fromAmount) :
-                                  (fromOperator + fromAmount)
-    );   
-    var toEvalStrDo = toGameItem +  ( (toOperator != "=") ? 
-                                  ("=" + toGameItem + toOperator + toAmount) :
-                                  (toOperator + toAmount)
-    );          
-    eval(fromEvalStrDo);
-    eval(toEvalStrDo);
   }
-  //console.log("myline=%s:  verbOK is %s", line, verbOK);
-  //verbOK = false;
-  printInventory();
-  if (line == "CCC") {
-    console.log("CCC is true");
+
+
+  if (line == "QUIT") {
+    console.log("QUIT is true");
     rl.close();
-  }  
+    return; //skip the rest of the conditions
+  }
+  
+  //CATCH Default/Else: whatever input("line") is, it's unrecognized
+  l("'%s' command is not recognized. Please try again\n",line);
+  printStats1();
+  return; //loop again into another readline
 });
 
 rl.once('close', () => {
   console.log("Thank you for playing!")
     // end of input
+  exit();
  });
 
-function printInventory(){
-  l("What you have left:");
-  l("--------------------");
-  for (key in inventory){
-    var val = inventory[key];
-    var amt = val[0];
-    var visible = val[1];
-    if (visible!=null){
-      l("%i %s %s", amt, visible, key);
-    }
+function printStats1(verb){
+  l("**********  TIME: %s", ( ('0' + (time%24)).slice(-2) + ':00 hrs' )  );
+  var msg = "";
+  if (verb) {
+    msg+= "OK, you " + verb + ".  Now, you've got:"; 
+  } else {
+    msg+= "You've got:";
+  }
+  l(msg);
+  l("--------------------");  
+  printStats2(vitals);
+  l("===================================");
+  if (printStats2(inventory) == 0) {
+    l("No possessions at the moment!");
   }
   l("===================================");
   l();
+}
+
+function printStats2(list){
+  var numListItems=0;
+  for (key in list){
+    var val = list[key];
+    var amt = val[0];
+    var visible = val[1];
+    //if (visible!=null && amt > 0 ){
+    if (visible == vis.never) continue;
+    if (visible == vis.GTzero && amt < 1) continue;    
+    if (  (visible == vis.GTzero && amt > 0)
+      ||  (visible == vis.always)
+    ){
+      //l("%i %s %s", amt, visible, key);
+      l("%s: %i", key, amt);
+      numListItems++;
+    }
+  }
+  return numListItems;
 }
