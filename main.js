@@ -17,10 +17,10 @@ var vis = {
 }
 
 var vitals = {
-  "hunger":   [10, vis.always],
-  "thirst":   [10, vis.always],
-  "warmth":   [100, vis.always],
-  "security": [10, vis.always]
+  "hunger":   [10, "always"],
+  "thirst":   [10, "always"],
+  "warmth":   [100, "always"],
+  "security": [10, "always"]
 };
 var time = 0;   //12 midnight
 var timeInterval = 1;  //1 hour
@@ -175,10 +175,10 @@ function printStats2(list){
     var visible = val[1];
     //if (visible!=null && amt > 0 ){
 
-    if (visible == "vis.never") continue;
-    if (visible == "vis.GTzero" && amt < 1) continue;    
-    if (  (visible == "vis.GTzero" && amt > 0)
-      ||  (visible == "vis.always")
+    if (visible == "never") continue;
+    if (visible == "GTzero" && amt < 1) continue;    
+    if (  (visible == "GTzero" && amt > 0)
+      ||  (visible == "always")
     ){
       numListItems++;
       var lMsg = "";
