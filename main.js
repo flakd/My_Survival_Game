@@ -1,10 +1,12 @@
 const { exit } = require('process');
 const readline = require('readline');
+const parseJSONs = require('./parseJSONs');
+
 
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
-  terminal: false
+  terminal: true  //true: gives term emul like UP-ARROW for prev command
 });
 const l=console.log;
 
@@ -13,19 +15,21 @@ var vis = {
   "always": 1,
   "GTzero": 2
 }
-var inventory = {
-  "wood":     [0, vis.GTzero],  //"bundles of"
-  "trees":    [9999, vis.never],
-  "fire":     [0, vis.GTzero],  //"hours of"
-  "club":     [0, vis.GTzero],  //"weapon of"
-  "bow":      [0, vis.GTzero],  //"weapon of"  
-  "arrows":   [0, vis.GTzero],
-  "worms":    [0, vis.GTzero],
-  "fish":     [0, vis.GTzero],  //"heads of" 
-  "H20":      [0, vis.GTzero],  //"cups of"
-  "none":     [0, vis.never]
+
+/*
+{
+  "wood":     [0, "vis.GTzero"],  //"bundles of"
+  "trees":    [9999, "vis.never"],
+  "fire":     [0, "vis.GTzero"],  //"hours of"
+  "club":     [0, "vis.GTzero"],  //"weapon of"
+  "bow":      [0, "vis.GTzero"],  //"weapon of"  
+  "arrows":   [0, "vis.GTzero"],
+  "worms":    [0, "vis.GTzero"],
+  "fish":     [0, "vis.GTzero"],  //"heads of" 
+  "H20":      [0, "vis.GTzero"],  //"cups of"
+  "none":     [0, "vis.never"]
 };
-var i=inventory;
+*/
 
 var vitals = {
   "hunger":   [10, vis.always],
@@ -90,6 +94,10 @@ var actions = {
   }  
 };
 
+parseJSONs.print();
+parseJSONs.loadJSONs();
+var inventory = parseJSONs.Objects.inventory;
+var i = inventory;
 l();
 l("Welcome to the game!");
 l();
@@ -182,10 +190,10 @@ function printStats2(list){
     var visible = val[1];
     //if (visible!=null && amt > 0 ){
 
-    if (visible == vis.never) continue;
-    if (visible == vis.GTzero && amt < 1) continue;    
-    if (  (visible == vis.GTzero && amt > 0)
-      ||  (visible == vis.always)
+    if (visible == "vis.never") continue;
+    if (visible == "vis.GTzero" && amt < 1) continue;    
+    if (  (visible == "vis.GTzero" && amt > 0)
+      ||  (visible == "vis.always")
     ){
       numListItems++;
       var lMsg = "";
