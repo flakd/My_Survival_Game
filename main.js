@@ -40,26 +40,35 @@ rl.on('line', (line) => {
   //if (!actions[line] || action[line].length==0) return;
   var action = actions[line];
   if (action) {
-    var fromInvGameItem = "i." + action.fromInv[0] + "[0]";
+    var fromInvGameItem = action.fromInv[0];
+    var fromInvGameItemFull = "i." + fromInvGameItem + "[0]";    
     var fromInvOperator = action.fromInv[1];
     var fromInvAmount = action.fromInv[2];
 
-    var toInvGameItem = "i." + action.toInv[0] + "[0]";
+    var toInvGameItem = action.toInv[0];
+    var toInvGameItemFull = "i." + toInvGameItem + "[0]";
     var toInvOperator = action.toInv[1];
     var toInvAmount = action.toInv[2];  
 
-    var fromInvEvalStrCond = fromInvGameItem + fromInvOperator + fromInvAmount;
+    var toInvGameItem = action.toInv[0];
+    var toInvGameItemFull = "i." + toInvGameItem + "[0]";
+    var toInvOperator = action.toInv[1];
+    var toInvAmount = action.toInv[2];  
+        
+    var fromInvEvalStrCond = fromInvGameItemFull + fromInvOperator + fromInvAmount;
     if (eval(fromInvEvalStrCond) < 0) {
-      console.log("Sorry, you only have %i %s.  But, you need to have %i %s to do that.", i[action.fromInv[0]], action.fromInv[0], action.fromInv[2], action.fromInv[0] )
+      console.log("Sorry, you need to have at least %i %s to do that - but, you (only) have %i %s!", fromInvAmount, fromInvGameItem, i[fromInvGameItem], fromInvGameItem )
       return;
     } else {
-      var fromInvEvalStrDo = fromInvGameItem +  ( (fromInvOperator != "=") ? 
-                                    ("=" + fromInvGameItem + fromInvOperator + fromInvAmount) :
-                                    (fromInvOperator + fromInvAmount)
+      var fromInvEvalStrDo  = fromInvGameItemFull 
+                            + ( (fromInvOperator != "=") 
+                              ? ("=" + fromInvGameItemFull + fromInvOperator + fromInvAmount) 
+                              : (fromInvOperator + fromInvAmount)
       );   
-      var toInvEvalStrDo = toInvGameItem +  ( (toInvOperator != "=") ? 
-                                    ("=" + toInvGameItem + toInvOperator + toInvAmount) :
-                                    (toInvOperator + toInvAmount)
+      var toInvEvalStrDo    = toInvGameItemFull 
+                            + ( (toInvOperator != "=") 
+                              ? ("=" + toInvGameItemFull + toInvOperator + toInvAmount) 
+                              : (toInvOperator + toInvAmount)
       );          
       eval(fromInvEvalStrDo);
       eval(toInvEvalStrDo);
