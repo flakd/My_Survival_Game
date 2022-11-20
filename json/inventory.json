@@ -14,7 +14,15 @@
   "bow":      [0, "GTzero"],  
   "arrows":   [0, "GTzero"],
   "worms":    [0, "GTzero"],
+  "worm2":    {
+    "bal":    0,
+    "vis":    "GTzero"
+  },    
   "fish":     [0, "GTzero"],  
+  "fish2":    {
+    "bal":    0,
+    "vis":    "GTzero"
+  },    
   "H20":      [0, "GTzero"],  
   "none":     [0, "never"]
 }

@@ -1,6 +1,14 @@
 {
   "hunger":   [10, "always"],
+  "hung2":    {
+    "bal":    10,
+    "vis":    "always"
+  },    
   "thirst":   [10, "always"],
+  "thir2":    {
+    "bal":    10,
+    "vis":    "always"
+  },    
   "cold":     [30, "always"],
   "cold2":    {
     "bal":    30,
@@ -10,6 +18,12 @@
     "bal":    40,
     "vis":    "always"
   },    
-  "danger":   [40, "always"],
-  "none":     [0, "never"]
+  "dang2":  {
+    "bal":    40, 
+    "vis":    "always"
+  },
+  "none":     {
+    "bal":    0, 
+    "vis":    "never"
+  }
 }
