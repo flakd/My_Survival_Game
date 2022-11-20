@@ -9,6 +9,7 @@ const rl = readline.createInterface({
   terminal: true  //true: gives term emul like UP-ARROW for prev command
 });
 const l=console.log;
+const e=console.error
 
 var vis = {
   "never": 0,
@@ -32,39 +33,55 @@ l();
 l("Welcome to the game!");
 l();
 printStats1();
-rl.on('line', (line) => {
-  if (line=="c") {
+rl.on('line', (command) => {
+  if (command=="c") {
     //break;
     console.log("action canceled");
     printStats1();
     return;
+  }  
+  if (!actions) {
+    e("**ERROR**:  actions is missing"); 
+    return;
   }
-  //if (!actions[line] || action[line].length==0) return;
-  var action = actions[line];
-  if (action) {
-    for (var actionTarget in action) {
-      // only care about the obj props for actual action calcs, skip others
-      if (actionTarget != "fromInv"  || actionTarget != "toInv" || actionTarget != vitals) continue;
-      
-      // "inventory" or "vitals"? -need prefix to access b/c they're diff lists
-      if (actionTarget == "fromInv"  || actionTarget == "toInv") prefix = "i";
-      else if (actionTarget == "vitals") prefix= "v";
+  if (actions[command] && action[command].length==0) {
+    e("**ERROR**:  actions[command] is present, but empty/undefined"); 
+    return;
+  }
+  var action = actions[command];     // e.g.  command = "light"
+  if (action) {   //e.g. action = actions["light"] or actions.light = the "light" command's entire object
 
-      var GameItemCfg = action[actionTarget];
-      var GameItem = GameItemCfg[0];
-      var prefix = "";
-      var GameItemBal_Str = prefix + GameItem + "[0]";
-      var GameItemBal = eval(GameItemBal_Str);
-      var Operator_Str = GameItemCfg[1];
-      var AmtChange_Str = GameItemCfg[2];
+    // attribSet is what stats/attributes we're going to change:  AON either inventory or vitals
+    for (var attribSetLbl in action) {  // e.g. attribSet = "inventory"
+
+      for (var attrib in attribSetLbl) {   //e.g. attrib = "calcs" or "msgs"
+        var calcs;
+
+        if (attrib == "calcs") { 
+          calcs = attrib;   // calcs=attrib = obj of subs and adds to inventory or vitals
+        } else continue;
+
+        for (var calcLbl in calcs) {   //e.g. calcLbl (string) = "sub" or "add"
+          var calcSet = calcs[calcLbl];   // e.g. ENTIRE add or sub PROPERTY
+          var gameItemToChange_shortStr = calcSet[0];  // e.g. "wood" (string)
+          var gameItemToChange_fullStr = attribSetLbl + "." + gameItemToChange_shortStr;
+          var gameItemToChange = eval(gameItemToChange_fullStr);
+          
+          var GameItemBal = gameItemToChange[0];
+          var Operator_Str = gameItemToChange[1];
+          var AmtChange = gameItemToChange[2];
+        }
+      }
+      var doAction_evalStr = "";      
+      if (Operator_Str == "=") {
+        doAction_evalStr = gameItemToChange + Operator_Str + AmtChange;
+      } else
+      if (Operator_Str == "+" || Operator_Str == "-") {
+        doAction_evalStr  = gameItemToChange + "=" + gameItemToChange + Operator_Str + AmtChange;
+      }
     }
     
-    if (Operator_Str == "=") { }
-    var doAction_evalStr  = GameItemBalEval 
-                              + ( (fromInvOperator != "=") 
-      ? ("=" + fromInvGameItemFull + fromInvOperator + fromInvAmount) 
-      : (fromInvOperator + fromInvAmount)
-  );       
+
 
   {
     var fromInvGameItem = action.fromInv[0];
@@ -120,14 +137,14 @@ rl.on('line', (line) => {
   }
 
 
-  if (line == "QUIT") {
+  if (command == "QUIT") {
     console.log("QUIT is true");
     rl.close();
     return; //skip the rest of the conditions
   }
   
-  //CATCH Default/Else: whatever input("line") is, it's unrecognized
-  l("'%s' command is not recognized. Please try again\n",line);
+  //CATCH Default/Else: whatever input("command") is, it's unrecognized
+  l("'%s' command is not recognized. Please try again\n",command);
   printStats1();
   return; //loop again into another readline
 });

@@ -9,12 +9,12 @@ let parseJSONs = {
     "actions":  {}
   },
   loadJSONs: function loadJSONs(){
-    //   FIGURE OUT THE BELOW
-    //fileNames = new Array<String>(this.fileInfo.JSONfileNames);
+    //   FIGURE OUT THE BELOW for Typescript
+    //var fileNames: String[]  = new Array(this.fileInfo.JSONfileNames);
 
-    var names, fileNames;   //undefined
+    var names;   //declared but undefined at this point
     names = this.Objects;  //assigned 'Objects', and obj of game obj names    
-    //names.forEach((name, idx)=> {    
+    //names.forEach((name, idx)=> {    // an obj, not an array so this won't work
     for (var name in names) {
       // write each array item (indiv fileName) to console
       var fileName = name + ".json";

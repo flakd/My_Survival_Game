@@ -13,16 +13,24 @@
   },
   "light2": {
     "inventory":{
-      "sub":    ["wood", "-", "1"],
-      "add":    ["fire", "+", "3"],
-      "okMsg":  "lit a fire (fire +3)",
-      "errMsg": "Sorry, you need to have at least %i %s to do that - but, you (only) have %i %s!",          
+      "calcs":  {
+        "sub":    ["wood", "-", 1],
+        "add":    ["fire", "+", 3]
+      },
+      "msgs":   {
+        "okMsg":  "lit a fire (fire +3)",
+        "errMsg": "Sorry, you need to have at least %i %s to do that - but, you (only) have %i %s!"
+      }
     },
     "vitals":   {
-      "sub":    ["fatigue", "-", "10"],
-      "add":    ["cold",  "-", "3"],
-      "okMsg":  "Ahhhh, you feel warmer, that's nice! (cold -3)",    
-      "errMsg": "Ok, but you're already very warm, you don't want to burn the place down!"
+      "calcs":  {
+        "sub":    ["fatigue", "-", 10],
+        "add":    ["cold",  "-", 3]
+      },
+      "msgs":   {      
+        "okMsg":  "Ahhhh, you feel warmer, that's nice! (cold -3)",    
+        "errMsg": "Ok, but you're already very warm, you don't want to burn the place down!"
+      }
     }
   },
   "feed": {
