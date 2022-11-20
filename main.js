@@ -50,11 +50,11 @@ rl.on('line', (line) => {
     var toInvOperator = action.toInv[1];
     var toInvAmount = action.toInv[2];  
 
-    var toInvGameItem = action.toInv[0];
-    var toInvGameItemFull = "i." + toInvGameItem + "[0]";
-    var toInvOperator = action.toInv[1];
-    var toInvAmount = action.toInv[2];  
-        
+    var vitalsGameItem = action.vitals[0];
+    var vitalsGameItemFull = "vitals." + vitalsGameItem + "[0]";
+    var vitalsOperator = action.vitals[1];
+    var vitalsAmount = action.vitals[2];  
+
     var fromInvEvalStrCond = fromInvGameItemFull + fromInvOperator + fromInvAmount;
     if (eval(fromInvEvalStrCond) < 0) {
       console.log("Sorry, you need to have at least %i %s to do that - but, you (only) have %i %s!", fromInvAmount, fromInvGameItem, i[fromInvGameItem], fromInvGameItem )
@@ -69,9 +69,15 @@ rl.on('line', (line) => {
                             + ( (toInvOperator != "=") 
                               ? ("=" + toInvGameItemFull + toInvOperator + toInvAmount) 
                               : (toInvOperator + toInvAmount)
-      );          
+      );      
+      var vitalsEvalStrDo    = vitalsGameItemFull 
+                            + ( (vitalsOperator != "=") 
+                              ? ("=" + vitalsGameItemFull + vitalsOperator + vitalsAmount) 
+                              : (vitalsOperator + vitalsAmount)
+      );                
       eval(fromInvEvalStrDo);
       eval(toInvEvalStrDo);
+      eval(vitalsEvalStrDo);
     }
     time+=timeInterval;
     printStats1(action.verb);
