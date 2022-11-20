@@ -14,8 +14,16 @@
   "light2": {
     "inventory":{
       "calcs":  {
-        "sub":    ["wood", "-", 1],
-        "add":    ["fire", "+", 3]
+        "sub":    {
+          "gameItem":   "wood2",
+          "operator":   "=",
+          "changeAmt":  1
+        },
+        "add":  {
+          "gameItem":   "fire2",
+          "operator":   "=",
+          "changeAmt":  3
+        }
       },
       "msgs":   {
         "okMsg":  "lit a fire (fire +3)",

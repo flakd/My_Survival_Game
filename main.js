@@ -33,8 +33,8 @@ l();
 l("Welcome to the game!");
 l();
 printStats1();
-rl.on('line', (command) => {
-  if (command=="c") {
+rl.on('line', (line) => {
+  if (line=="c") {
     //break;
     console.log("action canceled");
     printStats1();
@@ -44,40 +44,51 @@ rl.on('line', (command) => {
     e("**ERROR**:  actions is missing"); 
     return;
   }
-  if (actions[command] && action[command].length==0) {
-    e("**ERROR**:  actions[command] is present, but empty/undefined"); 
-    return;
+  if (actions[line]){
+    if (actions[line].length==0) {
+      e("**ERROR**:  actions[line] is present, but empty/undefined"); 
+      return;
+    }
   }
-  var action = actions[command];     // e.g.  command = "light"
-  if (action) {   //e.g. action = actions["light"] or actions.light = the "light" command's entire object
+  var action = actions[line];     // e.g.  line = "light"
+  if (action) {   //e.g. action = actions["light"] or actions.light = the "light" line's entire object
 
     // attribSet is what stats/attributes we're going to change:  AON either inventory or vitals
     for (var attribSetLbl in action) {  // e.g. attribSet = "inventory"
+      var attribs = action[attribSetLbl];
 
-      for (var attrib in attribSetLbl) {   //e.g. attrib = "calcs" or "msgs"
-        var calcs;
+      for (var attribLbl in attribs) {   //e.g. attrib = "calcs" or "msgs"
 
-        if (attrib == "calcs") { 
-          calcs = attrib;   // calcs=attrib = obj of subs and adds to inventory or vitals
+        if (attribLbl == "calcs") { 
+          var calcs = attribs[attribLbl];   // calcs=attrib = obj of subs and adds to inventory or vitals
         } else continue;
 
         for (var calcLbl in calcs) {   //e.g. calcLbl (string) = "sub" or "add"
           var calcSet = calcs[calcLbl];   // e.g. ENTIRE add or sub PROPERTY
-          var gameItemToChange_shortStr = calcSet[0];  // e.g. "wood" (string)
+          var gameItemToChange_shortStr = calcSet.gameItem;  // e.g. "wood" (string)
           var gameItemToChange_fullStr = attribSetLbl + "." + gameItemToChange_shortStr;
           var gameItemToChange = eval(gameItemToChange_fullStr);
-          
-          var GameItemBal = gameItemToChange[0];
-          var Operator_Str = gameItemToChange[1];
-          var AmtChange = gameItemToChange[2];
+          var gameItemToChange_bal = gameItemToChange.bal;
+          var gameItemToChange_vis = gameItemToChange.vis;          
+          var Operator_Str = calcSet.operator;
+          var changeAmt = calcSet.changeAmt[2];
+
+          var doAction_evalStr = "";      
+          var doAction = function(){};
+          if (Operator_Str == "=") {
+            doAction_evalStr = "gameItemToChange_bal" + Operator_Str + changeAmt;
+            var tmp=0;
+            /*doAction = function(){
+              return (
+                gameItemToChange.bal + eval(Operator_Str) + changeAmt
+              );
+            };
+            */
+          }
         }
-      }
-      var doAction_evalStr = "";      
-      if (Operator_Str == "=") {
-        doAction_evalStr = gameItemToChange + Operator_Str + AmtChange;
-      } else
+      } 
       if (Operator_Str == "+" || Operator_Str == "-") {
-        doAction_evalStr  = gameItemToChange + "=" + gameItemToChange + Operator_Str + AmtChange;
+        doAction_evalStr  = gameItemToChange.bal + "=" + gameItemToChange + Operator_Str + changeAmt;
       }
     }
     
@@ -137,14 +148,14 @@ rl.on('line', (command) => {
   }
 
 
-  if (command == "QUIT") {
+  if (line == "QUIT") {
     console.log("QUIT is true");
     rl.close();
     return; //skip the rest of the conditions
   }
   
-  //CATCH Default/Else: whatever input("command") is, it's unrecognized
-  l("'%s' command is not recognized. Please try again\n",command);
+  //CATCH Default/Else: whatever input("line") is, it's unrecognized
+  l("'%s' line is not recognized. Please try again\n",line);
   printStats1();
   return; //loop again into another readline
 });
