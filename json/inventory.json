@@ -1,13 +1,13 @@
 {
   "wood":     [0, "GTzero"],
   "wood2":    {
-    "bal":    0,
+    "bal":    21,
     "vis":    "GTzero"
   },
   "trees":    [9999, "never"],
   "fire":     [0, "GTzero"],  
   "fire2":    {
-    "bal":    0,
+    "bal":    31,
     "vis":    "GTzero"
   },  
   "club":     [0, "GTzero"],  

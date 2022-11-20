@@ -16,12 +16,12 @@
       "calcs":  {
         "sub":    {
           "gameItem":   "wood2",
-          "operator":   "=",
-          "changeAmt":  1
+          "operator":   "-",
+          "changeAmt":  9
         },
         "add":  {
           "gameItem":   "fire2",
-          "operator":   "=",
+          "operator":   "+",
           "changeAmt":  3
         }
       },
@@ -32,8 +32,16 @@
     },
     "vitals":   {
       "calcs":  {
-        "sub":    ["fatigue", "-", 10],
-        "add":    ["cold",  "-", 3]
+        "sub":    {
+          "gameItem":   "fati2",
+          "operator":   "-",
+          "changeAmt":  10
+        },
+        "add":    {
+          "gameItem":   "cold2",
+          "operator":   "-",
+          "changeAmt":  3          
+        }
       },
       "msgs":   {      
         "okMsg":  "Ahhhh, you feel warmer, that's nice! (cold -3)",    

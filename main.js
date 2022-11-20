@@ -53,97 +53,128 @@ rl.on('line', (line) => {
   var action = actions[line];     // e.g.  line = "light"
   if (action) {   //e.g. action = actions["light"] or actions.light = the "light" line's entire object
 
-    // attribSet is what stats/attributes we're going to change:  AON either inventory or vitals
-    for (var attribSetLbl in action) {  // e.g. attribSet = "inventory"
-      var attribs = action[attribSetLbl];
+    var calcSet, 
+        gameItemToChange_shortStr,
+        gameItemToChange_fullStr,
+        gameItemToChange,
+//        gameItemToChange_bal,
+//        gameItemToChange_vis,
+        Operator_Str,
+        changeAmt
+    ;
 
-      for (var attribLbl in attribs) {   //e.g. attrib = "calcs" or "msgs"
+    //if (line in ["light2", "drink2"]){
+    if (line == "light2"){      
+      // attribSet is what stats/attributes we're going to change:  AON either inventory or vitals
+      for (var attribSetLbl in action) {  // e.g. attribSet = "inventory"
+        var attribs = action[attribSetLbl];
 
-        if (attribLbl == "calcs") { 
-          var calcs = attribs[attribLbl];   // calcs=attrib = obj of subs and adds to inventory or vitals
-        } else continue;
+        for (var attribLbl in attribs) {   //e.g. attrib = "calcs" or "msgs"
 
-        for (var calcLbl in calcs) {   //e.g. calcLbl (string) = "sub" or "add"
-          var calcSet = calcs[calcLbl];   // e.g. ENTIRE add or sub PROPERTY
-          var gameItemToChange_shortStr = calcSet.gameItem;  // e.g. "wood" (string)
-          var gameItemToChange_fullStr = attribSetLbl + "." + gameItemToChange_shortStr;
-          var gameItemToChange = eval(gameItemToChange_fullStr);
-          var gameItemToChange_bal = gameItemToChange.bal;
-          var gameItemToChange_vis = gameItemToChange.vis;          
-          var Operator_Str = calcSet.operator;
-          var changeAmt = calcSet.changeAmt[2];
+          if (attribLbl == "calcs") { 
+            var calcs = attribs[attribLbl];   // calcs=attrib = obj of subs and adds to inventory or vitals
+          } else continue;
 
-          var doAction_evalStr = "";      
-          var doAction = function(){};
-          if (Operator_Str == "=") {
-            doAction_evalStr = "gameItemToChange_bal" + Operator_Str + changeAmt;
-            var tmp=0;
-            /*doAction = function(){
-              return (
-                gameItemToChange.bal + eval(Operator_Str) + changeAmt
-              );
-            };
-            */
+          for (var calcLbl in calcs) {   //e.g. calcLbl (string) = "sub" or "add"
+            calcSet = calcs[calcLbl];   // e.g. ENTIRE add or sub PROPERTY
+            gameItemToChange_shortStr = calcSet.gameItem;  // e.g. "wood" (string)
+            gameItemToChange_fullStr = attribSetLbl + "." + gameItemToChange_shortStr;
+            gameItemToChange = eval(gameItemToChange_fullStr);
+            //var gameItemToChange_bal = gameItemToChange.bal;
+            //var gameItemToChange_vis = gameItemToChange.vis;
+            Operator_Str = calcSet.operator;
+            changeAmt = calcSet.changeAmt;
+
+            var doAction_evalStr = "";      
+            //var doAction = function(){};
+            if (Operator_Str == "=") {
+              //doAction_evalStr = "gameItemToChange_bal" + Operator_Str + changeAmt;
+              doAction_evalStr = "gameItemToChange.bal" + Operator_Str + changeAmt;              
+              var tmp=0;
+              /*doAction = function(){
+                return (
+                  gameItemToChange.bal + eval(Operator_Str) + changeAmt
+                );
+              };
+              */
+            } else 
+            if (Operator_Str == "+" || Operator_Str == "-") {
+              doAction_evalStr  = "gameItemToChange.bal" + "=" + "gameItemToChange.bal" + Operator_Str + changeAmt;
+            }   
+
+            var doActionCond_evalStr = "gameItemToChange.bal" + Operator_Str + changeAmt + " >= 0 ";
+            if (eval(doActionCond_evalStr)) {
+              eval(doAction_evalStr);    
+            } else {
+              var errMsg = "";
+              switch (attribSetLbl) {
+                case "inventory":
+                  l("Sorry, you need to have at least %i %s to do that - but, you (only) have %i %s!", 
+                    changeAmt, gameItemToChange_shortStr, gameItemToChange.bal, gameItemToChange_shortStr 
+                  );
+                  break;
+                case "vitals":
+                  l("You don't feel like doing that -- you have no %s", gameItemToChange )
+                  break;
+                default:
+                  l("Sorry, you can't do that (this is a generic err message)");
+              }
+            }       
+
           }
-        }
-      } 
-      if (Operator_Str == "+" || Operator_Str == "-") {
-        doAction_evalStr  = gameItemToChange.bal + "=" + gameItemToChange + Operator_Str + changeAmt;
+        } 
+
       }
-    }
-    
+    } else {
+      var fromInvGameItem = action.fromInv[0];
+      var fromInvGameItemFull = "i." + fromInvGameItem + "[0]";    
+      var fromInvOperator = action.fromInv[1];
+      var fromInvAmount = action.fromInv[2];
 
+      var toInvGameItem = action.toInv[0];
+      var toInvGameItemFull = "i." + toInvGameItem + "[0]";
+      var toInvOperator = action.toInv[1];
+      var toInvAmount = action.toInv[2];  
 
-  {
-    var fromInvGameItem = action.fromInv[0];
-    var fromInvGameItemFull = "i." + fromInvGameItem + "[0]";    
-    var fromInvOperator = action.fromInv[1];
-    var fromInvAmount = action.fromInv[2];
-
-    var toInvGameItem = action.toInv[0];
-    var toInvGameItemFull = "i." + toInvGameItem + "[0]";
-    var toInvOperator = action.toInv[1];
-    var toInvAmount = action.toInv[2];  
-
-    var vitalsGameItem = action.vitals[0];
-    var vitalsGameItemFull = "vitals." + vitalsGameItem + "[0]";
-    var vitalsOperator = action.vitals[1];
-    var vitalsAmount = action.vitals[2];  
-  }
-  {
-    var fromInvEvalStrCond = fromInvGameItemFull + fromInvOperator + fromInvAmount;
-    var vitalsEvalStrCond = vitalsGameItemFull + vitalsOperator + vitalsAmount;
-    if (eval(fromInvEvalStrCond) < 0) {
-      console.log("Sorry, you need to have at least %i %s to do that - but, you (only) have %i %s!", fromInvAmount, fromInvGameItem, i[fromInvGameItem], fromInvGameItem )
-      return;
-    } 
-    if (eval(vitalsEvalStrCond) < 0)  {
-      console.log("You don't feel like doing that -- you have no %s", vitalsGameItem )
-      return;
-    }       
-  } 
-    {
-      var fromInvEvalStrDo  = fromInvGameItemFull 
-                            + ( (fromInvOperator != "=") 
-                              ? ("=" + fromInvGameItemFull + fromInvOperator + fromInvAmount) 
-                              : (fromInvOperator + fromInvAmount)
-      );   
-      var toInvEvalStrDo    = toInvGameItemFull 
-                            + ( (toInvOperator != "=") 
-                              ? ("=" + toInvGameItemFull + toInvOperator + toInvAmount) 
-                              : (toInvOperator + toInvAmount)
-      );      
-      var vitalsEvalStrDo    = vitalsGameItemFull 
-                            + ( (vitalsOperator != "=") 
-                              ? ("=" + vitalsGameItemFull + vitalsOperator + vitalsAmount) 
-                              : (vitalsOperator + vitalsAmount)
-      );                
-      eval(fromInvEvalStrDo);
-      eval(toInvEvalStrDo);
-      eval(vitalsEvalStrDo);
-    }
+      var vitalsGameItem = action.vitals[0];
+      var vitalsGameItemFull = "vitals." + vitalsGameItem + "[0]";
+      var vitalsOperator = action.vitals[1];
+      var vitalsAmount = action.vitals[2];  
+      {
+        var fromInvEvalStrCond = fromInvGameItemFull + fromInvOperator + fromInvAmount;
+        var vitalsEvalStrCond = vitalsGameItemFull + vitalsOperator + vitalsAmount;
+        if (eval(fromInvEvalStrCond) < 0) {
+          console.log("Sorry, you need to have at least %i %s to do that - but, you (only) have %i %s!", fromInvAmount, fromInvGameItem, i[fromInvGameItem], fromInvGameItem )
+          return;
+        } 
+        if (eval(vitalsEvalStrCond) < 0)  {
+          console.log("You don't feel like doing that -- you have no %s", vitalsGameItem )
+          return;
+        }       
+      } 
+      {
+        var fromInvEvalStrDo  = fromInvGameItemFull 
+                              + ( (fromInvOperator != "=") 
+                                ? ("=" + fromInvGameItemFull + fromInvOperator + fromInvAmount) 
+                                : (fromInvOperator + fromInvAmount)
+        );   
+        var toInvEvalStrDo    = toInvGameItemFull 
+                              + ( (toInvOperator != "=") 
+                                ? ("=" + toInvGameItemFull + toInvOperator + toInvAmount) 
+                                : (toInvOperator + toInvAmount)
+        );      
+        var vitalsEvalStrDo    = vitalsGameItemFull 
+                              + ( (vitalsOperator != "=") 
+                                ? ("=" + vitalsGameItemFull + vitalsOperator + vitalsAmount) 
+                                : (vitalsOperator + vitalsAmount)
+        );                
+        eval(fromInvEvalStrDo);
+        eval(toInvEvalStrDo);
+        eval(vitalsEvalStrDo);
+      }
+    } //elseIF (line != "light2")
     time+=timeInterval;
-    printStats1(action.verb);
+    printStats1(action.verb ? action.verb : gameItemToChange_shortStr);
     return;
   }
 
@@ -189,13 +220,19 @@ function printStats2(list){
   var numListItems=0;
 
   var msg ="  ";
+  var val, amt, visible;
   
   for (key in list){
-    var val = list[key];
-    var amt = val[0];
-    var visible = val[1];
-    //if (visible!=null && amt > 0 ){
-
+    val = list[key];
+    if (key.slice(4) == "2") {
+      //console.log(key);
+      amt = val.bal;
+      visible = val.vis;
+    } else {
+      amt = val[0];
+      visible = val[1];
+      //if (visible!=null && amt > 0 ){
+    }
     if (visible == "never") continue;
     if (visible == "GTzero" && amt < 1) continue;    
     if (  (visible == "GTzero" && amt > 0)
