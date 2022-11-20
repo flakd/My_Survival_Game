@@ -65,9 +65,9 @@ rl.on('line', (line) => {
 
     //if (line in ["light2", "drink2"]){
     if (line == "light2"){      
-      // attribSet is what stats/attributes we're going to change:  AON either inventory or vitals
-      for (var attribSetLbl in action) {  // e.g. attribSet = "inventory"
-        var attribs = action[attribSetLbl];
+      // attribs is what stats/attributes we're going to change:  AON either inventory or vitals
+      for (var attribsLbl in action) {  // e.g. attribsLbl = "inventory"
+        var attribs = action[attribsLbl];
 
         for (var attribLbl in attribs) {   //e.g. attrib = "calcs" or "msgs"
 
@@ -78,7 +78,7 @@ rl.on('line', (line) => {
           for (var calcLbl in calcs) {   //e.g. calcLbl (string) = "sub" or "add"
             calcSet = calcs[calcLbl];   // e.g. ENTIRE add or sub PROPERTY
             gameItemToChange_shortStr = calcSet.gameItem;  // e.g. "wood" (string)
-            gameItemToChange_fullStr = attribSetLbl + "." + gameItemToChange_shortStr;
+            gameItemToChange_fullStr = attribsLbl + "." + gameItemToChange_shortStr;
             gameItemToChange = eval(gameItemToChange_fullStr);
             //var gameItemToChange_bal = gameItemToChange.bal;
             //var gameItemToChange_vis = gameItemToChange.vis;
@@ -107,7 +107,7 @@ rl.on('line', (line) => {
               eval(doAction_evalStr);    
             } else {
               var errMsg = "";
-              switch (attribSetLbl) {
+              switch (attribsLbl) {
                 case "inventory":
                   l("Sorry, you need to have at least %i %s to do that - but, you (only) have %i %s!", 
                     changeAmt, gameItemToChange_shortStr, gameItemToChange.bal, gameItemToChange_shortStr 
