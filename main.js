@@ -22,9 +22,11 @@ var timeInterval = 1;  //1 hour
 parseJSONs.print();
 parseJSONs.loadJSONs();
 var inventory = parseJSONs.Objects.inventory;
-var i = inventory;
 var actions = parseJSONs.Objects.actions; 
 var vitals = parseJSONs.Objects.vitals; 
+var i = inventory;
+var a = actions;
+var v = vitals;
 
 l();
 l("Welcome to the game!");
@@ -40,6 +42,31 @@ rl.on('line', (line) => {
   //if (!actions[line] || action[line].length==0) return;
   var action = actions[line];
   if (action) {
+    for (var actionTarget in action) {
+      // only care about the obj props for actual action calcs, skip others
+      if (actionTarget != "fromInv"  || actionTarget != "toInv" || actionTarget != vitals) continue;
+      
+      // "inventory" or "vitals"? -need prefix to access b/c they're diff lists
+      if (actionTarget == "fromInv"  || actionTarget == "toInv") prefix = "i";
+      else if (actionTarget == "vitals") prefix= "v";
+
+      var GameItemCfg = action[actionTarget];
+      var GameItem = GameItemCfg[0];
+      var prefix = "";
+      var GameItemBal_Str = prefix + GameItem + "[0]";
+      var GameItemBal = eval(GameItemBal_Str);
+      var Operator_Str = GameItemCfg[1];
+      var AmtChange_Str = GameItemCfg[2];
+    }
+    
+    if (Operator_Str == "=") { }
+    var doAction_evalStr  = GameItemBalEval 
+                              + ( (fromInvOperator != "=") 
+      ? ("=" + fromInvGameItemFull + fromInvOperator + fromInvAmount) 
+      : (fromInvOperator + fromInvAmount)
+  );       
+
+  {
     var fromInvGameItem = action.fromInv[0];
     var fromInvGameItemFull = "i." + fromInvGameItem + "[0]";    
     var fromInvOperator = action.fromInv[1];
@@ -54,12 +81,20 @@ rl.on('line', (line) => {
     var vitalsGameItemFull = "vitals." + vitalsGameItem + "[0]";
     var vitalsOperator = action.vitals[1];
     var vitalsAmount = action.vitals[2];  
-
+  }
+  {
     var fromInvEvalStrCond = fromInvGameItemFull + fromInvOperator + fromInvAmount;
+    var vitalsEvalStrCond = vitalsGameItemFull + vitalsOperator + vitalsAmount;
     if (eval(fromInvEvalStrCond) < 0) {
       console.log("Sorry, you need to have at least %i %s to do that - but, you (only) have %i %s!", fromInvAmount, fromInvGameItem, i[fromInvGameItem], fromInvGameItem )
       return;
-    } else {
+    } 
+    if (eval(vitalsEvalStrCond) < 0)  {
+      console.log("You don't feel like doing that -- you have no %s", vitalsGameItem )
+      return;
+    }       
+  } 
+    {
       var fromInvEvalStrDo  = fromInvGameItemFull 
                             + ( (fromInvOperator != "=") 
                               ? ("=" + fromInvGameItemFull + fromInvOperator + fromInvAmount) 
