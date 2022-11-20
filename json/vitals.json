@@ -1,6 +1,7 @@
 {
   "hunger":   [10, "always"],
   "thirst":   [10, "always"],
-  "warmth":   [100, "always"],
-  "security": [10, "always"]
+  "cold":     [30, "always"],
+  "danger":   [40, "always"],
+  "none":     [0, "never"]
 }
