@@ -14,12 +14,12 @@
   "light2": {
     "inventory":{
       "calcs":  {
-        "sub":    {
+        "take":    {
           "gameItem":   "wood2",
           "operator":   "-",
-          "changeAmt":  9
+          "changeAmt":  5
         },
-        "add":  {
+        "give":  {
           "gameItem":   "fire2",
           "operator":   "+",
           "changeAmt":  3
@@ -32,20 +32,20 @@
     },
     "vitals":   {
       "calcs":  {
-        "sub":    {
+        "take":    {
           "gameItem":   "fati2",
-          "operator":   "-",
-          "changeAmt":  10
+          "operator":   "+",
+          "changeAmt":  5
         },
-        "add":    {
+        "give":    {
           "gameItem":   "cold2",
           "operator":   "-",
-          "changeAmt":  3          
+          "changeAmt":  10          
         }
       },
       "msgs":   {      
         "okMsg":  "Ahhhh, you feel warmer, that's nice! (cold -3)",    
-        "errMsg": "Ok, but you're already very warm, you don't want to burn the place down!"
+        "errMsg": "Why waste wood, you're not cold right now"
       }
     }
   },
