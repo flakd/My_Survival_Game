@@ -16,6 +16,12 @@
     "doOper": ">0",
     "dead":   ">=100"    
   },    
+  "fatigue": {
+    "bal":    40,
+    "vis":    "always",
+    "doOper": ">0",
+    "dead":   ">=100"    
+  },    
   "fati2": {
     "bal":    40,
     "vis":    "always",

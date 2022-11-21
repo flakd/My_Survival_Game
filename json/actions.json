@@ -1,17 +1,45 @@
 {
-  "chop":  {
-    "fromInv": ["trees", "-", "1"],
-    "toInv":   ["wood", "+", "1"],
-    "vitals":  ["none",  "=", "0"],
-    "verb": "chopped wood (wood +1)"
+  "chop": {
+    "inventory":{
+      "calcs":  {
+        "take":    {
+          "gameItem":   "trees",
+          "operator":   "-",
+          "changeAmt":  1
+        },
+        "give":  {
+          "gameItem":   "wood",
+          "operator":   "+",
+          "changeAmt":  1
+        }
+      },
+      "msgs":   {
+        "okMsg":  "chopped wood (wood +1)",
+        "errMsg": "Sorry, you need to have at least %i %s to do that - but, you (only) have %i %s!"
+      }
+    },
+    "vitals":   {
+      "calcs":  {
+        "take":    {
+          "gameItem":   "fatigue",
+          "operator":   "+",
+          "changeAmt":  5
+        },
+        "give":    {
+          "gameItem":   "none",
+          "operator":   "=",
+          "changeAmt":  0          
+        }
+      },
+      "msgs":   {      
+        "okMsg":  "You feel a bit more tired (fatigue +5)",    
+        "errMsg": "Should be no err msg here for CHOP"
+      }
+    }
   },
+
+
   "light": {
-    "fromInv": ["wood", "-", "1"],
-    "toInv":   ["fire", "+", "3"],
-    "vitals":  ["cold",  "-", "3"],
-    "verb":     "lit a fire (fire +3)"
-  },
-  "light2": {
     "inventory":{
       "calcs":  {
         "take":    {
