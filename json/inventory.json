@@ -1,7 +1,7 @@
 {
   "wood":     [0, "GTzero"],
   "wood2":    {
-    "bal":    21,
+    "bal":    50,
     "vis":    "GTzero"
   },
   "trees":    [9999, "never"],

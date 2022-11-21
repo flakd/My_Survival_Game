@@ -12,11 +12,15 @@
   "cold":     [30, "always"],
   "cold2":    {
     "bal":    30,
-    "vis":    "always"
+    "vis":    "always",
+    "doOper": ">0",
+    "dead":   ">=100"    
   },    
   "fati2": {
     "bal":    40,
-    "vis":    "always"
+    "vis":    "always",
+    "doOper": ">0",
+    "dead":   ">=100"    
   },    
   "dang2":  {
     "bal":    40, 

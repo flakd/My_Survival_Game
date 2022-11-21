@@ -1,3 +1,4 @@
+const { checkPrime } = require('crypto');
 const { exit } = require('process');
 const readline = require('readline');
 const parseJSONs = require('./parseJSONs');
@@ -65,63 +66,10 @@ rl.on('line', (line) => {
 
     //if (line in ["light2", "drink2"]){
     if (line == "light2"){      
+      check(action, calcSet, gameItemToChange_shortStr, gameItemToChange_fullStr, gameItemToChange, Operator_Str, changeAmt);
       // attribs is what stats/attributes we're going to change:  AON either inventory or vitals
-      for (var attribsLbl in action) {  // e.g. attribsLbl = "inventory"
-        var attribs = action[attribsLbl];
-
-        for (var attribLbl in attribs) {   //e.g. attrib = "calcs" or "msgs"
-          var attrib = attribs[attribLbl];
-
-          if (attribLbl == "calcs") { 
-            var calcs = attrib;   // calcs=attrib = obj of subs and adds to inventory or vitals
-
-            for (var calcLbl in calcs) {   //e.g. calcLbl (string) = "sub" or "add"
-              calcSet = calcs[calcLbl];   // e.g. ENTIRE add or sub PROPERTY
-              gameItemToChange_shortStr = calcSet.gameItem;  // e.g. "wood" (string)
-              gameItemToChange_fullStr = attribsLbl + "." + gameItemToChange_shortStr;
-              gameItemToChange = eval(gameItemToChange_fullStr);
-              //var gameItemToChange_bal = gameItemToChange.bal;
-              //var gameItemToChange_vis = gameItemToChange.vis;
-              Operator_Str = calcSet.operator;
-              changeAmt = calcSet.changeAmt;
-
-              var doAction_evalStr = "";      
-              //var doAction = function(){};
-              if (Operator_Str == "=") {
-                doAction_evalStr = "gameItemToChange.bal" + Operator_Str + changeAmt;              
-                var tmp=0;
-              } else 
-              if (Operator_Str == "+" || Operator_Str == "-") {
-                doAction_evalStr  = "gameItemToChange.bal" + "=" + "gameItemToChange.bal" + Operator_Str + changeAmt;
-              }   
-
-              var doActionCond_evalStr = "gameItemToChange.bal" + Operator_Str + changeAmt + " >= 0 ";
-              if (eval(doActionCond_evalStr)) {
-                eval(doAction_evalStr);    
-                printStats1(attribs.msgs.okMsg);
-              } else {
-                var errMsg = "";
-                switch (attribsLbl) {
-                  case "inventory":
-                    l("Sorry, you need to have at least %i %s to do that - but, you (only) have %i %s!", 
-                      changeAmt, gameItemToChange_shortStr, gameItemToChange.bal, gameItemToChange_shortStr 
-                    );
-                    break;
-                  case "vitals":
-                    l("You don't feel like doing that -- you have no %s", gameItemToChange_shortStr )
-                    break;
-                  default:
-                    l("Sorry, you can't do that (this is a generic err message)");
-                }
-              } 
-
-            } 
-
-          }
-
-        } 
-
-      }
+      //({ calcSet, gameItemToChange_shortStr, gameItemToChange_fullStr, gameItemToChange, Operator_Str, changeAmt } = newFunction(action, calcSet, gameItemToChange_shortStr, gameItemToChange_fullStr, gameItemToChange, Operator_Str, changeAmt));
+      printStats1();
     } else {
       var fromInvGameItem = action.fromInv[0];
       var fromInvGameItemFull = "i." + fromInvGameItem + "[0]";    
@@ -167,9 +115,9 @@ rl.on('line', (line) => {
         eval(toInvEvalStrDo);
         eval(vitalsEvalStrDo);
         printStats1(action.verb);
+        time+=timeInterval;
       }
     } //elseIF (line != "light2")
-    time+=timeInterval;
     return;
   }
 
@@ -191,6 +139,64 @@ rl.once('close', () => {
     // end of input
   exit();
  });
+
+
+
+function check(action, calcSet, gameItemToChange_shortStr, gameItemToChange_fullStr, gameItemToChange, Operator_Str, changeAmt) {
+  for (var attribsLbl in action) { // e.g. attribsLbl = "inventory"
+    var attribs = action[attribsLbl];
+
+    for (var attribLbl in attribs) { //e.g. attrib = "calcs" or "msgs"
+      var attrib = attribs[attribLbl];
+
+      if (attribLbl == "calcs") {
+        var calcs = attrib; // calcs=attrib = obj of subs and adds to inventory or vitals
+
+        for (var calcLbl in calcs) { //e.g. calcLbl (string) = "sub" or "add"
+          calcSet = calcs[calcLbl]; // e.g. ENTIRE add or sub PROPERTY
+          gameItemToChange_shortStr = calcSet.gameItem; // e.g. "wood" (string)
+          gameItemToChange_fullStr = attribsLbl + "." + gameItemToChange_shortStr;
+          gameItemToChange = eval(gameItemToChange_fullStr);
+          //var gameItemToChange_bal = gameItemToChange.bal;
+          //var gameItemToChange_vis = gameItemToChange.vis;
+          Operator_Str = calcSet.operator;
+          changeAmt = calcSet.changeAmt;
+
+          var doAction_evalStr = "";
+          //var doAction = function(){};
+          if (Operator_Str == "=") {
+            doAction_evalStr = "gameItemToChange.bal" + Operator_Str + changeAmt;
+            var tmp = 0;
+          }
+          else if (Operator_Str == "+" || Operator_Str == "-") {
+            doAction_evalStr = "gameItemToChange.bal" + "=" + "gameItemToChange.bal" + Operator_Str + changeAmt;
+          }
+          var doActionCond_evalStrs = {
+            "inventory":  "gameItemToChange.bal" + Operator_Str + changeAmt + " >= 0 ",
+            "vitals":     "gameItemToChange.bal" + gameItemToChange.doOper
+          }
+          var errMsg = "";
+
+          if ( !eval(doActionCond_evalStrs[attribsLbl]) ){
+            if (attribsLbl=="inventory"){
+              l(attribs.msgs.errMsg, changeAmt, gameItemToChange_shortStr, gameItemToChange.bal, gameItemToChange_shortStr);                
+            } else 
+            if (attribsLbl=="vitals"){
+              l(attribs.msgs.errMsg);
+            }
+            return;
+          } else {
+            eval(doAction_evalStr);
+          }          
+        }
+      }
+    }
+  }
+  time+=timeInterval;        
+  //return { calcSet, gameItemToChange_shortStr, gameItemToChange_fullStr, gameItemToChange, Operator_Str, changeAmt };
+}
+
+
 
 function printStats1(verb){
   l("**********  TIME: %s", ( ('0' + (time%24)).slice(-2) + ':00 hrs' )  );
