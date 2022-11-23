@@ -38,6 +38,36 @@
     }
   },
 
+  "light2": {
+    "inventory":{
+      "take":   {   "gameItem":   "wood",
+                    "operator":   "-",
+                    "changeAmt":  5
+      },
+      "give":   {   "gameItem":   "fire",
+                    "operator":   "+",
+                    "changeAmt":  3
+      },
+      "msgs":   {   "okMsg":  "lit a fire (fire +3)",
+                    "errMsg": "Sorry, you need to have at least %i %s to do that - but, you (only) have %i %s!"
+      }
+    },
+    "vitals":   {
+      "take":   {   "gameItem":   "fatigue",
+                    "operator":   "+",
+                    "changeAmt":  5
+      },
+      "give":   {   "gameItem":   "cold",
+                    "operator":   "-",
+                    "changeAmt":  10          
+      },
+      "msgs":   {   "okMsg":  "Ahhhh, you feel warmer, that's nice! (cold -3)",    
+                    "errMsg": "Why waste wood, you're not cold right now"
+      }
+    },
+    "timeIncrement":  2
+  },
+
 
   "light": {
     "inventory":{

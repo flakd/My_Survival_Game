@@ -94,12 +94,32 @@ let second = {
     if (numTrue == numCalcs){
       for (var doAction_evalStr2 in doAction_evalStrs){
         eval(doAction_evalStrs[doAction_evalStr2]);
-        time+=timeInterval;        
+        //time+=timeInterval;
       }
       //eval(doAction_evalStr);
     }
     //return { calcSet, gameItemToChange_shortStr, gameItemToChange_fullStr, gameItemToChange, Operator_Str, changeAmt };
+    time = incrementTime(action,time).time;
+    doCounters(action,vitals);
+    return {time};
+
+  } //END check()
+
+} //END second Object
+
+function incrementTime(action,time){
+  time += action.timeIncrement;
+  return { time };
+}
+
+function doCounters(action,vitals){
+  var counterIncrement = action.timeIncrement;
+  for (var vital in vitals){
+    if(vital!="none"){
+      vitals[vital].bal+= vitals[vital].ctr * action.timeIncrement;
+    }
   }
 }
+
 
 module.exports = second;
