@@ -8,7 +8,7 @@ let parseJSONs = {
     "vitals":   {}, 
     "actions":  {}
   },
-  loadJSONs: function loadJSONs(){
+  loadJSONs: function loadJSONs(debug){
     //   FIGURE OUT THE BELOW for Typescript
     //var fileNames: String[]  = new Array(this.fileInfo.JSONfileNames);
 
@@ -19,8 +19,10 @@ let parseJSONs = {
       // write each array item (indiv fileName) to console
       var fileName = name + ".json";
       var fullPath = this.path + fileName;
-      l("%s: %s", name, fileName);
-      l(fullPath);
+      if (debug) {
+        l("%s: %s", name, fileName);
+        l(fullPath);
+      }
       var fsRead = fs.readFileSync(fullPath);
       names[name] = JSON.parse(fsRead);
     //});

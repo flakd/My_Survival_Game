@@ -41,7 +41,7 @@
     "dieOper":  ">=",
     "dieLimit": "100",
     "dieOkMsg": "You've died from exhaustion!!!",
-    "ctr":    10
+    "ctr":    8
   },    
   "none":     {
     "bal":    0, 

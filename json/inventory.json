@@ -31,6 +31,10 @@
     "bal":  0,
     "vis":  "GTzero"
   }, 
+  "meat": {
+    "bal":  0,
+    "vis":  "GTzero"
+  },   
   "H20":  {
     "bal":  0,
     "vis":  "GTzero"

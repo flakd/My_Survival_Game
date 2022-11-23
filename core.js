@@ -1,6 +1,6 @@
 const l = console.log;
 
-let second = {
+let core = {
   check: function check(inventory, vitals, action, time, timeInterval) {
     var calcSet, 
         gameItemToChange_shortStr,
@@ -20,14 +20,17 @@ let second = {
       var attribs = action[attribsLbl];
 
       for (var attribLbl in attribs) { //e.g. attrib = "calcs" or "msgs"
+        //take, give, msgs
         var attrib = attribs[attribLbl];
+        calcLbl = attribLbl;
+        //if (attribLbl == "calcs") {
+          if (attribLbl == "take" || attribLbl == "give") {
+            var calcs = attrib; // calcs=attrib = obj of subs and adds to inventory or vitals
 
-        if (attribLbl == "calcs") {
-          var calcs = attrib; // calcs=attrib = obj of subs and adds to inventory or vitals
-
-          for (var calcLbl in calcs) { //e.g. calcLbl (string) = "take" or "give"
+          //for (var calcLbl in calcs) { //e.g. calcLbl (string) = "take" or "give"
             numCalcs++;
-            calcSet = calcs[calcLbl]; // e.g. ENTIRE add or sub PROPERTY
+            //calcSet = calcs[calcLbl]; // e.g. ENTIRE add or sub PROPERTY
+            calcSet = attrib;
             gameItemToChange_shortStr = calcSet.gameItem; // e.g. "wood" (string)
             gameItemToChange_fullStr = attribsLbl + "." + gameItemToChange_shortStr;
             gameItemToChange = eval(gameItemToChange_fullStr);
@@ -88,7 +91,7 @@ let second = {
             numTrue++;
           
           }
-        }
+        //}
       }
     }
     if (numTrue == numCalcs){
@@ -108,18 +111,18 @@ let second = {
 } //END second Object
 
 function incrementTime(action,time){
-  time += action.timeIncrement;
+  time += action.duration;
   return { time };
 }
 
 function doCounters(action,vitals){
-  var counterIncrement = action.timeIncrement;
+  var counterIncrement = action.duration;
   for (var vital in vitals){
     if(vital!="none"){
-      vitals[vital].bal+= vitals[vital].ctr * action.timeIncrement;
+      vitals[vital].bal+= vitals[vital].ctr * action.duration;
     }
   }
 }
 
 
-module.exports = second;
+module.exports = core;
