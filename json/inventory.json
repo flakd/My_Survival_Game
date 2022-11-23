@@ -1,28 +1,42 @@
 {
-  "wood":     [0, "GTzero"],
-  "wood2":    {
+  "wood": {
     "bal":    50,
     "vis":    "GTzero"
   },
-  "trees":    [9999, "never"],
-  "fire":     [0, "GTzero"],  
-  "fire2":    {
-    "bal":    31,
-    "vis":    "GTzero"
+  "trees":{
+    "bal":  9999,
+    "vis":  "GTzero"
+  },    
+  "fire": {
+    "bal":  31,
+    "vis":  "GTzero"
   },  
-  "club":     [0, "GTzero"],  
-  "bow":      [0, "GTzero"],  
-  "arrows":   [0, "GTzero"],
-  "worms":    [0, "GTzero"],
-  "worm2":    {
-    "bal":    0,
-    "vis":    "GTzero"
+  "club": {
+    "bal":  0,
+    "vis":  "GTzero"
   },    
-  "fish":     [0, "GTzero"],  
-  "fish2":    {
-    "bal":    0,
-    "vis":    "GTzero"
+  "bow":  {
+    "bal":  0,
+    "vis":  "GTzero"
   },    
-  "H20":      [0, "GTzero"],  
-  "none":     [0, "never"]
+  "arrows": {
+    "bal":  0,
+    "vis":  "GTzero"
+  },    
+  "worm": {
+    "bal":  0,
+    "vis":  "GTzero"
+  },    
+  "fish": {
+    "bal":  0,
+    "vis":  "GTzero"
+  }, 
+  "H20":  {
+    "bal":  0,
+    "vis":  "GTzero"
+  },    
+  "none": {
+    "bal":  0,
+    "vis":  "never"
+  }    
 }

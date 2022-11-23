@@ -43,12 +43,12 @@
     "inventory":{
       "calcs":  {
         "take":    {
-          "gameItem":   "wood2",
+          "gameItem":   "wood",
           "operator":   "-",
           "changeAmt":  5
         },
         "give":  {
-          "gameItem":   "fire2",
+          "gameItem":   "fire",
           "operator":   "+",
           "changeAmt":  3
         }
@@ -61,12 +61,12 @@
     "vitals":   {
       "calcs":  {
         "take":    {
-          "gameItem":   "fati2",
+          "gameItem":   "fatigue",
           "operator":   "+",
           "changeAmt":  5
         },
         "give":    {
-          "gameItem":   "cold2",
+          "gameItem":   "cold",
           "operator":   "-",
           "changeAmt":  10          
         }
@@ -77,6 +77,44 @@
       }
     }
   },
+  "sleep": {
+    "inventory":{
+      "calcs":  {
+        "take":    {
+          "gameItem":   "none",
+          "operator":   "=",
+          "changeAmt":  0
+        },
+        "give":  {
+          "gameItem":   "none",
+          "operator":   "=",
+          "changeAmt":  0
+        }
+      },
+      "msgs":   {
+        "okMsg":  "Should not be an OK msg here for sleep",
+        "errMsg": "Should not be an ERR msg here for sleep"
+      }
+    },
+    "vitals":   {
+      "calcs":  {
+        "take":    {
+          "gameItem":   "fatigue",
+          "operator":   "+",
+          "changeAmt":  5
+        },
+        "give":    {
+          "gameItem":   "fatigue",
+          "operator":   "-",
+          "changeAmt":  20          
+        }
+      },
+      "msgs":   {      
+        "okMsg":  "Ahhhh, you feel warmer, that's nice! (cold -3)",    
+        "errMsg": "Why waste wood, you're not cold right now"
+      }
+    }
+  },  
   "feed": {
     "fromInv": ["wood", "-", "1"],
     "toInv":   ["fire", "+", "5"],

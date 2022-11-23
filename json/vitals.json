@@ -1,37 +1,28 @@
 {
-  "hunger":   [10, "always"],
-  "hung2":    {
+  "hunger":    {
     "bal":    10,
     "vis":    "always"
   },    
-  "thirst":   [10, "always"],
-  "thir2":    {
+  "thirst":    {
     "bal":    10,
     "vis":    "always"
   },    
-  "cold":     [30, "always"],
-  "cold2":    {
+  "cold":    {
     "bal":    30,
     "vis":    "always",
     "doOper": ">0",
     "dead":   ">=100"    
   },    
   "fatigue": {
-    "bal":    40,
-    "vis":    "always",
-    "doOper": ">0",
-    "dead":   ">=100"    
+    "bal":      40,
+    "vis":      "always",
+    "doOper":   "<=",
+    "doLimit":  "0",
+    "doErrMsg": "You're completely rested",
+    "dieOper":  ">=",
+    "dieLimit": "100",
+    "dieOkMsg":   "You've died from exhaustion!!!"
   },    
-  "fati2": {
-    "bal":    40,
-    "vis":    "always",
-    "doOper": ">0",
-    "dead":   ">=100"    
-  },    
-  "dang2":  {
-    "bal":    40, 
-    "vis":    "always"
-  },
   "none":     {
     "bal":    0, 
     "vis":    "never"
