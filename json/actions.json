@@ -10,7 +10,7 @@
       "give":   {   "gameItem":   "none",     "operator":   "=",  "changeAmt":  0  },
       "msgs":   {   "okMsg":   "You feel a bit more tired (fatigue +5)", "errMsg": "Should be no err msg here for CHOP"  }
     },
-    "duration":  8
+    "duration":  1
   },
   
   "hunt": {
@@ -22,9 +22,9 @@
     "vitals":   { 
       "take":   {   "gameItem":   "fatigue",  "operator":   "+",  "changeAmt":  10   },
       "give":   {   "gameItem":   "none",     "operator":   "=",  "changeAmt":  0  },
-      "msgs":   {   "okMsg":  "Ahhhh, you feel tired (fatigue +64), but accomplished - you're a warrior!", "errMsg": "ERROR MSG here for 'hunt' ??"  }
+      "msgs":   {   "okMsg":  "Ahhhh, you feel tired (fatigue +60), but accomplished - you're a warrior!", "errMsg": "ERROR MSG here for 'hunt' ??"  }
     },
-    "duration":  8
+    "duration":  6
   },
 
 
@@ -49,11 +49,28 @@
       "msgs":   {   "okMsg":  "Should not be an OK msg here for sleep", "errMsg": "Should not be an ERR msg here for sleep" }
     },
     "vitals":   {
-      "take":   {   "gameItem":   "fatigue",  "operator":   "+",  "changeAmt":  5   },
-      "give":   {   "gameItem":   "fatigue",  "operator":   "-",  "changeAmt":  20  },
-      "msgs":   {   "okMsg":  "Ahhhh, you feel warmer, that's nice! (cold -3)", "errMsg": "Why waste wood, you're not cold right now" }
-    }
+      "take":   {   "gameItem":   "none",     "operator":   "=",  "changeAmt":  0   },
+      "give":   {   "gameItem":   "fatigue",  "operator":   "-",  "changeAmt":  15  },
+      "msgs":   {   "okMsg":  "Ahhhh, you feel rested, that's nice! (fatigue -20)", "errMsg": "You're not tired right now" }
+    },
+    "duration":  8
   },  
+
+
+  "eatmeat": {
+    "inventory":{
+      "take":   {   "gameItem":   "meat",     "operator":   "-",  "changeAmt":  1   },
+      "give":   {   "gameItem":   "none",     "operator":   "=",  "changeAmt":  0   },
+      "msgs":   {   "okMsg":  "You ate some meat, yummy (meat -1)", "errMsg": "Sorry, you need to have at least %i %s to do that - but, you (only) have %i %s!" }
+    },
+    "vitals":   {
+      "take":   {   "gameItem":   "fatigue",  "operator":   "+",  "changeAmt":  2   },
+      "give":   {   "gameItem":   "hunger",  "operator":   "-",  "changeAmt":  10  },
+      "msgs":   {   "okMsg":  "Ahhhh, you feel warmer, that's nice! (cold -3)", "errMsg": "Why waste wood, you're not cold right now" }
+    },
+    "duration":  1
+  },  
+
 
   "feed": {
     "fromInv": ["wood", "-", "1"],
@@ -73,12 +90,22 @@
     "vitals":  ["none",  "=", "0"],
     "verb": "made a bow (bow +1)"
   },    
-  "arrows":  {
-    "fromInv": ["wood", "-", "2"],
-    "toInv":   ["arrows", "=", "4"],
-    "vitals":  ["none",  "=", "0"],
-    "verb": "made arrows (arrows +4)"    
-  },    
+
+  "arrows": {
+    "inventory":{
+      "take":   {   "gameItem":   "wood",     "operator":   "-",  "changeAmt":  2   },
+      "give":   {   "gameItem":   "arrows",   "operator":   "+",  "changeAmt":  4   },
+      "msgs":   {   "okMsg":  "made arrows (arrows +4)", "errMsg": "Sorry, you need to have at least %i %s to do that - but, you (only) have %i %s!" }
+    },
+    "vitals":   {
+      "take":   {   "gameItem":   "fatigue",  "operator":   "+",  "changeAmt":  7   },
+      "give":   {   "gameItem":   "none",  "operator":   "=",  "changeAmt":  0  },
+      "msgs":   {   "okMsg":   "Wow, making arrows is harder than you thought (fatigue +7)", "errMsg": "Should be no err msg here for ARROWS"  }
+    },
+    "duration":  3
+  },  
+
+
   "douse":  {
     "fromInv": ["none",  "=", "0"],
     "toInv":   ["fire", "=", "0"],

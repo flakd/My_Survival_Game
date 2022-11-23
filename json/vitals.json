@@ -1,6 +1,6 @@
 {
   "hunger":    {
-    "bal":    10,
+    "bal":    0,
     "vis":    "always",
     "doOper":   "<=",
     "doLimit":  "0",
@@ -8,10 +8,10 @@
     "dieOper":  ">=",
     "dieLimit": "100",
     "dieOkMsg": "You've died from lack of food!!!",    
-    "ctr":    1
+    "dfltInc":    1
   },    
   "thirst":    {
-    "bal":    10,
+    "bal":    0,
     "vis":    "always",
     "doOper":   "<=",
     "doLimit":  "0",
@@ -19,7 +19,7 @@
     "dieOper":  ">=",
     "dieLimit": "100",
     "dieOkMsg": "You've died from lack of water!!!",    
-    "ctr":    3
+    "dfltInc":    4
   },    
   "cold":    {
     "bal":    30,
@@ -30,10 +30,10 @@
     "dieOper":  ">=",
     "dieLimit": "100",
     "dieOkMsg": "You've frozen to death!!!",
-    "ctr":    5
+    "dfltInc":    3
   },    
   "fatigue": {
-    "bal":      40,
+    "bal":      0,
     "vis":      "always",
     "doOper":   "<=",
     "doLimit":  "0",
@@ -41,7 +41,7 @@
     "dieOper":  ">=",
     "dieLimit": "100",
     "dieOkMsg": "You've died from exhaustion!!!",
-    "ctr":    8
+    "dfltInc":    5
   },    
   "none":     {
     "bal":    0, 

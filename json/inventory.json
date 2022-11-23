@@ -1,45 +1,56 @@
 {
   "wood": {
-    "bal":    50,
-    "vis":    "GTzero"
+    "key":  "wood",
+    "bal":  50,
+    "vis":  "GTzero"
   },
   "trees":{
+    "key":  "trees",    
     "bal":  9999,
     "vis":  "GTzero"
   },    
   "fire": {
+    "key":  "fire",
     "bal":  31,
     "vis":  "GTzero"
   },  
-  "club": {
+  "clubs": {
+    "key":  "clubs",
     "bal":  0,
     "vis":  "GTzero"
   },    
-  "bow":  {
+  "bows":  {
+    "key":  "bows",
     "bal":  0,
     "vis":  "GTzero"
   },    
   "arrows": {
+    "key":  "arrows",
     "bal":  0,
     "vis":  "GTzero"
   },    
-  "worm": {
+  "worms": {
+    "key":  "worms",
     "bal":  0,
     "vis":  "GTzero"
   },    
   "fish": {
+    "key":  "fish",
     "bal":  0,
     "vis":  "GTzero"
   }, 
   "meat": {
+    "key":  "meat",
     "bal":  0,
     "vis":  "GTzero"
   },   
   "H20":  {
+    "key":  "H20",
     "bal":  0,
     "vis":  "GTzero"
   },    
   "none": {
+    "key":  "none",
     "bal":  0,
     "vis":  "never"
   }    

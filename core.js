@@ -56,7 +56,7 @@ let core = {
             if ( !eval(inventoryDflt_cond_evalStr[attribsLbl+"_"+calcLbl]) ){
               if (attribsLbl=="inventory"){
                 l(attribs.msgs.errMsg, changeAmt, gameItemToChange_shortStr, gameItemToChange.bal, gameItemToChange_shortStr);                
-                return;
+                return {time};
               }          
             } else {
               doAction_evalStrs[attribsLbl+"_"+calcLbl] = doAction_evalStr;
@@ -66,7 +66,7 @@ let core = {
                 vitalsTake_cond_evalStr = "gameItemToChange.bal" + Operator_Str + changeAmt + "gameItemToChange.dieOper" + "gameItemToChange.dieLimit";
                 if (eval(vitalsTake_cond_evalStr)) {
                   l( eval("gameItemToChange.dieMsg") );   //e.g. you died... "of exhaustion", "by freezing to death", etc.
-                  return;   // TODO:  change to EXIT (game over)
+                  return {time};;   // TODO:  change to EXIT (game over)
                 } else {
                   doAction_evalStrs[attribsLbl+"_"+calcLbl] = doAction_evalStr;
                 }
@@ -119,7 +119,7 @@ function doCounters(action,vitals){
   var counterIncrement = action.duration;
   for (var vital in vitals){
     if(vital!="none"){
-      vitals[vital].bal+= vitals[vital].ctr * action.duration;
+      vitals[vital].bal+= vitals[vital].dfltInc * action.duration;
     }
   }
 }
