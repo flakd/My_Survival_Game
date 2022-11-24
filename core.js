@@ -18,14 +18,14 @@ let core = {
     //  ASSUMING that this action is valid, we increment vitals by:
     //        vitals[vital].bal+= vitals[vital].dfltInc * action.duration;
     //  BUT before we do that, we need to save the original values so that 
-    //  we can REVERSE the operation if the vitals are too low or too 
-    //  high... b/c the operation itself depends on the vital LEVELS at 
+    //  we can REVERSE/ROLLBACK the operation if the vitals are too low or 
+    //  too high... b/c the operation itself depends on the vital LEVELS at 
     //  the begining of the round, BUT we need the levels AFTER the 
     //  natural / default_incr * duration
     var vitalsTmpStorage = {};
-    vitalsTmpStorage = storeVitals(vitals);
+    vitalsTmpStorage = core.storeVitals(vitals);
 
-    doCounters(action,vitals);
+    core.doCounters(action,vitals);
 
     for (var attribsLbl in action) { // e.g. attribsLbl = "inventory" or "vitals"
       var attribs = action[attribsLbl];
@@ -111,6 +111,12 @@ let core = {
                 continue;
               }
               if (eval(vitalsTake_cond1_evalStr)) {
+
+                //  You died HERE so, we want to immediately set this VITAL to 100, 
+                //  otherwise the action fails and we don't INCREASE the VITAL by 
+                //  whatever we were supposed to from the action/anything at all
+                gameItemToChange.bal = 100;
+
                 l( gameItemToChange.dieMsg );   //e.g. you died... "of exhaustion", "by freezing to death", etc.
                 return {time};;   // TODO:  change to EXIT (game over)
               } else {
@@ -160,51 +166,67 @@ let core = {
         eval(doAction_evalStrs[doAction_evalStr2]);
         //time+=timeInterval;
       }
-      time = incrementTime(action,time).time;
+      time = core.incrementTime(action,time).time;
     } else {
-      reverseCounters(vitalsTmpStorage,vitals);
+      core.rollbackCounters(vitalsTmpStorage,vitals);
     }
     return {time};
 
-  } //END check()
+  }, //END check()
 
-} //END second Object
+  storeVitals: function storeVitals(vitals) {
+    var vitalsTmpStorage = {
+      "hunger_bal": vitals.hunger.bal,
+      "thirst_bal": vitals.thirst.bal,
+      "cold_bal": vitals.cold.bal,
+      "fatigue_bal": vitals.fatigue.bal
+    };
+    return vitalsTmpStorage;
+  },
 
-function storeVitals(vitals) {
-  var vitalsTmpStorage = {
-    "hunger_bal": vitals.hunger.bal,
-    "thirst_bal": vitals.thirst.bal,
-    "cold_bal": vitals.cold.bal,
-    "fatigue_bal": vitals.fatigue.bal
-  };
-  return vitalsTmpStorage;
-}
-function resetVitals(vitals) {
-  vitals.hunger.bal = 0;
-  vitals.thirst.bal = 0;
-  vitals.cold.bal = 0;
-  vitals.fatigue.bal = 0;
-}
-function reverseCounters(vitalsTmpStorage,vitals) {
-  vitals.hunger.bal = vitalsTmpStorage.hunger_bal;
-  vitals.thirst.bal = vitalsTmpStorage.thirst_bal;
-  vitals.cold.bal = vitalsTmpStorage.cold_bal;
-  vitals.fatigue.bal = vitalsTmpStorage.fatigue_bal;
-}
+  resetVitals: function resetVitals(vitals) {
+    vitals.hunger.bal = 0;
+    vitals.thirst.bal = 0;
+    vitals.cold.bal = 0;
+    vitals.fatigue.bal = 0;
+  },
 
-function incrementTime(action,time){
-  time += action.duration;
-  return { time };
-}
+  rollbackCounters: function rollbackCounters(vitalsTmpStorage,vitals) {
+    vitals.hunger.bal = vitalsTmpStorage.hunger_bal;
+    vitals.thirst.bal = vitalsTmpStorage.thirst_bal;
+    vitals.cold.bal = vitalsTmpStorage.cold_bal;
+    vitals.fatigue.bal = vitalsTmpStorage.fatigue_bal;
+  },
 
-function doCounters(action,vitals){
-  var counterIncrement = action.duration;
-  for (var vital in vitals){
-    if(vital!="none"){
-      vitals[vital].bal+= vitals[vital].dfltInc * action.duration;
+  incrementTime: function incrementTime(action,time){
+    time += action.duration;
+    return { time };
+  },
+
+  doCounters: function doCounters(action,vitals){
+    var counterIncrement = action.duration;
+    var numDeath = 0;
+    for (var vital in vitals){
+      if(vital!="none"){
+        vitals[vital].bal+= vitals[vital].dfltInc * action.duration;
+        if (vitals[vital].bal >= 100) {
+          l(vitals[vital].dieMsg);
+          vitals[vital].bal = 100;
+          numDeath++;
+        }
+      }
+      if (numDeath > 0) {
+        l("\n\n\n");
+        l("GAME OVER")
+        l("\n\n");      
+        l("Would you like to play again?")      
+
+      }
     }
   }
-}
+
+} //END Core Object
+
 
 
 module.exports = core;

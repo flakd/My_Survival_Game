@@ -15,6 +15,7 @@ const e=function(msg){console.error("**ERROR**: %s",msg)};
 var time = 0;   //12 midnight
 var timeInterval = 1;  //1 hour
 var isQuit = false;
+var isGameOver = false;
 
 parseJSONs.loadJSONs();
 var inventory = parseJSONs.Objects.inventory;
@@ -49,6 +50,18 @@ rl.on('line', (line) => {
       l("Are you sure you want to quit? (y/n, Y/N");
       isQuit = true;
     }    
+    if (isGameOver) {
+      if (line=="n" || line=="N") {
+        console.log("OK then.  Thank you for playing!  Goodbye and play again soon!");
+        rl.close();
+      } else 
+      if (line=="y" || line=="Y") {
+        isGameOver = false;
+        resetVitals();
+        output.printTitleBanner(time,c);
+        return;
+      }
+    }     
     if (isQuit) {
       if (line=="y" || line=="Y") {
         console.log("OK then.  Thank you for playing!  Goodbye and play again soon!");
