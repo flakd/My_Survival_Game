@@ -141,7 +141,7 @@ let core = {
                 // the vitals you're trying to satisfy (hunger) is already ZERO, so you're NOT HUNGRY -- DISALLOW
 
                 l( gameItemToChange.doErrMsg );    //e.g. "you're not cold", "you're not hungry"
-                numTrue = numTrue;
+                numTrue = numTrue;                // no increment, should cause ENTIRE ACTION to FAIL
                 return {time};                    // TODO:  change to EXIT (game over) ??
               } else                              // nonZERO, so some positive number in this vitals value
               if (eval(vitalsGive_cond1_evalStr)) {  // the vitals you're trying to satisfy (hunger) - hunger cost < ZERO, so set to ZERO -- ALLOW
@@ -212,15 +212,15 @@ let core = {
         if (vitals[vital].bal >= 100) {
           l(vitals[vital].dieMsg);
           vitals[vital].bal = 100;
-          numDeath++;
-        }
-      }
-      if (numDeath > 0) {
-        l("\n\n\n");
-        l("GAME OVER")
-        l("\n\n");      
-        l("Would you like to play again?")      
-
+          //numDeath++;
+        //}
+      //}
+      //if (numDeath > 0) {
+          l("\n\n\n");
+          l("GAME OVER")
+          l("\n\n");      
+          l("Would you like to play again?")      
+          }
       }
     }
   }

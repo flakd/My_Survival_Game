@@ -1,6 +1,7 @@
 {
   "chop": {
-    "inventory":{
+    "key":        "chop",
+    "inventory":  {
       "give":   {   "gameItem":   "wood",     "operator":   "+",  "changeAmt":  5   },
       "take":   {   "gameItem":   "trees",    "operator":   "-",  "changeAmt":  1   },
       "msgs":   {   "okMsg":  "chopped wood (wood +1)", "errMsg": "Sorry, you need to have at least %i %s to do that - but, you (only) have %i %s!" }
@@ -10,10 +11,11 @@
       "take":   {   "gameItem":   "fatigue",  "operator":   "+",  "changeAmt":  5   },
       "msgs":   {   "okMsg":   "You feel a bit more tired (fatigue +5)", "errMsg": "Should be no err msg here for CHOP"  }
     },
-    "duration":  1
+    "duration":   1
   },
   
   "hunt": {
+    "key":        "hunt",
     "inventory":{
       "give":   {   "gameItem":   "meat",     "operator":   "+",  "changeAmt":  1   },
       "take":   {   "gameItem":   "arrows",   "operator":   "-",  "changeAmt":  3   },
@@ -28,6 +30,7 @@
   },
 
   "light": {
+    "key":        "light",
     "inventory":{
       "give":   {   "gameItem":   "fire",     "operator":   "+",  "changeAmt":  3   },
       "take":   {   "gameItem":   "wood",     "operator":   "-",  "changeAmt":  5   },
@@ -42,6 +45,7 @@
   },
 
   "sleep": {
+    "key":        "sleep",
     "inventory":{
       "give":   {   "gameItem":   "none",     "operator":   "=",  "changeAmt":  0   },
       "take":   {   "gameItem":   "none",     "operator":   "=",  "changeAmt":  0   },
@@ -56,6 +60,7 @@
   },  
 
   "eatmeat": {
+    "key":        "eatmeat",
     "inventory":{
       "give":   {   "gameItem":   "none",     "operator":   "=",  "changeAmt":  0   },
       "take":   {   "gameItem":   "meat",     "operator":   "-",  "changeAmt":  1   },
@@ -70,6 +75,7 @@
   },  
 
   "arrows": {
+    "key":        "arrows",
     "inventory":{
       "give":   {   "gameItem":   "arrows",   "operator":   "+",  "changeAmt":  4   },
       "take":   {   "gameItem":   "wood",     "operator":   "-",  "changeAmt":  2   },
@@ -84,6 +90,7 @@
   },  
  
   "fetch": {
+    "key":        "fetch",
     "inventory":{
       "give":   {   "gameItem":   "H20",      "operator":   "+",  "changeAmt":  5   },
       "take":   {   "gameItem":   "none",     "operator":   "=",  "changeAmt":  0   },
@@ -98,6 +105,7 @@
   },  
 
   "drink": {
+    "key":        "drink",
     "inventory":{
       "give":   {   "gameItem":   "none",     "operator":   "=",  "changeAmt":  0   },
       "take":   {   "gameItem":   "H20",      "operator":   "-",  "changeAmt":  1   },
@@ -112,6 +120,7 @@
   },
 
   "fish": {
+    "key":        "fish",
     "inventory":{
       "give":   {   "gameItem":   "fish",     "operator":   "+",  "changeAmt":  1   },
       "take":   {   "gameItem":   "worms",    "operator":   "-",  "changeAmt":  1   },
@@ -126,6 +135,7 @@
   },  
 
   "dig": {
+    "key":        "dig",
     "inventory":{
       "give":   {   "gameItem":   "worms",    "operator":   "+",  "changeAmt":  1   },
       "take":   {   "gameItem":   "none",     "operator":   "=",  "changeAmt":  0   },
@@ -140,6 +150,7 @@
   },  
 
   "eatfish": {
+    "key":        "eatfish",
     "inventory":{
       "give":   {   "gameItem":   "none",     "operator":   "=",  "changeAmt":  0   },
       "take":   {   "gameItem":   "fish",     "operator":   "-",  "changeAmt":  1   },
