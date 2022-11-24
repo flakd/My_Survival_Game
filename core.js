@@ -171,13 +171,19 @@ let core = {
 } //END second Object
 
 function storeVitals(vitals) {
-  vitalsTmpStorage = {
+  var vitalsTmpStorage = {
     "hunger_bal": vitals.hunger.bal,
     "thirst_bal": vitals.thirst.bal,
     "cold_bal": vitals.cold.bal,
     "fatigue_bal": vitals.fatigue.bal
   };
   return vitalsTmpStorage;
+}
+function resetVitals(vitals) {
+  vitals.hunger.bal = 0;
+  vitals.thirst.bal = 0;
+  vitals.cold.bal = 0;
+  vitals.fatigue.bal = 0;
 }
 function reverseCounters(vitalsTmpStorage,vitals) {
   vitals.hunger.bal = vitalsTmpStorage.hunger_bal;
