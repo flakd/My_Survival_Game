@@ -11,7 +11,7 @@
   },    
   "fire": {
     "key":  "fire",
-    "bal":  31,
+    "bal":  0,
     "vis":  "GTzero"
   },  
   "clubs": {

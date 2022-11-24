@@ -15,6 +15,18 @@ let core = {
     var numTrue=0;
     var numCalcs=0;
 
+    //  **********************
+    //  ASSUMING that this action is valid, we increment vitals by:
+    //        vitals[vital].bal+= vitals[vital].dfltInc * action.duration;
+    //  BUT before we do that, we need to save the original values so that 
+    //  we can REVERSE the operation if the vitals are too low or too 
+    //  high... b/c the operation itself depends on the vital LEVELS at 
+    //  the begining of the round, BUT we need the levels AFTER the 
+    //  natural / default_incr * duration
+    var vitalsTmpStorage = {};
+    vitalsTmpStorage = storeVitals(vitals);
+
+    doCounters(action,vitals);
 
     for (var attribsLbl in action) { // e.g. attribsLbl = "inventory" or "vitals"
       var attribs = action[attribsLbl];
@@ -42,9 +54,19 @@ let core = {
               //doAction_evalStr = "gameItemToChange.bal" + Operator_Str + changeAmt;
               doAction_evalStr = gameItemToChange_fullStr + ".bal" + Operator_Str + changeAmt; 
               var tmp = 0;
-            }
-            else if (Operator_Str == "+" || Operator_Str == "-") {
-              doAction_evalStr = gameItemToChange_fullStr + ".bal" + "=" + gameItemToChange_fullStr + ".bal" + Operator_Str + changeAmt;
+            } else {
+              if (Operator_Str == "+" || Operator_Str == "-") {
+                if (attribsLbl=="inventory"){
+                  doAction_evalStr  = gameItemToChange_fullStr + ".bal" + "=" 
+                                    + gameItemToChange_fullStr + ".bal" 
+                                    + Operator_Str + changeAmt;
+                } else
+                if (attribsLbl=="vitals"){
+                  doAction_evalStr  = gameItemToChange_fullStr + ".bal" + "=" 
+                                    + gameItemToChange_fullStr + ".bal" 
+                                    + Operator_Str + " (" + changeAmt + " * " + action.duration + ") ";
+                }
+              }
             }
 
             var tmpCondEval =  "gameItemToChange.bal" + Operator_Str + changeAmt;
@@ -61,21 +83,23 @@ let core = {
             } else {
               doAction_evalStrs[attribsLbl+"_"+calcLbl] = doAction_evalStr;
             }          
-            if (attribsLbl=="vitals"){
-              if (calcSet=="take"){
-                vitalsTake_cond_evalStr = "gameItemToChange.bal" + Operator_Str + changeAmt + "gameItemToChange.dieOper" + "gameItemToChange.dieLimit";
+            if (attribsLbl=="vitals" && gameItemToChange.key != "none"){
+              //if (calcSet=="take"){
+              if (attribLbl=="take"){
+                vitalsTake_cond_evalStr = "gameItemToChange.bal" + Operator_Str + changeAmt + gameItemToChange.dieOper + gameItemToChange.dieLimit;
                 if (eval(vitalsTake_cond_evalStr)) {
-                  l( eval("gameItemToChange.dieMsg") );   //e.g. you died... "of exhaustion", "by freezing to death", etc.
+                  l( gameItemToChange.dieMsg );   //e.g. you died... "of exhaustion", "by freezing to death", etc.
                   return {time};;   // TODO:  change to EXIT (game over)
                 } else {
                   doAction_evalStrs[attribsLbl+"_"+calcLbl] = doAction_evalStr;
                 }
               }
-              if (calcSet=="give"){
-                vitalsGive_cond_evalStr = "gameItemToChange.bal" + Operator_Str + changeAmt + "gameItemToChange.doOper" + "gameItemToChange.doLimit";
+              //if (calcSet=="give"){
+              if (attribLbl=="give"){
+                vitalsGive_cond_evalStr = "gameItemToChange.bal" + Operator_Str + changeAmt + gameItemToChange.doOper + gameItemToChange.doLimit;
                 if (eval(vitalsGive_cond_evalStr)) {
-                  l( eval("gameItemToChange.doErr") );    //e.g. "you're not cold", "you're not hungry"
-                  return;   // TODO:  change to EXIT (game over)
+                  l( gameItemToChange.doErrMsg );    //e.g. "you're not cold", "you're not hungry"
+                  return {time};   // TODO:  change to EXIT (game over)
                 } else {
                   doAction_evalStrs[attribsLbl+"_"+calcLbl] = doAction_evalStr;
                 }
@@ -99,16 +123,31 @@ let core = {
         eval(doAction_evalStrs[doAction_evalStr2]);
         //time+=timeInterval;
       }
-      //eval(doAction_evalStr);
+      time = incrementTime(action,time).time;
+    } else {
+      reverseCounters(vitalsTmpStorage,vitals);
     }
-    //return { calcSet, gameItemToChange_shortStr, gameItemToChange_fullStr, gameItemToChange, Operator_Str, changeAmt };
-    time = incrementTime(action,time).time;
-    doCounters(action,vitals);
     return {time};
 
   } //END check()
 
 } //END second Object
+
+function storeVitals(vitals) {
+  vitalsTmpStorage = {
+    "hunger_bal": vitals.hunger.bal,
+    "thirst_bal": vitals.thirst.bal,
+    "cold_bal": vitals.cold.bal,
+    "fatigue_bal": vitals.fatigue.bal
+  };
+  return vitalsTmpStorage;
+}
+function reverseCounters(vitalsTmpStorage,vitals) {
+  vitals.hunger.bal = vitalsTmpStorage.hunger_bal;
+  vitals.thirst.bal = vitalsTmpStorage.thirst_bal;
+  vitals.cold.bal = vitalsTmpStorage.cold_bal;
+  vitals.fatigue.bal = vitalsTmpStorage.fatigue_bal;
+}
 
 function incrementTime(action,time){
   time += action.duration;

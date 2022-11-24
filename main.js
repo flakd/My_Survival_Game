@@ -36,7 +36,7 @@ rl.on('line', (line) => {
     if (action.length==0) { 
       e("**ERROR**:  action(actions[line]) is present, but empty or undefined"); return;
     }
-    if (! (time = core.check(inventory, vitals, action, time, timeInterval).time) ){
+    if (! (time = core.check(inventory, vitals, action, time).time) ){
       e("while executing core.check()");
     }
     // attribs is what stats/attributes we're going to change:  AON either inventory or vitals

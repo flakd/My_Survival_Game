@@ -1,0 +1,42 @@
+"feed": {
+  "fromInv": ["wood", "-", "1"],
+  "toInv":   ["fire", "+", "5"],
+  "vitals":  ["cold",  "-", "5"],
+  "verb": "fed the fire (fed +5)"
+},
+"club":  {
+  "fromInv": ["wood", "-", "3"],
+  "toInv":   ["club", "=", "1"],
+  "vitals":  ["none",  "=", "0"],
+  "verb": "made a club (club +1)"
+},    
+"bow":  {
+  "fromInv": ["wood", "-", "10"],
+  "toInv":   ["bow", "=", "1"],
+  "vitals":  ["none",  "=", "0"],
+  "verb": "made a bow (bow +1)"
+},      
+"douse":  {
+  "fromInv": ["none",  "=", "0"],
+  "toInv":   ["fire", "=", "0"],
+  "vitals":  ["none",  "=", "0"],
+  "verb": "put out the fire"
+},
+"fish": {
+  "fromInv": ["worms",  "-", "1"],
+  "toInv":   ["fish",  "+", "1"],
+  "vitals":  ["none",  "=", "0"],
+  "verb": "caught a fish (fish +1)"
+},
+"dig": {
+  "fromInv": ["none",  "=", "0"],
+  "toInv":   ["worms",  "+", "1"],
+  "vitals":  ["none",  "=", "0"],
+  "verb": "found a worm (worms +1)"
+},
+"eatfish": {
+  "fromInv": ["fish",  "-", "1"],
+  "toInv":   ["none",  "=", "0"],
+  "vitals":   ["hunger",  "-", "5"],
+  "verb": "Yummy, you ate something - your tummy is fuller (hunger -5)"
+}

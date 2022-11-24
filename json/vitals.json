@@ -1,5 +1,6 @@
 {
   "hunger":    {
+    "key":    "hunger",
     "bal":    0,
     "vis":    "always",
     "doOper":   "<=",
@@ -7,10 +8,11 @@
     "doErrMsg": "You're not hungry",
     "dieOper":  ">=",
     "dieLimit": "100",
-    "dieOkMsg": "You've died from lack of food!!!",    
+    "dieMsg": "You've died from lack of food!!!",    
     "dfltInc":    1
   },    
   "thirst":    {
+    "key":    "thirst",
     "bal":    0,
     "vis":    "always",
     "doOper":   "<=",
@@ -18,10 +20,11 @@
     "doErrMsg": "You're not thirsty at all",
     "dieOper":  ">=",
     "dieLimit": "100",
-    "dieOkMsg": "You've died from lack of water!!!",    
+    "dieMsg": "You've died from lack of water!!!",    
     "dfltInc":    4
   },    
   "cold":    {
+    "key":    "cold",
     "bal":    30,
     "vis":    "always",
     "doOper":   "<=",
@@ -29,22 +32,24 @@
     "doErrMsg": "You're not cold",
     "dieOper":  ">=",
     "dieLimit": "100",
-    "dieOkMsg": "You've frozen to death!!!",
+    "dieMsg": "You've frozen to death!!!",
     "dfltInc":    3
   },    
   "fatigue": {
-    "bal":      0,
+    "key":      "fatigue",
+    "bal":      10,
     "vis":      "always",
     "doOper":   "<=",
     "doLimit":  "0",
     "doErrMsg": "You're completely rested",
     "dieOper":  ">=",
     "dieLimit": "100",
-    "dieOkMsg": "You've died from exhaustion!!!",
+    "dieMsg": "You've died from exhaustion!!!",
     "dfltInc":    5
   },    
   "none":     {
-    "bal":    0, 
-    "vis":    "never"
+    "key":      "none",
+    "bal":      0, 
+    "vis":      "never"
   }
 }
