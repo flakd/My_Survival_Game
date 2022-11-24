@@ -1,13 +1,13 @@
 {
   "wood": {
     "key":  "wood",
-    "bal":  50,
+    "bal":  0,
     "vis":  "GTzero"
   },
   "trees":{
     "key":  "trees",    
     "bal":  9999,
-    "vis":  "GTzero"
+    "vis":  "never"
   },    
   "fire": {
     "key":  "fire",

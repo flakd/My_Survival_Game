@@ -2,8 +2,7 @@ const l = console.log;
 
 let core = {
   check: function check(inventory, vitals, action, time, timeInterval) {
-    var calcSet, 
-        gameItemToChange_shortStr,
+    var gameItemToChange_shortStr,
         gameItemToChange_fullStr,
         gameItemToChange,
         Operator_Str,
@@ -11,7 +10,7 @@ let core = {
     ;    
     var doAction_evalStrs = {};
     var inventoryDflt_cond_evalStr = {};
-    var gameItemsToChange_evalStrs = {};
+    //var gameItemsToChange_evalStrs = {};
     var numTrue=0;
     var numCalcs=0;
 
@@ -34,91 +33,129 @@ let core = {
       for (var attribLbl in attribs) { //e.g. attrib = "calcs" or "msgs"
         //take, give, msgs
         var attrib = attribs[attribLbl];
-        calcLbl = attribLbl;
-        //if (attribLbl == "calcs") {
-          if (attribLbl == "take" || attribLbl == "give") {
-            var calcs = attrib; // calcs=attrib = obj of subs and adds to inventory or vitals
 
-          //for (var calcLbl in calcs) { //e.g. calcLbl (string) = "take" or "give"
-            numCalcs++;
-            //calcSet = calcs[calcLbl]; // e.g. ENTIRE add or sub PROPERTY
-            calcSet = attrib;
-            gameItemToChange_shortStr = calcSet.gameItem; // e.g. "wood" (string)
-            gameItemToChange_fullStr = attribsLbl + "." + gameItemToChange_shortStr;
-            gameItemToChange = eval(gameItemToChange_fullStr);
-            Operator_Str = calcSet.operator;
-            changeAmt = calcSet.changeAmt;
+        if (attribLbl == "take" || attribLbl == "give") {
+          var calcs = attrib; // calcs=attrib = obj of subs and adds to inventory or vitals
 
-            var doAction_evalStr = "";
-            if (Operator_Str == "=") {
-              //doAction_evalStr = "gameItemToChange.bal" + Operator_Str + changeAmt;
-              doAction_evalStr = gameItemToChange_fullStr + ".bal" + Operator_Str + changeAmt; 
-              var tmp = 0;
-            } else {
-              if (Operator_Str == "+" || Operator_Str == "-") {
-                if (attribsLbl=="inventory"){
-                  doAction_evalStr  = gameItemToChange_fullStr + ".bal" + "=" 
-                                    + gameItemToChange_fullStr + ".bal" 
-                                    + Operator_Str + changeAmt;
-                } else
-                if (attribsLbl=="vitals"){
-                  doAction_evalStr  = gameItemToChange_fullStr + ".bal" + "=" 
-                                    + gameItemToChange_fullStr + ".bal" 
-                                    + Operator_Str + " (" + changeAmt + " * " + action.duration + ") ";
-                }
+          numCalcs++;
+          gameItemToChange_shortStr = attrib.gameItem; // e.g. "wood" (string)
+          gameItemToChange_fullStr = attribsLbl + "." + gameItemToChange_shortStr;
+          gameItemToChange = eval(gameItemToChange_fullStr);
+          Operator_Str = attrib.operator;
+          changeAmt = attrib.changeAmt;
+
+          var doAction_evalStr = "";
+          if (Operator_Str == "=") {
+            //doAction_evalStr = "gameItemToChange.bal" + Operator_Str + changeAmt;
+            doAction_evalStr = gameItemToChange_fullStr + ".bal" + Operator_Str + changeAmt; 
+            var tmp = 0;
+          } else {
+            if (Operator_Str == "+" || Operator_Str == "-") {
+              if (attribsLbl=="inventory"){
+                doAction_evalStr  = gameItemToChange_fullStr + ".bal" + "=" 
+                                  + gameItemToChange_fullStr + ".bal" 
+                                  + Operator_Str + changeAmt;
+              } else
+              if (attribsLbl=="vitals"){
+                doAction_evalStr  = gameItemToChange_fullStr + ".bal" + "=" 
+                                  + gameItemToChange_fullStr + ".bal" 
+                                  + Operator_Str + " (" + changeAmt + " * " + action.duration + ") ";
               }
             }
+          }
 
-            var tmpCondEval =  "gameItemToChange.bal" + Operator_Str + changeAmt;
-            eval(tmpCondEval);
-            inventoryDflt_cond_evalStr[attribsLbl+"_"+calcLbl] = tmpCondEval + ">= 0"
-            var vitalsTake_cond_evalStr;
-            var vitalsGive_cond_evalStr;
+          var tmpCondEval =  "gameItemToChange.bal" + Operator_Str + changeAmt;
+          eval(tmpCondEval);
+          inventoryDflt_cond_evalStr[attribsLbl+"_"+attribLbl] = tmpCondEval + ">= 0"
+          var vitalsTake_cond1_evalStr;
+          var vitalsTake_cond2_evalStr;
+          var vitalsGive_cond1_evalStr;
+          var vitalsGive_cond2_evalStr;
 
-            if ( !eval(inventoryDflt_cond_evalStr[attribsLbl+"_"+calcLbl]) ){
-              if (attribsLbl=="inventory"){
+
+          //if (attribsLbl=="vitals" && gameItemToChange.key != "none"){
+          if (gameItemToChange.key == "none"){
+            doAction_evalStrs[attribsLbl+"_"+attribLbl] = doAction_evalStr;
+            numTrue++;
+            continue;
+          }
+
+          if (attribsLbl=="inventory"){
+            if (attribLbl=="take"){
+              if ( !eval(inventoryDflt_cond_evalStr[attribsLbl+"_"+attribLbl]) ){
                 l(attribs.msgs.errMsg, changeAmt, gameItemToChange_shortStr, gameItemToChange.bal, gameItemToChange_shortStr);                
                 return {time};
-              }          
-            } else {
-              doAction_evalStrs[attribsLbl+"_"+calcLbl] = doAction_evalStr;
-            }          
-            if (attribsLbl=="vitals" && gameItemToChange.key != "none"){
-              //if (calcSet=="take"){
-              if (attribLbl=="take"){
-                vitalsTake_cond_evalStr = "gameItemToChange.bal" + Operator_Str + changeAmt + gameItemToChange.dieOper + gameItemToChange.dieLimit;
-                if (eval(vitalsTake_cond_evalStr)) {
-                  l( gameItemToChange.dieMsg );   //e.g. you died... "of exhaustion", "by freezing to death", etc.
-                  return {time};;   // TODO:  change to EXIT (game over)
-                } else {
-                  doAction_evalStrs[attribsLbl+"_"+calcLbl] = doAction_evalStr;
-                }
+              } else {
+                doAction_evalStrs[attribsLbl+"_"+attribLbl] = doAction_evalStr;
+                numTrue++;
+                continue;
               }
-              //if (calcSet=="give"){
-              if (attribLbl=="give"){
-                vitalsGive_cond_evalStr = "gameItemToChange.bal" + Operator_Str + changeAmt + gameItemToChange.doOper + gameItemToChange.doLimit;
-                if (eval(vitalsGive_cond_evalStr)) {
-                  l( gameItemToChange.doErrMsg );    //e.g. "you're not cold", "you're not hungry"
-                  return {time};   // TODO:  change to EXIT (game over)
-                } else {
-                  doAction_evalStrs[attribsLbl+"_"+calcLbl] = doAction_evalStr;
-                }
-              } 
-            }
- 
-            
-            /*none of those caused a return do to failure, so add 
-              THE ONE doAction_evalStr (there is onely one generic 
-              for all 4 possibilities) to the object
-            */
-            //doAction_evalStrs[attribsLbl+"_"+calcLbl] = doAction_evalStr;
-            numTrue++;
-          
+            } else
+            if (attribLbl=="give"){
+              if ( !eval(inventoryDflt_cond_evalStr[attribsLbl+"_"+attribLbl]) ){
+                l(attribs.msgs.errMsg, changeAmt, gameItemToChange_shortStr, gameItemToChange.bal, gameItemToChange_shortStr);                
+                return {time};
+              } else {
+                doAction_evalStrs[attribsLbl+"_"+attribLbl] = doAction_evalStr;
+                numTrue++;
+                continue;
+              }
+            }                
+          } else          
+          if (attribsLbl=="vitals") {              
+            if (attribLbl=="take"){
+              vitalsTake_cond1_evalStr = "gameItemToChange.bal" + Operator_Str + changeAmt + gameItemToChange.dieOper + gameItemToChange.dieLimit;
+              if (gameItemToChange.key == "none"){
+                numTrue = numTrue + 1;
+                doAction_evalStrs[attribsLbl+"_"+attribLbl] = doAction_evalStr;
+                continue;
+              }
+              if (eval(vitalsTake_cond1_evalStr)) {
+                l( gameItemToChange.dieMsg );   //e.g. you died... "of exhaustion", "by freezing to death", etc.
+                return {time};;   // TODO:  change to EXIT (game over)
+              } else {
+                doAction_evalStrs[attribsLbl+"_"+attribLbl] = doAction_evalStr;
+                numTrue = numTrue + 1;
+                continue;
+              }
+            } else 
+            if (attribLbl=="give"){
+              vitalsGive_cond1_evalStr  = gameItemToChange_fullStr + ".bal"
+                                        + Operator_Str + " (" + changeAmt + " * " + action.duration + ") "
+                                        + " < 0";
+
+              //vitalsGive_cond1_evalStr = "gameItemToChange.bal" + Operator_Str + changeAmt + gameItemToChange.doOper + gameItemToChange.doLimit;
+              vitalsGive_cond2_evalStr = "gameItemToChange.bal == 0";
+              if (gameItemToChange.key == "none"){
+                numTrue = numTrue + 1;
+                doAction_evalStrs[attribsLbl+"_"+attribLbl] = doAction_evalStr;
+                continue;
+              }
+              if (eval(vitalsGive_cond2_evalStr) && gameItemToChange.key != "none"){  
+                // the vitals you're trying to satisfy (hunger) is already ZERO, so you're NOT HUNGRY -- DISALLOW
+
+                l( gameItemToChange.doErrMsg );    //e.g. "you're not cold", "you're not hungry"
+                numTrue = numTrue;
+                return {time};                    // TODO:  change to EXIT (game over) ??
+              } else                              // nonZERO, so some positive number in this vitals value
+              if (eval(vitalsGive_cond1_evalStr)) {  // the vitals you're trying to satisfy (hunger) - hunger cost < ZERO, so set to ZERO -- ALLOW
+                doAction_evalStrs[attribsLbl+"_"+attribLbl] = gameItemToChange_fullStr + ".bal" + " = 0";
+                numTrue = numTrue + 1;
+                continue;                  
+              } else {
+                doAction_evalStrs[attribsLbl+"_"+attribLbl] = doAction_evalStr;
+                numTrue = numTrue + 1;
+                continue;
+              }
+            } 
           }
-        //}
+        
+        }
+        
       }
     }
-    if (numTrue == numCalcs){
+    //if (numTrue == numCalcs){
+    if (numTrue == numCalcs){      
       for (var doAction_evalStr2 in doAction_evalStrs){
         eval(doAction_evalStrs[doAction_evalStr2]);
         //time+=timeInterval;
