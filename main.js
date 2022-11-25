@@ -31,7 +31,7 @@ var c = {
 startGame();
 //  RIGHT HERE!!!!
 
-rl.on('line', (line) => {
+function isDeadCheck(line){
   if (isGameOver) {
     l("\n");
     l("GAME OVER")
@@ -46,7 +46,10 @@ rl.on('line', (line) => {
       startGame();
       return;
     }
-  }     
+  }   
+}  
+
+rl.on('line', (line) => {
 
   
   if (!actions) {e("**ERROR**:  actions is missing"); return;}
@@ -66,6 +69,9 @@ rl.on('line', (line) => {
       e("while executing core.check()");
     }
     isGameOver = ret.isDead;
+    if (isDeadCheck(line)){
+      return;
+    }    
     // attribs is what stats/attributes we're going to change:  AON either inventory or vitals
     output.printStats1(time,c);
     return;
@@ -90,7 +96,7 @@ rl.on('line', (line) => {
 
       //CATCH Default/Else: whatever input("line") is, it's unrecognized
       l("'%s' line is not recognized. Please try again\n",line);
-      output.printStats1(time,c);
+      //output.printStats1(time,c);
       return; //loop again into another readline
     }
   }
