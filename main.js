@@ -63,7 +63,7 @@ rl.on('line', (line) => {
     //if no errors, then let's print a 2 empty lines to give us some room on the screen
     l(" ==>\n");
 
-    if ( (ret=core.check(inventory, vitals, action, time)) === undefined
+    if ( (ret=core.check(line,inventory, vitals, action, time)) === undefined
         ||  ret.time === undefined || ret.time===null
     ){
       e("while executing core.check()");
