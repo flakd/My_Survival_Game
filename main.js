@@ -26,7 +26,10 @@ var c = {
   "actions": actions,
   "vitals": vitals
 }
-output.printTitleBanner(time,c);
+
+//  EVERYTHING STARTS HERE!!!!!
+startGame();
+//  RIGHT HERE!!!!
 
 rl.on('line', (line) => {
   if (isGameOver) {
@@ -40,9 +43,7 @@ rl.on('line', (line) => {
       rl.close();
     } else 
     if (line=="y" || line=="Y") {
-      isGameOver = false;
-      core.resetAllStats(vitals, inventory);
-      output.printTitleBanner(time,c);
+      startGame();
       return;
     }
   }     
@@ -99,4 +100,10 @@ rl.once('close', () => {
   // end of input
   exit();  
 });
+
+function startGame() {
+  isGameOver = false;
+  core.resetAllStats(vitals, inventory);
+  output.printTitleBanner(time, c);
+}
 
