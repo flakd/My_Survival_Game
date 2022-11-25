@@ -8,7 +8,7 @@
     },
     "vitals":   { 
       "give":   {   "gameItem":   "none",     "operator":   "=",  "changeAmt":  0  },
-      "take":   {   "gameItem":   "fatigue",  "operator":   "+",  "changeAmt":  5   },
+      "take":   {   "gameItem":   "fatigue",  "operator":   "+",  "changeAmt":  25   },
       "msgs":   {   "okMsg":   "You feel a bit more tired (fatigue +5)", "errMsg": "Should be no err msg here for CHOP"  }
     },
     "duration":   1

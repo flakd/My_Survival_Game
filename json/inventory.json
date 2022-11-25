@@ -7,7 +7,7 @@
   "trees":{
     "key":  "trees",    
     "bal":  9999,
-    "vis":  "never"
+    "vis":  "always"
   },    
   "fire": {
     "key":  "fire",

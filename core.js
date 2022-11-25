@@ -25,7 +25,8 @@ let core = {
     var vitalsTmpStorage = {};
     vitalsTmpStorage = core.storeVitals(vitals);
 
-    core.doCounters(action,vitals);
+    var isDead = core.doCounters(action,vitals);
+    if (isDead) { return {time, isDead};}
 
     for (var attribsLbl in action) { // e.g. attribsLbl = "inventory" or "vitals"
       var attribs = action[attribsLbl];
@@ -184,11 +185,17 @@ let core = {
     return vitalsTmpStorage;
   },
 
-  resetVitals: function resetVitals(vitals) {
-    vitals.hunger.bal = 0;
-    vitals.thirst.bal = 0;
-    vitals.cold.bal = 0;
-    vitals.fatigue.bal = 0;
+  resetAllStats: function resetAllStats(vitals, inventory) {
+    for (var vital in vitals){
+      vitals[vital].bal = 0;
+    }
+    for (var invItem in inventory){
+      if (invItem == "trees") {
+        inventory[invItem].bal = 9999;
+      } else {
+        inventory[invItem].bal = 0;
+      }
+    }
   },
 
   rollbackCounters: function rollbackCounters(vitalsTmpStorage,vitals) {
@@ -203,24 +210,24 @@ let core = {
     return { time };
   },
 
-  doCounters: function doCounters(action,vitals){
+  doCounters: function doCounters(action,vitals,isDead){
     var counterIncrement = action.duration;
     var numDeath = 0;
     for (var vital in vitals){
       if(vital!="none"){
         vitals[vital].bal+= vitals[vital].dfltInc * action.duration;
-        if (vitals[vital].bal >= 100) {
+        if (vitals[vital].bal > 100) {
+
+          // DEAD message.   e.g.  You've died from exhaustion!!
           l(vitals[vital].dieMsg);
+          l();
           vitals[vital].bal = 100;
-          //numDeath++;
-        //}
-      //}
-      //if (numDeath > 0) {
-          l("\n\n\n");
-          l("GAME OVER")
-          l("\n\n");      
-          l("Would you like to play again?")      
-          }
+          numDeath++;
+        }
+      }
+      if (numDeath > 0) {
+        isDead = true;
+        return isDead;
       }
     }
   }
