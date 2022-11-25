@@ -29,6 +29,24 @@ var c = {
 output.printTitleBanner(time,c);
 
 rl.on('line', (line) => {
+  if (isGameOver) {
+    l("\n");
+    l("GAME OVER")
+    l("=============================");      
+    l("Would you like to play again?")          
+    l("=============================");      
+    if (line=="n" || line=="N") {
+      console.log("OK then.  Thank you for playing!  Goodbye and play again soon!");
+      rl.close();
+    } else 
+    if (line=="y" || line=="Y") {
+      isGameOver = false;
+      core.resetAllStats(vitals, inventory);
+      output.printTitleBanner(time,c);
+      return;
+    }
+  }     
+
   
   if (!actions) {e("**ERROR**:  actions is missing"); return;}
 
@@ -37,11 +55,16 @@ rl.on('line', (line) => {
     if (action.length==0) { 
       e("**ERROR**:  action(actions[line]) is present, but empty or undefined"); return;
     }
-    if ( (time=core.check(inventory, vitals, action, time).time === undefined) 
-        ||  time===null
+
+    //if no errors, then let's print a 2 empty lines to give us some room on the screen
+    l(" ==>\n");
+
+    if ( (ret=core.check(inventory, vitals, action, time)) === undefined
+        ||  ret.time === undefined || ret.time===null
     ){
       e("while executing core.check()");
     }
+    isGameOver = ret.isDead;
     // attribs is what stats/attributes we're going to change:  AON either inventory or vitals
     output.printStats1(time,c);
     return;
@@ -52,18 +75,6 @@ rl.on('line', (line) => {
       l("Are you sure you want to quit? (y/n, Y/N");
       isQuit = true;
     }    
-    if (isGameOver) {
-      if (line=="n" || line=="N") {
-        console.log("OK then.  Thank you for playing!  Goodbye and play again soon!");
-        rl.close();
-      } else 
-      if (line=="y" || line=="Y") {
-        isGameOver = false;
-        resetVitals();
-        output.printTitleBanner(time,c);
-        return;
-      }
-    }     
     if (isQuit) {
       if (line=="y" || line=="Y") {
         console.log("OK then.  Thank you for playing!  Goodbye and play again soon!");
