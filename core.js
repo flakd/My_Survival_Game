@@ -10,7 +10,6 @@ let core = {
     ;    
     var doAction_evalStrs = {};
     var inventoryDflt_cond_evalStr = {};
-    //var gameItemsToChange_evalStrs = {};
     var numTrue=0;
     var numCalcs=0;
 
@@ -36,8 +35,6 @@ let core = {
         var attrib = attribs[attribLbl];
 
         if (attribLbl == "take" || attribLbl == "give") {
-          var calcs = attrib; // calcs=attrib = obj of subs and adds to inventory or vitals
-
           numCalcs++;
           gameItemToChange_shortStr = attrib.gameItem; // e.g. "wood" (string)
           gameItemToChange_fullStr = attribsLbl + "." + gameItemToChange_shortStr;
