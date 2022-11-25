@@ -45,7 +45,7 @@
     "dieOper":  ">=",
     "dieLimit": "100",
     "dieMsg": "You've died from exhaustion!!!",
-    "dfltInc":    5
+    "dfltInc":    10
   },    
   "none":     {
     "key":      "none",

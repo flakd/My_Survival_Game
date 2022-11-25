@@ -4,6 +4,11 @@
     "bal":  0,
     "vis":  "GTzero"
   },
+  "cord":{
+    "key":  "cord",    
+    "bal":  0,
+    "vis":  "GTzero"
+  },  
   "trees":{
     "key":  "trees",    
     "bal":  9999,

@@ -1,4 +1,10 @@
-const l = console.log;
+let g;  //create my global object;
+if (global) { 
+    g=global;
+} else
+if (window) { 
+  g=window;
+}const l = console.log;
 
 let core = {
   check: function check(line,inventory, vitals, action, time, timeInterval) {
@@ -40,20 +46,22 @@ let core = {
   outerLoop: function outerLoop(line,inventory, vitals, action, doAction_evalStrs, numTrue, numCalcs){  
     for (var attribsLbl in action) { // e.g. attribsLbl = "inventory" or "vitals"
 
-      var attribs = action[attribsLbl];
-      core.innerLoop1(line,inventory, vitals, action, attribs, attribsLbl, doAction_evalStrs, numTrue, numCalcs);
+      if (attribsLbl == "inventory" || attribsLbl == "vitals") {
+        var attribs = action[attribsLbl];
+        core.innerLoop1(line,inventory, vitals, action, attribs, attribsLbl, doAction_evalStrs, numTrue, numCalcs);
+      }
 
     } 
 
   },
 
-  innerLoop1: function innerLoop1(inventory, vitals, action, attribs, attribsLbl, doAction_evalStrs, numTrue, numCalcs){ 
+  innerLoop1: function innerLoop1(line, inventory, vitals, action, attribs, attribsLbl, doAction_evalStrs, numTrue, numCalcs){ 
     for (var attribLbl in attribs) { //e.g. attribLbl = each "take", "give", or "msgs"
       //take, give, msgs
       var attrib = attribs[attribLbl];
 
       if (attribLbl == "take" || attribLbl == "give") {
-        var togResult = core.doTakeOrGive(line,inventory, vitals, action, attrib, attribsLbl, attribLbl, doAction_evalStrs, numTrue, numCalcs);
+        var togResult = core.doTakeOrGive(line,inventory, vitals, action, attrib, attribs, attribsLbl, attribLbl, doAction_evalStrs, numTrue, numCalcs);
         if (togResult.didSucceed) numTrue = numTrue + 1;
       }
       
@@ -85,10 +93,10 @@ let core = {
     };
   },
 
-  doTakeOrGive: function doTakeOrGive(line,inventory, vitals, action, attrib, attribsLbl, attribLbl, doAction_evalStrs, numTrue, numCalcs){
+  doTakeOrGive: function doTakeOrGive(line,inventory, vitals, action, attrib, attribs, attribsLbl, attribLbl, doAction_evalStrs, numTrue, numCalcs){
     var inventoryDflt_cond_evalStr = {};
     var calcStrings, cs = core.getCalcStrings(inventory, vitals, attrib, attribsLbl, numCalcs);
-    var doAction_evalStr = setDoAction_evalStr(cs,action);
+    var doAction_evalStr = getDoAction_evalStr(cs,action);
 
     var tmpCondEval =  "cs.gameItemToChange.bal" + cs.Operator_Str + cs.changeAmt;
     eval(tmpCondEval);
@@ -182,7 +190,7 @@ let core = {
       }         
     }   // END doTakeOrGive_vitals
 
-    function setDoAction_evalStr(cs,action) {
+    function getDoAction_evalStr(cs,action) {
       var doAction_evalStr = "";
       if (cs.Operator_Str == "=") {
         //doAction_evalStr = "cs.gameItemToChange.bal" + cs.Operator_Str + cs.changeAmt;
@@ -242,24 +250,23 @@ let core = {
   },
 
   doCounters: function doCounters(line, action,vitals){
-    var counterIncrement = action.duration;
-    var numDeath = 0;
     for (var vitalLbl in vitals){
       var vital = vitals[vitalLbl];
 
       if(vitalLbl!="none"){
-        vitals[vitalLbl].bal+= vitals[vitalLbl].dfltInc * action.duration;
+        if (line=="sleep" && vitalLbl=="fatigue"){
+          continue;
+        } else {
+          vital.bal+= vital.dfltInc * action.duration;
+        }
 
         if (vital.bal >= 100) {
 
           this.doYouDied(vital, line);
-
-          numDeath++;
+          g.isGameOver = true;
+          g.isDead = true;
+          global.isDeadCheck(line);
         }
-      }
-      if (numDeath > 0) {
-        isDead = true;
-        return isDead;
       }
     }
   },

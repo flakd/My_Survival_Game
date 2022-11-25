@@ -8,12 +8,27 @@
     },
     "vitals":   { 
       "give":   {   "gameItem":   "none",     "operator":   "=",  "changeAmt":  0  },
-      "take":   {   "gameItem":   "fatigue",  "operator":   "+",  "changeAmt":  25   },
+      "take":   {   "gameItem":   "fatigue",  "operator":   "+",  "changeAmt":  15   },
       "msgs":   {   "okMsg":   "You feel a bit more tired (fatigue +5)", "errMsg": "Should be no err msg here for CHOP"  }
     },
     "duration":   1
   },
-  
+
+  "cord": {
+    "key":        "cord",
+    "inventory":  {
+      "give":   {   "gameItem":   "cord",     "operator":   "+",  "changeAmt":  1   },
+      "take":   {   "gameItem":   "trees",    "operator":   "-",  "changeAmt":  1   },
+      "msgs":   {   "okMsg":  "made cordage (cord +1)", "errMsg": "Sorry, you need to have at least %i %s to do that - but, you (only) have %i %s!" }
+    },
+    "vitals":   { 
+      "give":   {   "gameItem":   "none",     "operator":   "=",  "changeAmt":  0  },
+      "take":   {   "gameItem":   "fatigue",  "operator":   "+",  "changeAmt":  20   },
+      "msgs":   {   "okMsg":   "That was pretty tiring (fatigue +20)", "errMsg": "Should be no err msg here for CORD"  }
+    },
+    "duration":   1
+  },
+
   "hunt": {
     "key":        "hunt",
     "inventory":{
@@ -52,7 +67,7 @@
       "msgs":   {   "okMsg":  "Should not be an OK msg here for sleep", "errMsg": "Should not be an inventory ERR msg here for sleep" }
     },
     "vitals":   {
-      "give":   {   "gameItem":   "fatigue",  "operator":   "-",  "changeAmt":  15   },
+      "give":   {   "gameItem":   "fatigue",  "operator":   "-",  "changeAmt":  5   },
       "take":   {   "gameItem":   "none",     "operator":   "=",  "changeAmt":  0   },
       "msgs":   {   "okMsg":  "Ahhhh, you feel rested, that's nice! (fatigue -20)", "errMsg": "You're not tired right now" }
     },
@@ -160,6 +175,22 @@
       "give":   {   "gameItem":   "hunger",   "operator":   "-",  "changeAmt":  6   },
       "take":   {   "gameItem":   "fatigue",  "operator":   "-",  "changeAmt":  5   },
       "msgs":   {   "okMsg":  "You ate something - your tummy is fuller (hunger -5)", "errMsg": "Should be no Vitals err msg here for EATFISH" }
+    },
+    "duration":  1    
+  },
+ 
+  "bows":  {
+    "key":        "bows",
+    "inventory":{
+      "give":   {   "gameItem":   "bows",     "operator":   "+",  "changeAmt":  1   },
+      "take":   {   "gameItem":   "wood",     "operator":   "-",  "changeAmt":  2   },
+      "take":   {   "gameItem":   "cord",     "operator":   "-",  "changeAmt":  1   },      
+      "msgs":   {   "okMsg":  "made a bow (bows +1)", "errMsg": "Sorry, you need to have at least %i %s to do that - but, you (only) have %i %s!" }
+    },
+    "vitals":   {
+      "give":   {   "gameItem":   "none",     "operator":   "=",  "changeAmt":  0   },
+      "take":   {   "gameItem":   "fatigue",  "operator":   "+",  "changeAmt":  30   },
+      "msgs":   {   "okMsg":   "That was really tiring (fatigue +30)", "errMsg": "Should be no Vitals err msg here for BOWS" }
     },
     "duration":  1    
   }
