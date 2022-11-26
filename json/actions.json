@@ -189,7 +189,7 @@
     },
     "vitals":   {
       "give":   {   "gameItem":   "none",     "operator":   "=",  "changeAmt":  0   },
-      "take":   {   "gameItem":   "fatigue",  "operator":   "+",  "changeAmt":  30   },
+      "take":   {   "gameItem":   "fatigue",  "operator":   "+",  "changeAmt":  10   },
       "msgs":   {   "okMsg":   "That was really tiring (fatigue +30)", "errMsg": "Should be no Vitals err msg here for BOWS" }
     },
     "duration":  1    

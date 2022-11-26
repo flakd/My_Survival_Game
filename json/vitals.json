@@ -21,7 +21,7 @@
     "dieOper":  ">=",
     "dieLimit": "100",
     "dieMsg": "You've died from lack of water!!!",    
-    "dfltInc":    4
+    "dfltInc":    2
   },    
   "cold":    {
     "key":    "cold",
@@ -33,7 +33,7 @@
     "dieOper":  ">=",
     "dieLimit": "100",
     "dieMsg": "You've frozen to death!!!",
-    "dfltInc":    3
+    "dfltInc":    2
   },    
   "fatigue": {
     "key":      "fatigue",
@@ -45,7 +45,7 @@
     "dieOper":  ">=",
     "dieLimit": "100",
     "dieMsg": "You've died from exhaustion!!!",
-    "dfltInc":    10
+    "dfltInc":    5
   },    
   "none":     {
     "key":      "none",

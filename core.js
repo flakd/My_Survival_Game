@@ -177,7 +177,7 @@ let core = {
         if (eval(vitalsGive_cond2_evalStr) && cs.gameItemToChange.key != "none"){  
           // the vitals you're trying to satisfy (hunger) is already ZERO, so you're NOT HUNGRY -- DISALLOW
 
-          l( cs.gameItemToChange.keydoErrMsg );    //e.g. "you're not cold", "you're not hungry"
+          l( cs.gameItemToChange.doErrMsg );    //e.g. "you're not cold", "you're not hungry"
           return {didSucceed: false};                // no increment, should cause ENTIRE ACTION to FAIL
         } else                              // nonZERO, so some positive number in this vitals value
         if (eval(vitalsGive_cond1_evalStr)) {  // the vitals you're trying to satisfy (hunger) - hunger cost < ZERO, so set to ZERO -- ALLOW
