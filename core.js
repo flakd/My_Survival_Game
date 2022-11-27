@@ -150,13 +150,13 @@ let core = {
     //  affecting the real/originals
     var invClone = structuredClone(inventory);
     var vitClone = structuredClone(vitals);
-    var numTakeCalcs = 0;
+    //var numTakeCalcs = 0;
     var numValidConds = 0;
 
     //  starting with INVENTORY:
-    for (var invItem_lbl in invClone) {
+    //for (var invItem_lbl in invClone) {
       // let's look through each (e.g. wood, fish, H20) inventory item
-      var invItem = invClone[invItem_lbl];
+      //var invItem = invClone[invItem_lbl];
 
       // we're only looking at the calc property, we don't care about 
       //  the other properties !="calcs" (e.g. key, duration, msgs)
@@ -185,14 +185,23 @@ let core = {
           var gameItem = eval(takeItem_lbl);
 
           // set up the ACTUAL 'perform calculation' statement
-          var doTakeCalc_evalStr = gameItem + "=" + gameItem + take.operator + take.changeAmt.toString();
+          var doTakeCalc_evalStr = takeItem_lbl + "=" + takeItem_lbl + take.operator + take.changeAmt.toString();
           // e.g. var doTakeCalc_evalStr = "inventory.wood=inventory.wood-5"
 
           // go RIGHT AHEAD and perform the operation on THIS CLONED copy
           eval (doTakeCalc_evalStr);
+
+          // now IMMEDIATELY evaluate it ==> is the balance less than ZERO, 
+          //  if so, we didn't have enough of this inventory item/resource 
+          //  to perform this in the first place
+          // *****TODO
+
+          // TRUE:     "dfltErrMsg": "Sorry, you need to have at least %i %s to do that - but, you (only) have %i %s!" 
+
+
         } // END:  if (calc_lbl == "take"){
-      } // END:  for(var calc_lbl in invItem.calcs) {
-    } // END:  for (var invItem_lbl in invClone) {
+      //} // END:  for(var calc_lbl in invItem.calcs) {
+    //} // END:  for (var invItem_lbl in invClone) {
 
     // REPEAT part of the loop logic to CHECK if any of the operations failed
 
@@ -201,20 +210,12 @@ let core = {
       // let's look through each (e.g. wood, fish, H20) inventory item
       var invItem = invClone[invItem_lbl];
 
-      //skip other properties !="calcs" (e.g. key, duration, msgs)
-      for(var calc_lbl in invItem.calcs) {
-        // let's look through each "calc" property 
+      if (invItem.bal < 0) {
+        l(invClone.none.dfltErrMsg, )
+      }
 
-        // more specifically let's first look at all the "take" calcs/ops
-        if (calc_lbl == "take"){
-          numTakeCalcs++;
 
-          //check this for every take item in this cloned inventory object
-          var takeCalcCond_evalStr = gameItem + " >= 0";
-          // e.g. var takeCalcCond_evalStr = "inventory.wood >= 0"  ==> we 
-          //  already performed the subtraction, so now just make sure it's > 0
-
-          //evaluate the condition string and store TRUE or FALSE in a boolean var
+      //evaluate the condition string and store TRUE or FALSE in a boolean var
           var isTakeCalcCondValid = eval(takeCalcCond_evalStr);
 
           // test/see if this PARTICULAR (remember we're looping through all 
