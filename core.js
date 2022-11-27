@@ -151,7 +151,7 @@ let core = {
     var invClone = structuredClone(inventory);
     var vitClone = structuredClone(vitals);
     //var numTakeCalcs = 0;
-    var numValidConds = 0;
+    var numInValidConds = 0;   // all we care is if this is > 0 when we're done
 
     //  starting with INVENTORY:
     //for (var invItem_lbl in invClone) {
@@ -178,64 +178,63 @@ let core = {
           var take = calc;
 
           // store the name of the GameItem we want to TAKE FROM as a string
-          var takeItem_lbl = take.item;
+          var takeItem_fullLbl = take.item;
 
           // now store a reference to the ACTUAL GameItem by 'eval'ing the 
           //  string name of the GameItem
-          var gameItem = eval(takeItem_lbl);
+          var gameItem = eval(takeItem_fullLbl);
+
+          // store original balance to use in error message, in case this calculation fails
+          var preCalcBal = gameItem.bal;
 
           // set up the ACTUAL 'perform calculation' statement
-          var doTakeCalc_evalStr = takeItem_lbl + "=" + takeItem_lbl + take.operator + take.changeAmt.toString();
+          var doTakeCalc_evalStr = takeItem_fullLbl + ".bal=" + takeItem_fullLbl + ".bal" + take.operator + take.changeAmt.toString();
           // e.g. var doTakeCalc_evalStr = "inventory.wood=inventory.wood-5"
 
           // go RIGHT AHEAD and perform the operation on THIS CLONED copy
           eval (doTakeCalc_evalStr);
 
+          // store post calculation balance for comparison (?)                    
+          var postCalcBal = gameItem.bal;
+
           // now IMMEDIATELY evaluate it ==> is the balance less than ZERO, 
           //  if so, we didn't have enough of this inventory item/resource 
           //  to perform this in the first place
-          // *****TODO
+          //  ==> store TRUE or FALSE in a boolean var
+          var isTakeCalcCondValid = postCalcBal < 0;
 
-          // TRUE:     "dfltErrMsg": "Sorry, you need to have at least %i %s to do that - but, you (only) have %i %s!" 
+          if (isTakeCalcCondValid){ // it's TRUE, that means it failed, 
+                                    //  so print error msg and increase 
+                                    //  failure number by one (if we have 
+                                    //  even 1 failure, then we won't allow 
+                                    //  this ACTION [i.e. we won't copy 
+                                    //  this clone back to the original])
+            // if ANY of these tests fail then RETURN FALSE
+            l("This calc (%s) failed: 'postCalcBal < 0' ("+ postCalcBal+"<0) is %s",doTakeCalc_evalStr, isTakeCalcCondValid);
 
+            // takeItem_fullLbl includes list name (e.g. "inventory", "vitals"),
+            //  we want just the item name (e.g. wood, fish, worms, etc..),
+            //  so we take everything after the "." in the takeItem_fullLbl
+            //   (e.g. "inventory.wood", we want just "wood")
+            var takeItem_shortLbl = takeItem_fullLbl.split(".")[1];
 
-        } // END:  if (calc_lbl == "take"){
-      //} // END:  for(var calc_lbl in invItem.calcs) {
+            //print the proper error message
+            // TODO: replace below with reference to dflt err msg in inventory object
+            l("Sorry, you need to have at least %i %s to do that - but, you (only) have %i %s!", take.changeAmt, takeItem_shortLbl, preCalcBal, takeItem_shortLbl);
+            l();
+          
+            // TRUE: numInValidConds++  (now it will be greater than 0 later 
+            numInValidConds++;
+
+            //  => this means we don't perform the actiion [all have to be 
+            //  successful, i.e. you need to have enough ALL if the inventory 
+            //  and vitals to perform this calculation/action])            
+          }
+        } // END:  if (calc.type == "take"){
+      } // END:  for (var calcIdx in action.calcs){ 
     //} // END:  for (var invItem_lbl in invClone) {
 
-    // REPEAT part of the loop logic to CHECK if any of the operations failed
-
-    //  starting with INVENTORY:
-    for (var invItem_lbl in invClone) {
-      // let's look through each (e.g. wood, fish, H20) inventory item
-      var invItem = invClone[invItem_lbl];
-
-      if (invItem.bal < 0) {
-        l(invClone.none.dfltErrMsg, )
-      }
-
-
-      //evaluate the condition string and store TRUE or FALSE in a boolean var
-          var isTakeCalcCondValid = eval(takeCalcCond_evalStr);
-
-          // test/see if this PARTICULAR (remember we're looping through all 
-          //  the ones we've already done) "take calc" was valid
-          if (!isTakeCalcCondValid){
-            // if ANY of these tests fail then RETURN FALSE
-            l(takeCalcCond_evalStr + "=" + isTakeCalcCondValid);
-            continue;
-          } else {
-            numValidConds++;
-            continue;   // else NEXT LOOP (NEXT "take" calc)
-          } // END:  for (var invItem_lbl in invClone) {
-
-        } // END:  if (calc_lbl == "take"){
-
-      } // END:  for(var calc_lbl in invItem.calcs) {
-
-    } // END:  for (var invItem_lbl in invClone) {
-    if (numValidConds == numTakeCalcs) return true;
-    else return false
+    return (numInValidConds > 0)
 
   }, // END:  function canPerformAction(action, inventory, vitals){
 
