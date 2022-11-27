@@ -1,34 +1,4 @@
 {
-  "chop": {
-    "key":        "chop",
-    "inventory":  {
-      "give":   {   "gameItem":   "wood",     "operator":   "+",  "changeAmt":  5   },
-      "take":   {   "gameItem":   "trees",    "operator":   "-",  "changeAmt":  1   },
-      "msgs":   {   "okMsg":  "chopped wood (wood +1)", "errMsg": "Sorry, you need to have at least %i %s to do that - but, you (only) have %i %s!" }
-    },
-    "vitals":   { 
-      "give":   {   "gameItem":   "none",     "operator":   "=",  "changeAmt":  0  },
-      "take":   {   "gameItem":   "fatigue",  "operator":   "+",  "changeAmt":  15   },
-      "msgs":   {   "okMsg":   "You feel a bit more tired (fatigue +5)", "errMsg": "Should be no err msg here for CHOP"  }
-    },
-    "duration":   1
-  },
-
-  "cord": {
-    "key":        "cord",
-    "inventory":  {
-      "give":   {   "gameItem":   "cord",     "operator":   "+",  "changeAmt":  1   },
-      "take":   {   "gameItem":   "trees",    "operator":   "-",  "changeAmt":  1   },
-      "msgs":   {   "okMsg":  "made cordage (cord +1)", "errMsg": "Sorry, you need to have at least %i %s to do that - but, you (only) have %i %s!" }
-    },
-    "vitals":   { 
-      "give":   {   "gameItem":   "none",     "operator":   "=",  "changeAmt":  0  },
-      "take":   {   "gameItem":   "fatigue",  "operator":   "+",  "changeAmt":  20   },
-      "msgs":   {   "okMsg":   "That was pretty tiring (fatigue +20)", "errMsg": "Should be no err msg here for CORD"  }
-    },
-    "duration":   1
-  },
-
   "light": {
     "key":        "light",
     "inventory":{
@@ -164,28 +134,44 @@
     "duration":  1    
   },
  
+  "chop": {
+    "key":        "chop",
+    "duration":   1,
+    "successMsg": "chopped wood (%s%s%i). You feel a bit more tired (%s%s%i)",    
+    "calcs":  [
+      { "type": "give",   "item": "inventory.wood",     "operator":   "+",  "changeAmt":  5   },
+      { "type": "take",   "item": "inventory.trees",    "operator":   "-",  "changeAmt":  1   },
+      { "type": "take",   "item": "vitals.fatigue",  "operator":   "+",  "changeAmt":  15,   "override": true   }
+    ]
+  },
+
+  "cord": {
+    "key":        "cord",
+    "duration":   1,
+    "successMsg": "You made cordage (%s%s%i). That was pretty tiring (%s%s%i)",
+    "calcs":  [
+      { "type": "give",   "item": "inventory.cord",     "operator":   "+",  "changeAmt":  1   },
+      { "type": "take",   "item": "inventory.trees",    "operator":   "-",  "changeAmt":  1   },
+      { "type": "take",   "item": "vitals.fatigue",  "operator":   "+",  "changeAmt":  20,   "override": true   }
+    ]
+  },
+
   "bows":  {
     "key":        "bows",
     "duration":   1,
-    "msgs":   {   
-      "okMsg":  "You made a bow (%s%s%i), but that was really tiring (%s%s%i)", 
-      "errMsg": "Sorry, you need to have at least %i %s to do that - but, you (only) have %i %s!" 
-    },
-    "calcs":  {
-      "give":   {   "item": "inventory.bows",     "operator":   "+",  "changeAmt":  1   },
-      "take":   {   "item": "inventory.wood",     "operator":   "-",  "changeAmt":  2   },
-      "take":   {   "item": "inventory.cord",     "operator":   "-",  "changeAmt":  1   },
-      "take":   {   "item": "vitals.fatigue",     "operator":   "+",  "changeAmt":  10,   "override": true   }
-    }
+    "successMsg": "You made a bow (%s%s%i), but that was really tiring (%s%s%i)",
+    "calcs":  [
+      { "type": "give",   "item": "inventory.bows",     "operator":   "+",  "changeAmt":  1   },
+      { "type": "take",   "item": "inventory.wood",     "operator":   "-",  "changeAmt":  2   },
+      { "type": "take",   "item": "inventory.cord",     "operator":   "-",  "changeAmt":  1   },
+      { "type": "take",   "item": "vitals.fatigue",     "operator":   "+",  "changeAmt":  10,   "override": true   }
+    ]
   },
 
   "hunt": {
     "key":        "hunt",
     "duration":   6,
-    "msgs":   {   
-      "okMsg":  "You caught/killed a rabbit (%s%s%i). You feel tired (%s%s%i), but accomplished - you're a warrior!", 
-      "errMsg": "Sorry, you need to have at least %i %s to do that - but, you (only) have %i %s!" 
-    },
+    "successMsg": "You caught/killed a rabbit (%s%s%i). You feel tired (%s%s%i), but accomplished - you're a warrior!", 
     "calcs":  [
       { "type": "give",   "item": "inventory.bows",     "operator":   "+",  "changeAmt":  1   },
       { "type": "give",   "item": "inventory.meat",     "operator":   "+",  "changeAmt":  1   },

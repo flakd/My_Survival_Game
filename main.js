@@ -16,10 +16,9 @@ const l=console.log;
 const e=function(msg){console.error("**ERROR**: %s",msg)};
 
 var time = 0;   //12 midnight
-var timeInterval = 1;  //1 hour
 var isQuit = false;
 var isGameOver = false;
-
+g.time = time;
 g.isGameOver = isGameOver;
 g.isDeadCheck = isDeadCheck;
 g.startGame = startGame;
@@ -33,7 +32,7 @@ var c = {
   "vitals": vitals,
   "actions": actions
 }
-
+g.c = c;
 
 //  EVERYTHING STARTS HERE!!!!!
 g.startGame();

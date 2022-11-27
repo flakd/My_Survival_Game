@@ -5,8 +5,10 @@ if (global) {
 if (window) { 
   g=window;
 }
-const l = console.log;
-const e = console.error;
+const { exit } = require('process');
+const output =  require('./output');
+const l=console.log;
+const e=function(msg){console.error("**ERROR**: %s",msg)};
 
 let core = {
   gameMainLoop: function gameMainLoop(userInput, inventory, vitals, actions){
@@ -34,8 +36,10 @@ let core = {
     }
 */
 
+
     if (core.isInputAValidGameCommand(userInput)) return core.doCommandWithResult(userInput);
     if (!core.isInputAValidGameAction(userInput, actions)) return true;
+
 
     var action=actions[userInput];
     // if below is false, then skip to NEXT input READLINE, which requires a return of true
@@ -73,7 +77,42 @@ let core = {
     l("printing status");
   },
 
-  isInputAValidGameCommand: function isInputAValidGameCommand(userInput){
+  doSecretTestCalc: function doSecretTestCalc(userInput, inventory, vitals){
+    if ( userInput.toLowerCase().startsWith("/p") ) {
+      output.printStats1(g.time,g.c);
+      return true;
+    }
+    if (  userInput.toLowerCase().startsWith("/a ") ){
+      var words = userInput.toLowerCase().split(" ");
+      var targetListAbbr = words[1].split(".")[0];
+      var targetList = "";
+      var targetItem = words[1].split(".")[1];      
+      if (targetListAbbr == "i") targetList = "inventory";
+      if (targetListAbbr == "v") targetList = "vitals";
+      var evalStr = "targetList.targetItem.bal = targetList.targetItem.bal " +  words[2];   
+      l(evalStr);
+      // add to inventory or vital
+      l(targetList);
+      l(targetItem);
+      //var tList = eval(targetList);
+      //var tItem = eval(targetList + "." + targetItem);
+      l(g.c[targetList]);
+      var tList = g.c[targetList];
+      var tItem = eval("tList." + targetItem);
+
+      l(tItem.bal );
+      tItem.bal = tItem.bal + eval(words[2]);
+      //eval(evalStr);
+      l( tItem.bal );
+      return true;
+    } else {
+      //l("invalid input to FUNCTION doSecretTestCalc(userInput)"); 
+      return false;
+    }
+  },
+
+
+  isInputAValidGameCommand: function isInputAValidGameCommand(userInput, inventory, vitals){
     switch (userInput.toLowerCase()){
       case "q":     //TODO:  comment out for production      
       case "quit": 
@@ -82,7 +121,9 @@ let core = {
       case "list": 
         break;
       default:
-        return false;        
+        //      case "~a", "~s":
+        return core.doSecretTestCalc(userInput.toLowerCase(), inventory, vitals);
+        //return false;        
     }
     l(" <= '%s' is a VALID Command =>\n", userInput);
     return true;
@@ -181,16 +222,48 @@ let core = {
           // store the name of the GameItem we want to TAKE FROM as a string
           var takeItem_fullLbl = take.item;
 
+          // takeItem_fullLbl includes BOTH the list name (e.g. "inventory", 
+          //  "vitals")  AND  the item name (e.g. wood, fish, worms, etc..),
+          //  let's get the individual parts of the _fullLabel as a prefix
+          //  and suffix
+          var takeItem_prefix = takeItem_fullLbl.split(".")[0];
+          var takeItem_suffix = takeItem_fullLbl.split(".")[1];   
+
           // now store a reference to the ACTUAL GameItem by 'eval'ing the 
           //  string name of the GameItem
           var gameItem = eval(takeItem_fullLbl);
 
           // store original balance to use in error message, in case this calculation fails
           var preCalcBal = gameItem.bal;
+       
+
+          var willTakeCalcCondFail = false;
+
+
+          // Now prepare the Conditional Statement EVAL STRINGS 
+          //  depending on which list we're looking at ==> determined 
+          //  by our takeItem_prefix variable 
+          if (takeItem_prefix == "inventory") {
+            // if the preCalcBal MINUS the amount to change (subtract, since 
+            //  this is a TAKE operation) equals less than ZERO, then we didn't
+            //  have enough of this inventory item/resource to perform this
+            //  in the first place => NOW => store True/False in boolean var
+            willTakeCalcCondFail = (preCalcBal - take.changeAmt < 0);
+          } else
+          if (takeItem_prefix == "vitals") {
+            // if the preCalcBal ALONE <= 0, then we ARE AT 100%
+            //  of that vital (e.g. we're not hungry, tired, thirsty, cold) so
+            //  we should disallow this action => NOW => store True/False 
+            //  in boolean var
+            willTakeCalcCondFail = (preCalcBal <= 0);
+          }
+
 
           // set up the ACTUAL 'perform calculation' statement
+          //  THIS is exactly the same for all give and takes ???????
           var doTakeCalc_evalStr = takeItem_fullLbl + ".bal=" + takeItem_fullLbl + ".bal" + take.operator + take.changeAmt.toString();
-          // e.g. var doTakeCalc_evalStr = "inventory.wood=inventory.wood-5"
+          // e.g. var doTakeCalc_evalStr = "inventory.wood = inventory.wood - 5"
+          // e.g. var doTakeCalc_evalStr = "vitals.hunger = vitals.hunger + 10"
 
           // go RIGHT AHEAD and perform the operation on THIS CLONED copy
           eval (doTakeCalc_evalStr);
@@ -198,31 +271,18 @@ let core = {
           // store post calculation balance for comparison (?)                    
           var postCalcBal = gameItem.bal;
 
-          // now IMMEDIATELY evaluate it ==> is the balance less than ZERO, 
-          //  if so, we didn't have enough of this inventory item/resource 
-          //  to perform this in the first place
-          //  ==> store TRUE or FALSE in a boolean var
-          var isTakeCalcCondValid = postCalcBal < 0;
-
-          if (isTakeCalcCondValid){ // it's TRUE, that means it failed, 
+          if (willTakeCalcCondFail){ // it's TRUE, that means it failed, 
                                     //  so print error msg and increase 
                                     //  failure number by one (if we have 
                                     //  even 1 failure, then we won't allow 
                                     //  this ACTION [i.e. we won't copy 
                                     //  this clone back to the original])
             // if ANY of these tests fail then RETURN FALSE
-            l("This calc (%s) failed: 'postCalcBal < 0' ("+ postCalcBal+"<0) is %s",doTakeCalc_evalStr, isTakeCalcCondValid);
-            
-
-            // takeItem_fullLbl includes list name (e.g. "inventory", "vitals"),
-            //  we want just the item name (e.g. wood, fish, worms, etc..),
-            //  so we take everything after the "." in the takeItem_fullLbl
-            //   (e.g. "inventory.wood", we want just "wood")
-            var takeItem_shortLbl = takeItem_fullLbl.split(".")[1];
+            l("This calc (%s) failed: ("+ postCalcBal+"<0) is %s",doTakeCalc_evalStr, willTakeCalcCondFail);      
 
             //print the proper error message
             // TODO: replace below with reference to dflt err msg in inventory object
-            l("Sorry, you need to have at least %i %s to do that - but, you (only) have %i %s!", take.changeAmt, takeItem_shortLbl, preCalcBal, takeItem_shortLbl);
+            l("Sorry, you need to have at least %i %s to do that - but, you (only) have %i %s!", take.changeAmt, takeItem_suffix, preCalcBal, takeItem_suffix);
             l();
           
             // TRUE: numInValidConds++  (now it will be greater than 0 later 
