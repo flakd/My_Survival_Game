@@ -1,55 +1,43 @@
 {
   "hunger":    {
     "key":    "hunger",
-    "bal":    0,
-    "vis":    "always",
-    "doOper":   "<=",
-    "doLimit":  "0",
+    "bal":      0,
+    "vis":      "always",
     "doErrMsg": "You're not hungry",
-    "dieOper":  ">=",
-    "dieLimit": "100",
-    "dieMsg": "You've died from lack of food!!!",    
-    "dfltInc":    1
+    "dieMsg":   "You've died from lack of food!!!",    
+    "dfltInc":  1
   },    
   "thirst":    {
-    "key":    "thirst",
-    "bal":    0,
-    "vis":    "always",
-    "doOper":   "<=",
-    "doLimit":  "0",
+    "key":      "thirst",
+    "bal":      0,
+    "vis":      "always",
     "doErrMsg": "You're not thirsty at all",
-    "dieOper":  ">=",
-    "dieLimit": "100",
-    "dieMsg": "You've died from lack of water!!!",    
-    "dfltInc":    2
+    "dieMsg":   "You've died from lack of water!!!",    
+    "dfltInc":  2
   },    
   "cold":    {
-    "key":    "cold",
-    "bal":    0,
-    "vis":    "always",
-    "doOper":   "<=",
-    "doLimit":  "0",
+    "key":      "cold",
+    "bal":      0,
+    "vis":      "always",
     "doErrMsg": "You're not cold",
-    "dieOper":  ">=",
-    "dieLimit": "100",
-    "dieMsg": "You've frozen to death!!!",
-    "dfltInc":    2
+    "dieMsg":   "You've frozen to death!!!",
+    "dfltInc":  2
   },    
   "fatigue": {
     "key":      "fatigue",
     "bal":      0,
     "vis":      "always",
-    "doOper":   "<=",
-    "doLimit":  "0",
     "doErrMsg": "You're completely rested",
-    "dieOper":  ">=",
-    "dieLimit": "100",
-    "dieMsg": "You've died from exhaustion!!!",
-    "dfltInc":    5
+    "dieMsg":   "You've died from exhaustion!!!",
+    "dfltInc":  5
   },    
   "none":     {
     "key":      "none",
     "bal":      0, 
-    "vis":      "never"
+    "vis":      "never",
+    "dfltDoFailCond_evalStr": "balance < 0", 
+    "dfltDieLimitCond_evalStr": "balance >= 100",     
+    "dfltDoErrMsg": "Sorry, but you don't need any of that right now, you have %i of vital:%s",
+    "dfltDiErrMsg": "Sorry, but you just died of too much %s"     
   }
 }
