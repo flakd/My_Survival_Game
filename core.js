@@ -34,14 +34,15 @@ let core = {
     }
 */
 
-    if (core.isInputACommand(userInput)) return core.doCommandWithResult(userInput);
-    if (!core.isInputAnAction(userInput, actions)) return true;
+    if (core.isInputAValidGameCommand(userInput)) return core.doCommandWithResult(userInput);
+    if (!core.isInputAValidGameAction(userInput, actions)) return true;
 
     var action=actions[userInput];
     // if below is false, then skip to NEXT input READLINE, which requires a return of true
     if (!core.canPerformAction(action, inventory, vitals)) return true;
 
     // else do not return and we continue to the next line of code...
+    //  which is to ACTUALLY execute the command
 
 
     //  4. perform action by:
@@ -72,7 +73,7 @@ let core = {
     l("printing status");
   },
 
-  isInputACommand: function isInputACommand(userInput){
+  isInputAValidGameCommand: function isInputAValidGameCommand(userInput){
     switch (userInput.toLowerCase()){
       case "q":     //TODO:  comment out for production      
       case "quit": 
@@ -87,7 +88,7 @@ let core = {
     return true;
   },
 
-  isInputAnAction: function isInputAnAction(userInput, actions){
+  isInputAValidGameAction: function isInputAValidGameAction(userInput, actions){
     if (!actions) {e("**ERROR**:  actions is missing"); return false;}
 
     var action = actions[userInput];     // e.g.  line = "light"
@@ -101,8 +102,8 @@ let core = {
   },
 
   isInputValid: function isInputValid(userInput, actions){
-    if (this.isInputACommand(userInput)) return true;
-    if (this.isInputAnAction(userInput, actions)) return true;    
+    if (this.isInputAValidGameCommand(userInput)) return true;
+    if (this.isInputAValidGameAction(userInput, actions)) return true;    
     
     //  it's not valid in either of the ABOVE cases, so
     //  therefore, it's FALSE (not a valid input)
@@ -211,6 +212,7 @@ let core = {
                                     //  this clone back to the original])
             // if ANY of these tests fail then RETURN FALSE
             l("This calc (%s) failed: 'postCalcBal < 0' ("+ postCalcBal+"<0) is %s",doTakeCalc_evalStr, isTakeCalcCondValid);
+            
 
             // takeItem_fullLbl includes list name (e.g. "inventory", "vitals"),
             //  we want just the item name (e.g. wood, fish, worms, etc..),
