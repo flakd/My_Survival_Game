@@ -26,12 +26,12 @@ g.startGame = startGame;
 
 parseJSONs.loadJSONs();
 var inventory = parseJSONs.Objects.inventory;
-var actions = parseJSONs.Objects.actions; 
 var vitals = parseJSONs.Objects.vitals;
+var actions = parseJSONs.Objects.actions; 
 var c = {
   "inventory": inventory,
-  "actions": actions,
-  "vitals": vitals
+  "vitals": vitals,
+  "actions": actions
 }
 
 
@@ -92,6 +92,14 @@ function startGame() {
   });  
   rl.on('line', (line) => {
 
+    //if (TRUE), we are alive => then RETURN (RETURN = jump to the next "RL loop")
+    if (core.gameMainLoop(line, inventory, vitals, actions)) return;
+
+    //otherwise close and END the game
+    rl.close();
+
+
+
     if (!actions) {e("**ERROR**:  actions is missing"); return;}
 
     var action = actions[line];     // e.g.  line = "light"
@@ -145,7 +153,7 @@ function startGame() {
 
 rl.once('close', () => {
   // end of input
-  //exit();  
+  exit();  
 });
 
 
