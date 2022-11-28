@@ -58,7 +58,7 @@
     "key":  "none",
     "bal":  0,
     "vis":  "never",
-    "dfltDoFailCond_evalStr": "balance < 0", 
-    "dfltDoErrMsg": "Sorry, you need to have at least %i %s to do that - but, you (only) have %i %s!" 
+    "dflt_doFailCond_evalStr": "balance < 0", 
+    "dflt_doFailMsg": "Sorry, you can't do that: you need at least %i %s to do that; but, you (only) have %i %s!" 
   }    
 }

@@ -24,23 +24,15 @@ let core = {
 
     //  2. check if input is a LEGIT input
     //     a. EXECUTE valid Game COMMANDS
+        if (core.isInputAValidGameCommand(userInput)) return core.doCommandWithResult(userInput);
+
     //     b. check to see if this is a LEGIT game-play action
-    
-    
-/*
-    if (!core.isInputValid(userInput,actions)) {
-      l("invalid input");
-      return true;    // RETURNing TRUE here b/c we ARE NOT DEAD and want 
+    if (!core.isInputAValidGameAction(userInput, actions)) 
+    return true;      // RETURNing TRUE here b/c we ARE NOT DEAD and want 
                       //   to continue code execution
                       //   (REMEMBER:  return false would mean we died)
-    }
-*/
 
-
-    if (core.isInputAValidGameCommand(userInput)) return core.doCommandWithResult(userInput);
-    if (!core.isInputAValidGameAction(userInput, actions)) return true;
-
-
+    // now that we know it's valid, set action for further processing/use
     var action=actions[userInput];
     // if below is false, then skip to NEXT input READLINE, which requires a return of true
     if (!core.canPerformAction(action, inventory, vitals)) return true;
@@ -52,22 +44,25 @@ let core = {
     //  4. perform action by:
     //     a. perform "give"s... THEN
     //     b. perform "take"s (perform 3b, but on REAL inventory )
+    //==========================================================================>    
     doPerformAction: function doPerformAction(action, inventory, vitals){}
 
     //  5. pass time (update any time-dependent variables )
     //     a. based on action.duration * vitals.COST
+    //==========================================================================>    
     doPassTime: function doPassTime(action, inventory, vitals){}
 
     //  6. TODO: perform random events
     //     a. update values (e.g. inventory and/or vitals)
+    //==========================================================================>    
     doRandomActOfGod: function doRandomActOfGod(inventory, vitals){}
     
     //  7. check for death    ==>  TODO:  Game Over / Play Again
     //     a. verify that all VITALS are < 100
+    //==========================================================================>    
     isDead: function isDead(vitals){}
 
     //  8. loop back to beginning
-
     return true;
 
 
@@ -187,6 +182,7 @@ let core = {
   //        i.  IF false => print ERROR message (and NEXT LOOP) for EACH inventory item < 0
   //     d. verify TAKE vital > zero (i.e. otherwise at least ONE requirment failed)
   //        i.  IF false => print ERROR message (i.e. you're not hungry && NEXT LOOP)
+  //==========================================================================>
   canPerformAction: function canPerformAction(action, inventory, vitals){
     // lets clone these so that we can make changes without 
     //  affecting the real/originals
@@ -231,6 +227,7 @@ let core = {
 
           // now store a reference to the ACTUAL GameItem by 'eval'ing the 
           //  string name of the GameItem
+          takeItem_fullLbl = takeItem_prefix + "." + takeItem_suffix;
           var gameItem = eval(takeItem_fullLbl);
 
           // store original balance to use in error message, in case this calculation fails
@@ -238,26 +235,34 @@ let core = {
        
 
           var willTakeCalcCondFail = false;
+          var willTakeCalcCondFail_str = "";
+          var willTakeCalcCondFail_str2 = "";
 
 
           // Now prepare the Conditional Statement EVAL STRINGS 
           //  depending on which list we're looking at ==> determined 
           //  by our takeItem_prefix variable 
           if (takeItem_prefix == "inventory") {
+            var takeItem_prefix = "invClone";
             // if the preCalcBal MINUS the amount to change (subtract, since 
             //  this is a TAKE operation) equals less than ZERO, then we didn't
             //  have enough of this inventory item/resource to perform this
             //  in the first place => NOW => store True/False in boolean var
+            willTakeCalcCondFail_str = "(preCalcBal - take.changeAmt < 0)";
+            willTakeCalcCondFail_str2 = "(" + preCalcBal + "-" + take.changeAmt + " < 0" + ")";
             willTakeCalcCondFail = (preCalcBal - take.changeAmt < 0);
           } else
           if (takeItem_prefix == "vitals") {
+            var takeItem_prefix = "vitClone";
             // if the preCalcBal ALONE <= 0, then we ARE AT 100%
             //  of that vital (e.g. we're not hungry, tired, thirsty, cold) so
             //  we should disallow this action => NOW => store True/False 
             //  in boolean var
+            willTakeCalcCondFail_str = "(preCalcBal <= 0)";
+            willTakeCalcCondFail_str2 = "(" + preCalcBal + "<= 0";            
             willTakeCalcCondFail = (preCalcBal <= 0);
           }
-
+          takeItem_fullLbl = takeItem_prefix + "." + takeItem_suffix;
 
           // set up the ACTUAL 'perform calculation' statement
           //  THIS is exactly the same for all give and takes ???????
@@ -278,11 +283,21 @@ let core = {
                                     //  this ACTION [i.e. we won't copy 
                                     //  this clone back to the original])
             // if ANY of these tests fail then RETURN FALSE
-            l("This calc (%s) failed: ("+ postCalcBal+"<0) is %s",doTakeCalc_evalStr, willTakeCalcCondFail);      
+            l("This calc (%s) failed: %s[%s] is %s", 
+                doTakeCalc_evalStr, willTakeCalcCondFail_str, 
+                willTakeCalcCondFail_str2, willTakeCalcCondFail
+            );      
 
             //print the proper error message
             // TODO: replace below with reference to dflt err msg in inventory object
-            l("Sorry, you need to have at least %i %s to do that - but, you (only) have %i %s!", take.changeAmt, takeItem_suffix, preCalcBal, takeItem_suffix);
+            if (takeItem_prefix == "invClone") {
+              //l("Sorry, you need to have at least %i %s to do that - but, you (only) have %i %s!", take.changeAmt, takeItem_suffix, preCalcBal, takeItem_suffix);
+              l(invClone.none.dflt_doFailMsg, take.changeAmt, takeItem_suffix, preCalcBal, takeItem_suffix);
+            } else
+            if (takeItem_prefix == "vitClone") {
+              l(gameItem.doFailMsg);
+            }
+            l("postCalcBal:"+postCalcBal);            
             l();
           
             // TRUE: numInValidConds++  (now it will be greater than 0 later 
