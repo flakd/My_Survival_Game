@@ -183,67 +183,63 @@ let core = {
   //     d. verify TAKE vital > zero (i.e. otherwise at least ONE requirment failed)
   //        i.  IF false => print ERROR message (i.e. you're not hungry && NEXT LOOP)
   //==========================================================================>
-  canPerformAction: function canPerformAction(action, inventory, vitals){
+  canPerformAction: function canPerformAction(action, inventoryOrig, vitalsOrig){
     // lets clone these so that we can make changes without 
     //  affecting the real/originals
-    var invClone = structuredClone(inventory);
-    var vitClone = structuredClone(vitals);
+    var inventory = structuredClone(inventoryOrig);
+    var vitals = structuredClone(vitalsOrig);
     //var numTakeCalcs = 0;
     var numInValidConds = 0;   // all we care is if this is > 0 when we're done
 
-    //  starting with INVENTORY:
-    //for (var invItem_lbl in invClone) {
-      // let's look through each (e.g. wood, fish, H20) inventory item
-      //var invItem = invClone[invItem_lbl];
+    // we're only looking at the calc prop of the ACTION object, we don't
+    //  care about the other properties !="calcs" (e.g. key, duration, msgs)
+    
+    // action.calcs was an object ==> now I've made it an array 
+    //  (see code below this to iterate through the array)
 
-      // we're only looking at the calc property, we don't care about 
-      //  the other properties !="calcs" (e.g. key, duration, msgs)
-      
-      // action.calcs was an object ==> now I've made it an array 
-      //  (see code below this to iterate through the array)
-      //for(var calc_lbl in action.calcs) {
+    for (var calcIdx in action.calcs){   // array iteration instead of object iteration
+      // let's look through each item in the "calcs" property/subObject
 
-      for (var calcIdx in action.calcs){   // array iteration instead of object iteration
-        // let's look through each "calc" property 
+      // lets make it easier to refer to the actual indicidual "calc item" 
+      var calc = action.calcs[calcIdx];
 
-        // more specifically let's first look at all the "take" calcs/ops
-        //if (calc_lbl == "take"){  // array iteration instead of object iteration
-        var calc = action.calcs[calcIdx];
-        if (calc.type == "take"){ // array iteration instead of object iteration
+      // store the name of the GameItem we want to CALC FROM as a string
+      var calcItem_fullLbl = calc.item;
 
-          //reference the whole "take" object
-          //var take = invClone.calcs[calc_lbl];
-          var take = calc;
+      // calcItem_fullLbl includes BOTH the list name (e.g. "inventory", 
+      //  "vitals")  AND  the item name (e.g. wood, fish, worms, etc..),
+      //  let's get the individual parts of the _fullLabel as a prefix
+      //  and suffix
+      var calcItem_prefix = calcItem_fullLbl.split(".")[0];
+      var calcItem_suffix = calcItem_fullLbl.split(".")[1];   
 
-          // store the name of the GameItem we want to TAKE FROM as a string
-          var takeItem_fullLbl = take.item;
+      // now store a reference to the ACTUAL GameItem by 'eval'ing the 
+      //  STRING NAME of the GameItem, which is the string in calc.item/calcItem_fullLbl
+      var gameItem = eval(calcItem_fullLbl);
 
-          // takeItem_fullLbl includes BOTH the list name (e.g. "inventory", 
-          //  "vitals")  AND  the item name (e.g. wood, fish, worms, etc..),
-          //  let's get the individual parts of the _fullLabel as a prefix
-          //  and suffix
-          var takeItem_prefix = takeItem_fullLbl.split(".")[0];
-          var takeItem_suffix = takeItem_fullLbl.split(".")[1];   
+      // store original balance to use in error message, in case this calculation fails
+      var preCalcBal = gameItem.bal;
 
-          // now store a reference to the ACTUAL GameItem by 'eval'ing the 
-          //  string name of the GameItem
-          takeItem_fullLbl = takeItem_prefix + "." + takeItem_suffix;
-          var gameItem = eval(takeItem_fullLbl);
 
-          // store original balance to use in error message, in case this calculation fails
-          var preCalcBal = gameItem.bal;
-       
+      // more specifically let's first look at all the "take" calcs/ops
+      if (calc.type == "take"){       
 
           var willTakeCalcCondFail = false;
           var willTakeCalcCondFail_str = "";
           var willTakeCalcCondFail_str2 = "";
 
+          calc.willCalcCondFail = false;
+          calc.willCalcCondFail_str = "";
+          calc.willCalcCondFail_str2 = "";
+
 
           // Now prepare the Conditional Statement EVAL STRINGS 
           //  depending on which list we're looking at ==> determined 
           //  by our takeItem_prefix variable 
-          if (takeItem_prefix == "inventory") {
-            var takeItem_prefix = "invClone";
+          if (calcItem_prefix == "inventory") {
+            
+            //var calcItem_prefix = "invClone";
+            
             // if the preCalcBal MINUS the amount to change (subtract, since 
             //  this is a TAKE operation) equals less than ZERO, then we didn't
             //  have enough of this inventory item/resource to perform this
@@ -252,21 +248,25 @@ let core = {
             willTakeCalcCondFail_str2 = "(" + preCalcBal + "-" + take.changeAmt + " < 0" + ")";
             willTakeCalcCondFail = (preCalcBal - take.changeAmt < 0);
           } else
-          if (takeItem_prefix == "vitals") {
-            var takeItem_prefix = "vitClone";
+          if (calcItem_prefix == "vitals") {
+            
+            //var calcItem_prefix = "vitClone";
+            
             // if the preCalcBal ALONE <= 0, then we ARE AT 100%
             //  of that vital (e.g. we're not hungry, tired, thirsty, cold) so
             //  we should disallow this action => NOW => store True/False 
             //  in boolean var
+            
+            // this is the condition for GIVE not take 
             willTakeCalcCondFail_str = "(preCalcBal <= 0)";
             willTakeCalcCondFail_str2 = "(" + preCalcBal + "<= 0";            
             willTakeCalcCondFail = (preCalcBal <= 0);
           }
-          takeItem_fullLbl = takeItem_prefix + "." + takeItem_suffix;
+          calcItem_fullLbl = calcItem_prefix + "." + calcItem_suffix;
 
           // set up the ACTUAL 'perform calculation' statement
           //  THIS is exactly the same for all give and takes ???????
-          var doTakeCalc_evalStr = takeItem_fullLbl + ".bal=" + takeItem_fullLbl + ".bal" + take.operator + take.changeAmt.toString();
+          var doTakeCalc_evalStr = calcItem_fullLbl + ".bal=" + calcItem_fullLbl + ".bal" + take.operator + take.changeAmt.toString();
           // e.g. var doTakeCalc_evalStr = "inventory.wood = inventory.wood - 5"
           // e.g. var doTakeCalc_evalStr = "vitals.hunger = vitals.hunger + 10"
 
@@ -290,11 +290,11 @@ let core = {
 
             //print the proper error message
             // TODO: replace below with reference to dflt err msg in inventory object
-            if (takeItem_prefix == "invClone") {
+            if (calcItem_prefix == "invClone") {
               //l("Sorry, you need to have at least %i %s to do that - but, you (only) have %i %s!", take.changeAmt, takeItem_suffix, preCalcBal, takeItem_suffix);
-              l(invClone.none.dflt_doFailMsg, take.changeAmt, takeItem_suffix, preCalcBal, takeItem_suffix);
+              l(invClone.none.dflt_doFailMsg, take.changeAmt, calcItem_suffix, preCalcBal, calcItem_suffix);
             } else
-            if (takeItem_prefix == "vitClone") {
+            if (calcItem_prefix == "vitClone") {
               l(gameItem.doFailMsg);
             }
             l("postCalcBal:"+postCalcBal);            
@@ -308,6 +308,10 @@ let core = {
             //  and vitals to perform this calculation/action])            
           }
         } // END:  if (calc.type == "take"){
+        else
+        if (calc.type == "give"){ // array iteration instead of object iteration
+        }
+
       } // END:  for (var calcIdx in action.calcs){ 
     //} // END:  for (var invItem_lbl in invClone) {
 
