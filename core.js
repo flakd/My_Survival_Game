@@ -204,29 +204,25 @@ let core = {
       var calc = action.calcs[calcIdx];
 
       // store the name of the GameItem we want to CALC FROM as a string
-      var calcItem_fullLbl = calc.item;
+      var calcItem_fullLbl = calc.itemStr;
 
       // calcItem_fullLbl includes BOTH the list name (e.g. "inventory", 
       //  "vitals")  AND  the item name (e.g. wood, fish, worms, etc..),
       //  let's get the individual parts of the _fullLabel as a prefix
       //  and suffix
-      var calcItem_prefix = calcItem_fullLbl.split(".")[0];
-      var calcItem_suffix = calcItem_fullLbl.split(".")[1];   
+      calc.itemStr_prefix = calcItem_fullLbl.split(".")[0];
+      calc.itemStr_suffix = calcItem_fullLbl.split(".")[1];
 
       // now store a reference to the ACTUAL GameItem by 'eval'ing the 
-      //  STRING NAME of the GameItem, which is the string in calc.item/calcItem_fullLbl
-      var gameItem = eval(calcItem_fullLbl);
+      //  STRING NAME of the GameItem, which is the string in calc.itemStr/calcItem_fullLbl
+      calc.gameItem = eval(calc.itemStr);
 
       // store original balance to use in error message, in case this calculation fails
-      var preCalcBal = gameItem.bal;
+      calc.preCalcBal = calc.gameItem.bal;
 
 
       // more specifically let's first look at all the "take" calcs/ops
       if (calc.type == "take"){       
-
-          var willTakeCalcCondFail = false;
-          var willTakeCalcCondFail_str = "";
-          var willTakeCalcCondFail_str2 = "";
 
           calc.willCalcCondFail = false;
           calc.willCalcCondFail_str = "";
@@ -236,21 +232,22 @@ let core = {
           // Now prepare the Conditional Statement EVAL STRINGS 
           //  depending on which list we're looking at ==> determined 
           //  by our takeItem_prefix variable 
-          if (calcItem_prefix == "inventory") {
+          //if (calc.itemStr_prefix == "inventory") {
+          if (calc.itemStr_prefix == "inventory") {
             
-            //var calcItem_prefix = "invClone";
+            //var calc.itemStr_prefix = "invClone";
             
             // if the preCalcBal MINUS the amount to change (subtract, since 
             //  this is a TAKE operation) equals less than ZERO, then we didn't
             //  have enough of this inventory item/resource to perform this
             //  in the first place => NOW => store True/False in boolean var
-            willTakeCalcCondFail_str = "(preCalcBal - take.changeAmt < 0)";
-            willTakeCalcCondFail_str2 = "(" + preCalcBal + "-" + take.changeAmt + " < 0" + ")";
-            willTakeCalcCondFail = (preCalcBal - take.changeAmt < 0);
+            calc.willCalcCondFail_str = "(preCalcBal - calc.changeAmt < 0)";
+            calc.willCalcCondFail_str2 = "(" + calc.preCalcBal + "-" + calc.changeAmt + " < 0" + ")";
+            calc.willCalcCondFail = (calc.preCalcBal - calc.changeAmt < 0);
           } else
-          if (calcItem_prefix == "vitals") {
+          if (calc.itemStr_prefix == "vitals") {
             
-            //var calcItem_prefix = "vitClone";
+            //var calc.itemStr_prefix = "vitClone";
             
             // if the preCalcBal ALONE <= 0, then we ARE AT 100%
             //  of that vital (e.g. we're not hungry, tired, thirsty, cold) so
@@ -258,48 +255,56 @@ let core = {
             //  in boolean var
             
             // this is the condition for GIVE not take 
-            willTakeCalcCondFail_str = "(preCalcBal <= 0)";
-            willTakeCalcCondFail_str2 = "(" + preCalcBal + "<= 0";            
-            willTakeCalcCondFail = (preCalcBal <= 0);
+            calc.willCalcCondFail_str = "(preCalcBal >= 100)";
+            calc.willCalcCondFail_str2 = "(" + calc.preCalcBal + ">= 100";            
+            calc.willCalcCondFail = (calc.preCalcBal >= 100);
           }
-          calcItem_fullLbl = calcItem_prefix + "." + calcItem_suffix;
+          //calcItem_fullLbl = calc.itemStr_prefix + "." + calc.itemStr_suffix;
 
           // set up the ACTUAL 'perform calculation' statement
           //  THIS is exactly the same for all give and takes ???????
-          var doTakeCalc_evalStr = calcItem_fullLbl + ".bal=" + calcItem_fullLbl + ".bal" + take.operator + take.changeAmt.toString();
-          // e.g. var doTakeCalc_evalStr = "inventory.wood = inventory.wood - 5"
-          // e.g. var doTakeCalc_evalStr = "vitals.hunger = vitals.hunger + 10"
+          
+          //var doTakeCalc_evalStr = calcItem_fullLbl + ".bal=" + calcItem_fullLbl + ".bal" + calc.operator + calc.changeAmt.toString();
+          var doTakeCalc_evalStr = calc.itemStr + ".bal=" + calc.itemStr + ".bal" + calc.operator + calc.changeAmt.toString();
+          // e.g. (doTakeCalc_evalStr = "inventory.wood = inventory.wood - 5"  or  "vitals.hunger = vitals.hunger + 10"
 
-          // go RIGHT AHEAD and perform the operation on THIS CLONED copy
+          // go RIGHT AHEAD and perform the operation on THIS CLONED copy by EVALing the "doTakeCalc string"
           eval (doTakeCalc_evalStr);
 
           // store post calculation balance for comparison (?)                    
-          var postCalcBal = gameItem.bal;
+          calc.postCalcBal = calc.gameItem.bal;
+          // not sure we use this ????
 
-          if (willTakeCalcCondFail){ // it's TRUE, that means it failed, 
-                                    //  so print error msg and increase 
-                                    //  failure number by one (if we have 
-                                    //  even 1 failure, then we won't allow 
-                                    //  this ACTION [i.e. we won't copy 
-                                    //  this clone back to the original])
+          if (!calc.willCalcCondFail){ // it's FALSE, that means the calc SUCCEEDED, 
+            l("This calc (%s) SUCCEEDED: %s[%s] is %s", 
+                doTakeCalc_evalStr, calc.willCalcCondFail_str, 
+                calc.willCalcCondFail_str2, calc.willCalcCondFail
+            );                  
+          } else
+          if (calc.willCalcCondFail){ // it's TRUE, that means the calc FAILED
+                                      //  so print error msg and increase 
+                                      //  failure number by one (if we have 
+                                      //  even 1 failure, then we won't allow 
+                                      //  this ACTION [i.e. we won't copy 
+                                      //  this clone back to the original])
             // if ANY of these tests fail then RETURN FALSE
-            l("This calc (%s) failed: %s[%s] is %s", 
-                doTakeCalc_evalStr, willTakeCalcCondFail_str, 
-                willTakeCalcCondFail_str2, willTakeCalcCondFail
+            l("This calc (%s) FAILED: %s[%s] is %s", 
+                doTakeCalc_evalStr, calc.willCalcCondFail_str, 
+                calc.willCalcCondFail_str2, calc.willCalcCondFail
             );      
 
             //print the proper error message
             // TODO: replace below with reference to dflt err msg in inventory object
-            if (calcItem_prefix == "invClone") {
-              //l("Sorry, you need to have at least %i %s to do that - but, you (only) have %i %s!", take.changeAmt, takeItem_suffix, preCalcBal, takeItem_suffix);
-              l(invClone.none.dflt_doFailMsg, take.changeAmt, calcItem_suffix, preCalcBal, calcItem_suffix);
+            //if (calc.itemStr_prefix == "invClone") {
+            if (calc.itemStr_prefix == "inventory") {  
+              //l("Sorry, you need to have at least %i %s to do that - but, you (only) have %i %s!", calc.changeAmt, takeItem_suffix, preCalcBal, takeItem_suffix);
+              l(inventory.none.dflt_doFailMsg, calc.changeAmt, calc.itemStr_suffix, calc.preCalcBal, calc.itemStr_suffix);
             } else
-            if (calcItem_prefix == "vitClone") {
-              l(gameItem.doFailMsg);
+
+            if (calc.itemStr_prefix == "vitals") {    
+              // FAIL message for a TAKE-VITALS means you are 100 or more ==> you're DEAD
+              l(calc.gameItem.dieMsg);
             }
-            l("postCalcBal:"+postCalcBal);            
-            l();
-          
             // TRUE: numInValidConds++  (now it will be greater than 0 later 
             numInValidConds++;
 
@@ -307,6 +312,10 @@ let core = {
             //  successful, i.e. you need to have enough ALL if the inventory 
             //  and vitals to perform this calculation/action])            
           }
+
+          //print these regardless of whether it's false(succeeded) or true(failed)
+          l("postCalcBal:"+calc.postCalcBal);            
+          l();
         } // END:  if (calc.type == "take"){
         else
         if (calc.type == "give"){ // array iteration instead of object iteration

@@ -139,9 +139,9 @@
     "duration":   1,
     "successMsg": "chopped wood (%s%s%i). You feel a bit more tired (%s%s%i)",    
     "calcs":  [
-      { "type": "give",   "item": "inventory.wood",     "operator":   "+",  "changeAmt":  5   },
-      { "type": "take",   "item": "inventory.trees",    "operator":   "-",  "changeAmt":  1   },
-      { "type": "take",   "item": "vitals.fatigue",  "operator":   "+",  "changeAmt":  15,   "override": true   }
+      { "type": "give",   "itemStr": "inventory.wood",     "operator":   "+",  "changeAmt":  5   },
+      { "type": "take",   "itemStr": "inventory.trees",    "operator":   "-",  "changeAmt":  1   },
+      { "type": "take",   "itemStr": "vitals.fatigue",  "operator":   "+",  "changeAmt":  15,   "override": true   }
     ]
   },
 
@@ -150,9 +150,9 @@
     "duration":   1,
     "successMsg": "You made cordage (%s%s%i). That was pretty tiring (%s%s%i)",
     "calcs":  [
-      { "type": "give",   "item": "inventory.cord",     "operator":   "+",  "changeAmt":  1   },
-      { "type": "take",   "item": "inventory.trees",    "operator":   "-",  "changeAmt":  1   },
-      { "type": "take",   "item": "vitals.fatigue",  "operator":   "+",  "changeAmt":  20,   "override": true   }
+      { "type": "give",   "itemStr": "inventory.cord",     "operator":   "+",  "changeAmt":  1   },
+      { "type": "take",   "itemStr": "inventory.trees",    "operator":   "-",  "changeAmt":  1   },
+      { "type": "take",   "itemStr": "vitals.fatigue",  "operator":   "+",  "changeAmt":  20,   "override": true   }
     ]
   },
 
@@ -161,10 +161,10 @@
     "duration":   1,
     "successMsg": "You made a bow (%s%s%i), but that was really tiring (%s%s%i)",
     "calcs":  [
-      { "type": "give",   "item": "inventory.bows",     "operator":   "+",  "changeAmt":  1   },
-      { "type": "take",   "item": "inventory.wood",     "operator":   "-",  "changeAmt":  2   },
-      { "type": "take",   "item": "inventory.cord",     "operator":   "-",  "changeAmt":  1   },
-      { "type": "take",   "item": "vitals.fatigue",     "operator":   "+",  "changeAmt":  10,   "override": true   }
+      { "type": "give",   "itemStr": "inventory.bows",     "operator":   "+",  "changeAmt":  1   },
+      { "type": "take",   "itemStr": "inventory.wood",     "operator":   "-",  "changeAmt":  2   },
+      { "type": "take",   "itemStr": "inventory.cord",     "operator":   "-",  "changeAmt":  1   },
+      { "type": "take",   "itemStr": "vitals.fatigue",     "operator":   "+",  "changeAmt":  10,   "override": true   }
     ]
   },
 
@@ -173,12 +173,12 @@
     "duration":   6,
     "successMsg": "You caught/killed a rabbit (%s%s%i). You feel tired (%s%s%i), but accomplished - you're a warrior!", 
     "calcs":  [
-      { "type": "give",   "item": "inventory.bows",     "operator":   "+",  "changeAmt":  1   },
-      { "type": "give",   "item": "inventory.meat",     "operator":   "+",  "changeAmt":  1   },
-      { "type": "give",   "item": "vitals.hunger",      "operator":   "-",  "changeAmt":  6   },      
-      { "type": "take",   "item": "inventory.bows",     "operator":   "-",  "changeAmt":  1   },
-      { "type": "take",   "item": "inventory.arrows",   "operator":   "-",  "changeAmt":  3   },
-      { "type": "take",   "item": "vitals.fatigue",     "operator":   "+",  "changeAmt":  10,   "override": true   }
+      { "type": "give",   "itemStr": "inventory.bows",     "operator":   "+",  "changeAmt":  1   },
+      { "type": "give",   "itemStr": "inventory.meat",     "operator":   "+",  "changeAmt":  1   },
+      { "type": "give",   "itemStr": "vitals.hunger",      "operator":   "-",  "changeAmt":  6   },      
+      { "type": "take",   "itemStr": "inventory.bows",     "operator":   "-",  "changeAmt":  1   },
+      { "type": "take",   "itemStr": "inventory.arrows",   "operator":   "-",  "changeAmt":  3   },
+      { "type": "take",   "itemStr": "vitals.fatigue",     "operator":   "+",  "changeAmt":  10,   "override": true   }
     ]
   }
 
