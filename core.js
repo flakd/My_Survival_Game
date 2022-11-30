@@ -15,7 +15,9 @@ let core = {
     //  ** ANY FAILURE below immediately jumps out of function **
     
     //  0. print "status" 
-    core.printStatus();
+    //core.printStatus();
+    //output.printStats1(g.time,g.c);
+
 
     //  1. read inputs from user
     //readInput: function readInput(){}
@@ -35,19 +37,42 @@ let core = {
     // now that we know it's valid, set action for further processing/use
     var action=actions[userInput.toLowerCase()];
     
-    var inventory = structuredClone(inventoryOrig);
-    var vitals = structuredClone(vitalsOrig);
+    //var inventory = structuredClone(inventoryOrig);
+    //var vitals = structuredClone(vitalsOrig);
+    var inventory = inventoryOrig;
+    var vitals = vitalsOrig;
+
     g.c2 = {};
     g.c2.inventory = inventory;
     g.c2.vitals = vitals;
 
     // if below is false, then skip to NEXT input READLINE, which requires a return of true
-    if (!core.canPerformAction(action, inventory, vitals)) return true;
+    if (!core.canPerformAction(action, inventory, vitals)) {
+    }
 
     // else do not return and we continue to the next line of code...
     //  which is to ACTUALLY execute the command
     core.doGameAction(action, inventory, vitals);
+    doMakeGameActionPermanent();
+    function doMakeGameActionPermanent(){
+      doCopyBackToOrig();
 
+      //
+      //
+      //    THIS ISN'T WORKING
+      //
+      //
+      function doCopyBackToOrig(){
+        //inventoryOrig = inventory;
+        //vitalsOrig = vitals;
+        //inventoryOrig = structuredClone(inventory);
+        //vitalsOrig = structuredClone(vitals);        
+        g.c.inventory = structuredClone(inventory);
+        g.c.vitals = structuredClone(vitals);
+      }    
+    }
+    output.printStats1(g.time,g.c);
+    return true;
 
     //  5. pass time (update any time-dependent variables )
     //     a. based on action.duration * vitals.COST
@@ -83,6 +108,11 @@ let core = {
     isDead: function isDead(vitals){
 
     }
+
+    // print status at the end... AFTER the command is executed, 
+    //  so we can see the results/new numbers, otherwise we are always looking
+    //  at the previous numbers each time we execute a command
+    output.printStats1(g.time,g.c);
 
     //  8. loop back to beginning
     return true;
@@ -276,6 +306,7 @@ let core = {
       // now store a reference to the ACTUAL GameItem by 'eval'ing the 
       //  STRING NAME of the GameItem, which is the string in calc.itemStr/calcItem_fullLbl
       calc.gameItem = eval(gameItem_fullEvalStr);
+      if (!calc.gameItem) {e("possible misspelling of gameItem in JSON");}
 
       // store original balance to use in error message, in case this calculation fails
       calc.preCalcBal = calc.gameItem.bal;
@@ -319,7 +350,7 @@ let core = {
             doTakeCalc_evalStr, calc.willCalcCondFail_str, 
             calc.willCalcCondFail_str2, calc.willCalcCondFail
         );      
-        l(inventory.none.dflt_doFailMsg, calc.changeAmt, calc.itemStr_suffix, calc.preCalcBal, calc.itemStr_suffix);
+        l(inventory.none.dflt_doFailMsg, calc.changeAmt, calc.item, calc.preCalcBal, calc.item);
         return false;   // return false b/c this calc failed        
       }
     } // END:  doInvTakeCalc
@@ -373,6 +404,7 @@ let core = {
         // now store a reference to the ACTUAL GameItem by 'eval'ing the 
         //  STRING NAME of the GameItem, which is the string in calc.itemStr/calcItem_fullLbl
         calc.gameItem = eval(gameItem_fullEvalStr);
+        if (!calc.gameItem) {e("possible misspelling of gameItem in JSON");}
 
         // set up the ACTUAL 'perform calculation' statement      
         var doTakeCalc_evalStr = gameItemBal_evalStr + "=" + gameItemBal_evalStr + calc.operator + calc.changeAmt;
@@ -381,6 +413,10 @@ let core = {
         // go RIGHT AHEAD and perform the operation on THIS CLONED copy by EVALing the "doTakeCalc string"
         eval (doTakeCalc_evalStr);
 
+        // store post calculation balance for comparison (?)                    
+        calc.postCalcBal = calc.gameItem.bal;
+        // not sure we use this ????
+                
         //print these regardless of whether it's false(succeeded) or true(failed)
         l("postCalcBal:"+calc.postCalcBal);            
         l();
@@ -426,10 +462,7 @@ let core = {
         // now store a reference to the ACTUAL GameItem by 'eval'ing the 
         //  STRING NAME of the GameItem, which is the string in calc.itemStr/calcItem_fullLbl
         calc.gameItem = eval(gameItem_fullEvalStr);
-
-        // now store a reference to the ACTUAL GameItem by 'eval'ing the 
-        //  STRING NAME of the GameItem, which is the string in calc.itemStr/calcItem_fullLbl
-        calc.gameItem = eval(gameItem_fullEvalStr);
+        if (!calc.gameItem) {e("possible misspelling of gameItem in JSON");}
 
         // store original balance to use to set bal to ZERO if it drops BELOW ZERO from 
         //  the calculation - i.e. you can't have LESS THAN ZERO hunger, thirst, etc.

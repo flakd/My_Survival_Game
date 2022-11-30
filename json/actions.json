@@ -28,21 +28,6 @@
     },
     "duration":  1
   },  
-
-  "arrows": {
-    "key":        "arrows",
-    "inventory":{
-      "give":   {   "gameItem":   "arrows",   "operator":   "+",  "changeAmt":  4   },
-      "take":   {   "gameItem":   "wood",     "operator":   "-",  "changeAmt":  2   },
-      "msgs":   {   "okMsg":  "made arrows (arrows +4)", "errMsg": "Sorry, you need to have at least %i %s to do that - but, you (only) have %i %s!" }
-    },
-    "vitals":   {
-      "give":   {   "gameItem":   "none",  "operator":   "=",  "changeAmt":  0  },
-      "take":   {   "gameItem":   "fatigue",  "operator":   "+",  "changeAmt":  7   },
-      "msgs":   {   "okMsg":   "Wow, making arrows is harder than you thought (fatigue +7)", "errMsg": "Should be no err msg here for ARROWS"  }
-    },
-    "duration":  3
-  },  
  
   "fetch": {
     "key":        "fetch",
@@ -124,9 +109,9 @@
     "duration":   1,
     "successMsg": "chopped wood (%s%s%i). You feel a bit more tired (%s%s%i)",    
     "calcs":  [
-      { "type": "give",   "itemStr": "inventory.wood",     "operator":   "+",  "changeAmt":  5   },
-      { "type": "take",   "itemStr": "inventory.trees",    "operator":   "-",  "changeAmt":  1   },
-      { "type": "take",   "itemStr": "vitals.fatigue",  "operator":   "+",  "changeAmt":  15,   "override": true   }
+      { "type":   "give",   "list": "inventory",  "item": "wood",     "operator":   "+",  "changeAmt":  5   },
+      { "type":   "take",   "list": "inventory",  "item": "trees",    "operator":   "-",  "changeAmt":  1   },
+      { "type":   "take",   "list": "vitals",     "item": "fatigue",  "operator":   "+",  "changeAmt":  15,   "override": true   }
     ]
   },
 
@@ -135,31 +120,41 @@
     "duration":   1,
     "successMsg": "You made cordage (%s%s%i). That was pretty tiring (%s%s%i)",
     "calcs":  [
-      { "type": "give",   "itemStr": "inventory.cord",     "operator":   "+",  "changeAmt":  1   },
-      { "type": "take",   "itemStr": "inventory.trees",    "operator":   "-",  "changeAmt":  1   },
-      { "type": "take",   "itemStr": "vitals.fatigue",  "operator":   "+",  "changeAmt":  20,   "override": true   }
+      { "type":   "give",   "list": "inventory",  "item": "cord",     "operator":   "+",  "changeAmt":  1   },
+      { "type":   "take",   "list": "inventory",  "item": "trees",    "operator":   "-",  "changeAmt":  1   },
+      { "type":   "take",   "list": "vitals",     "item": "fatigue",  "operator":   "+",  "changeAmt":  20,   "override": true   }
     ]
   },
+
+  "arrows": {
+    "key":        "arrows",
+    "duration":   3,
+    "successMsg": "You made arrows (arrows +4 (%s%s%i). Wow, making arrows is harder than you thought (%s%s%i)",
+    "calcs":  [
+      { "type":   "give",   "list": "inventory",  "item": "arrows",   "operator":   "+",  "changeAmt":  4   },
+      { "type":   "take",   "list": "inventory",  "item": "wood",     "operator":   "-",  "changeAmt":  2   },
+      { "type":   "take",   "list": "vitals",     "item": "fatigue",  "operator":   "+",  "changeAmt":  7   }
+    ]
+  },  
 
   "bows":  {
     "key":        "bows",
     "duration":   1,
     "successMsg": "You made a bow (%s%s%i), but that was really tiring (%s%s%i)",
     "calcs":  [
-      { "type": "give",   "list": "inventory",  "item": "bows",     "operator":   "+",  "changeAmt":  1   },
-      { "type": "take",   "list": "inventory",  "item": "wood",     "operator":   "-",  "changeAmt":  2   },
-      { "type": "take",   "list": "inventory",  "item": "cord",     "operator":   "-",  "changeAmt":  1   },
-      { "type": "take",   "list": "vitals",     "item": "fatigue",  "operator":   "+",  "changeAmt":  10,   "override": true   }
+      { "type":   "give",   "list": "inventory",  "item": "bows",     "operator":   "+",  "changeAmt":  1   },
+      { "type":   "take",   "list": "inventory",  "item": "wood",     "operator":   "-",  "changeAmt":  2   },
+      { "type":   "take",   "list": "inventory",  "item": "cord",     "operator":   "-",  "changeAmt":  1   },
+      { "type":   "take",   "list": "vitals",     "item": "fatigue",  "operator":   "+",  "changeAmt":  10,   "override": true   }
     ]
   },
-
 
   "sleep": {
     "key":        "sleep",
     "duration":   4,
     "successMsg": "Ahhhh, you feel rested, that's nice! (fatigue -20), but, it's much later in the day",
     "calcs":  [
-      { "type": "give",   "list": "vitals",     "item": "fatigure", "operator":   "-",  "changeAmt":  25,   "override": true   }
+      { "type":   "give",   "list": "vitals",     "item": "fatigue", "operator":   "-",  "changeAmt":  25,   "override": true   }
     ]
   },    
 
@@ -168,12 +163,12 @@
     "duration":   6,
     "successMsg": "You caught/killed a rabbit (%s%s%i). You feel tired (%s%s%i), but accomplished - you're a warrior!", 
     "calcs":  [
-      { "type": "give",   "list": "inventory",  "item": "bows",     "operator":   "+",  "changeAmt":  1   },
-      { "type": "give",   "list": "inventory",  "item": "meat",     "operator":   "+",  "changeAmt":  1   },
-      { "type": "give",   "list": "vitals",     "item": "hunger",   "operator":   "-",  "changeAmt":  6   },      
-      { "type": "take",   "list": "inventory",  "item": "bows",     "operator":   "-",  "changeAmt":  1   },
-      { "type": "take",   "list": "inventory",  "item": "arrows",   "operator":   "-",  "changeAmt":  3   },
-      { "type": "take",   "list": "vitals",     "item": "fatigue",  "operator":   "+",  "changeAmt":  10,   "override": true   }
+      { "type":   "give",   "list": "inventory",  "item": "bows",     "operator":   "+",  "changeAmt":  1   },
+      { "type":   "give",   "list": "inventory",  "item": "meat",     "operator":   "+",  "changeAmt":  1   },
+      { "type":   "give",   "list": "vitals",     "item": "hunger",   "operator":   "-",  "changeAmt":  6   },      
+      { "type":   "take",   "list": "inventory",  "item": "bows",     "operator":   "-",  "changeAmt":  1   },
+      { "type":   "take",   "list": "inventory",  "item": "arrows",   "operator":   "-",  "changeAmt":  3   },
+      { "type":   "take",   "list": "vitals",     "item": "fatigue",  "operator":   "+",  "changeAmt":  10,   "override": true   }
     ]
   }
 
