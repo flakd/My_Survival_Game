@@ -11,7 +11,7 @@
       "take":   {   "gameItem":   "fatigue",  "operator":   "+",  "changeAmt":  5   },
       "msgs":   {   "okMsg":  "Ahhhh, you feel warmer, that's nice! (cold -3)", "errMsg": "Why waste wood, you're not cold right now"  }
     },
-    "duration":  1
+    "numHours":  1
   },
 
   "eatmeat": {
@@ -26,7 +26,7 @@
       "take":   {   "gameItem":   "fatigue",  "operator":   "+",  "changeAmt":  2   },
       "msgs":   {   "okMsg":  "Ahhhh, you feel warmer, that's nice! (cold -3)", "errMsg": "Why waste wood, you're not cold right now" }
     },
-    "duration":  1
+    "numHours":  1
   },  
  
   "fetch": {
@@ -41,7 +41,7 @@
       "take":   {   "gameItem":   "fatigue",  "operator":   "+",  "changeAmt":  0   },
       "msgs":   {   "okMsg":   "That took some effort (fatigue -10)", "errMsg": "Should be no Vitals err msg here for FETCH" }
     },
-    "duration":  1    
+    "numHours":  1    
   },  
 
   "drink": {
@@ -56,7 +56,7 @@
       "take":   {   "gameItem":   "fatigue",  "operator":   "-",  "changeAmt":  5   },
       "msgs":   {   "okMsg":   "Ahh... that water was refreshing! (thirst -20)", "errMsg": "You're not thirsty right now" }
     },
-    "duration":  1    
+    "numHours":  1    
   },
 
   "fish": {
@@ -71,7 +71,7 @@
       "take":   {   "gameItem":   "fatigue",  "operator":   "+",  "changeAmt":  1   },
       "msgs":   {   "okMsg":   "That wasn't too tiring (fatigue +1)", "errMsg": "Should be no Vitals err msg here for FISH" }
     },
-    "duration":  1    
+    "numHours":  1    
   },  
 
   "dig": {
@@ -86,7 +86,7 @@
       "take":   {   "gameItem":   "fatigue",  "operator":   "+",  "changeAmt":  1   },
       "msgs":   {   "okMsg":   "That wasn't too tiring (fatigue +1)", "errMsg": "Should be no Vitals err msg here for DIG" }
     },
-    "duration":  1    
+    "numHours":  1    
   },  
 
   "eatfish": {
@@ -101,12 +101,12 @@
       "take":   {   "gameItem":   "fatigue",  "operator":   "-",  "changeAmt":  5   },
       "msgs":   {   "okMsg":  "You ate something - your tummy is fuller (hunger -5)", "errMsg": "Should be no Vitals err msg here for EATFISH" }
     },
-    "duration":  1    
+    "numHours":  1    
   },
  
   "chop": {
     "key":        "chop",
-    "duration":   1,
+    "numHours":   1,
     "successMsg": "chopped wood (%s%s%i). You feel a bit more tired (%s%s%i)",    
     "calcs":  [
       { "type":   "give",   "list": "inventory",  "item": "wood",     "operator":   "+",  "changeAmt":  5   },
@@ -117,7 +117,7 @@
 
   "cord": {
     "key":        "cord",
-    "duration":   1,
+    "numHours":   1,
     "successMsg": "You made cordage (%s%s%i). That was pretty tiring (%s%s%i)",
     "calcs":  [
       { "type":   "give",   "list": "inventory",  "item": "cord",     "operator":   "+",  "changeAmt":  1   },
@@ -128,7 +128,7 @@
 
   "arrows": {
     "key":        "arrows",
-    "duration":   3,
+    "numHours":   3,
     "successMsg": "You made arrows (arrows +4 (%s%s%i). Wow, making arrows is harder than you thought (%s%s%i)",
     "calcs":  [
       { "type":   "give",   "list": "inventory",  "item": "arrows",   "operator":   "+",  "changeAmt":  4   },
@@ -139,7 +139,7 @@
 
   "bows":  {
     "key":        "bows",
-    "duration":   1,
+    "numHours":   1,
     "successMsg": "You made a bow (%s%s%i), but that was really tiring (%s%s%i)",
     "calcs":  [
       { "type":   "give",   "list": "inventory",  "item": "bows",     "operator":   "+",  "changeAmt":  1   },
@@ -151,7 +151,7 @@
 
   "sleep": {
     "key":        "sleep",
-    "duration":   4,
+    "numHours":   4,
     "successMsg": "Ahhhh, you feel rested, that's nice! (fatigue -20), but, it's much later in the day",
     "calcs":  [
       { "type":   "give",   "list": "vitals",     "item": "fatigue", "operator":   "-",  "changeAmt":  25,   "override": true   }
@@ -160,7 +160,7 @@
 
   "hunt": {
     "key":        "hunt",
-    "duration":   6,
+    "numHours":   6,
     "successMsg": "You caught/killed a rabbit (%s%s%i). You feel tired (%s%s%i), but accomplished - you're a warrior!", 
     "calcs":  [
       { "type":   "give",   "list": "inventory",  "item": "bows",     "operator":   "+",  "changeAmt":  1   },

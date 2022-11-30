@@ -5,7 +5,7 @@
     "vis":          "always",
     "doFailMsg":    "You're not hungry",
     "dieMsg":       "You've died from lack of food!!!",    
-    "hourlyInc":    1
+    "takePerHour":    1
   },    
   "thirst":    {
     "key":          "thirst",
@@ -13,7 +13,7 @@
     "vis":          "always",
     "doFailMsg":    "You're not thirsty at all",
     "dieMsg":       "You've died from lack of water!!!",    
-    "hourlyInc":    2
+    "takePerHour":    2
   },    
   "cold":    {
     "key":          "cold",
@@ -21,7 +21,7 @@
     "vis":          "always",
     "doFailMsg":    "You're not cold",
     "dieMsg":       "You've frozen to death!!!",
-    "hourlyInc":    2
+    "takePerHour":    2
   },    
   "fatigue": {
     "key":          "fatigue",
@@ -30,7 +30,7 @@
     "doFailMsg":    "You're completely rested",
     "doFailMsg_2":  "You don't feel tired",
     "dieMsg":       "You've died from exhaustion!!!",
-    "hourlyInc":    5
+    "takePerHour":    5
   },    
   "injury": {
     "key":          "injury",
@@ -39,7 +39,7 @@
     "doFailMsg":    "You're completely healed",
     "doFailMsg_2":  "You don't requiring healing",
     "dieMsg":       "You've died from your injuries!!!",
-    "hourlyInc":    0
+    "takePerHour":    0
   },      
   "none":     {
     "key":          "none",
