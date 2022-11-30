@@ -72,12 +72,21 @@ let core = {
       }    
     }
     output.printStats1(g.time,g.c);
-    return true;
+    //return true;
+
+    doPassTime();
 
     //  5. pass time (update any time-dependent variables )
     //     a. based on action.duration * vitals.COST
     //==========================================================================>    
-    doPassTime: function doPassTime(action, inventory, vitals){}
+    //doPassTime: function doPassTime(action, inventory, vitals){
+    function doPassTime(action, inventory, vitals){
+
+      for (var vitalLbl in vitals){
+        var vital = vitals[vitalLbl];
+        vital.bal+= vital.takePerHour * action.numHours;
+      }
+    }
       //loop through vitals
       //  do dflt vital.takePerHour -
       //    EXCEPT for action.calcs.take.vitals => override dflt vital.takePerHour
@@ -112,7 +121,7 @@ let core = {
     // print status at the end... AFTER the command is executed, 
     //  so we can see the results/new numbers, otherwise we are always looking
     //  at the previous numbers each time we execute a command
-    output.printStats1(g.time,g.c);
+    //output.printStats1(g.time,g.c);
 
     //  8. loop back to beginning
     return true;
