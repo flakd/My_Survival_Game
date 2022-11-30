@@ -1,7 +1,7 @@
 const l = console.log;
 
 let output = {
-  printStats1: function printStats1(time, c, cols, prePadding, colWidth, verb){
+  printStats1: function printStats1(time, cObj, cols, prePadding, colWidth, verb){
     if (!cols) { cols = 7;}
     if (!prePadding) { prePadding = "";}
     if (!colWidth) { colWidth = 15;}
@@ -16,11 +16,11 @@ let output = {
     //l("=================================================================================");
     l("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");  
 
-    this.printStats2(c.vitals, 4, "   ", 19, "|");
+    this.printStats2(cObj.vitals, 5, "   ", 15, "| ");
 
     l("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");  
 
-    if (this.printStats2(c.inventory) == 0) {
+    if (this.printStats2(cObj.inventory) == 0) {
       l("No possessions at the moment!");
     }
     l("=================================================================================");
@@ -30,7 +30,7 @@ let output = {
     l();
     l("~~~~~~~~~~~~~~~~~~~~~~~~~~~~  ACTIONS you can take:  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
     //l("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-    var actions = c.actions;
+    var actions = cObj.actions;
     var numListItems=0;
     //msg="|    ";   //reset msg from above (it last says "You've got the following:")
     msg="  ";   //reset msg from above (it last says "You've got the following:")

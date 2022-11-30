@@ -14,21 +14,6 @@
     "duration":  1
   },
 
-  "sleep": {
-    "key":        "sleep",
-    "inventory":{
-      "give":   {   "gameItem":   "none",     "operator":   "=",  "changeAmt":  0   },
-      "take":   {   "gameItem":   "none",     "operator":   "=",  "changeAmt":  0   },
-      "msgs":   {   "okMsg":  "Should not be an OK msg here for sleep", "errMsg": "Should not be an inventory ERR msg here for sleep" }
-    },
-    "vitals":   {
-      "give":   {   "gameItem":   "fatigue",  "operator":   "-",  "changeAmt":  5   },
-      "take":   {   "gameItem":   "none",     "operator":   "=",  "changeAmt":  0   },
-      "msgs":   {   "okMsg":  "Ahhhh, you feel rested, that's nice! (fatigue -20)", "errMsg": "You're not tired right now" }
-    },
-    "duration":  4
-  },  
-
   "eatmeat": {
     "key":        "eatmeat",
     "inventory":{
@@ -161,24 +146,34 @@
     "duration":   1,
     "successMsg": "You made a bow (%s%s%i), but that was really tiring (%s%s%i)",
     "calcs":  [
-      { "type": "give",   "itemStr": "inventory.bows",     "operator":   "+",  "changeAmt":  1   },
-      { "type": "take",   "itemStr": "inventory.wood",     "operator":   "-",  "changeAmt":  2   },
-      { "type": "take",   "itemStr": "inventory.cord",     "operator":   "-",  "changeAmt":  1   },
-      { "type": "take",   "itemStr": "vitals.fatigue",     "operator":   "+",  "changeAmt":  10,   "override": true   }
+      { "type": "give",   "list": "inventory",  "item": "bows",     "operator":   "+",  "changeAmt":  1   },
+      { "type": "take",   "list": "inventory",  "item": "wood",     "operator":   "-",  "changeAmt":  2   },
+      { "type": "take",   "list": "inventory",  "item": "cord",     "operator":   "-",  "changeAmt":  1   },
+      { "type": "take",   "list": "vitals",     "item": "fatigue",  "operator":   "+",  "changeAmt":  10,   "override": true   }
     ]
   },
+
+
+  "sleep": {
+    "key":        "sleep",
+    "duration":   4,
+    "successMsg": "Ahhhh, you feel rested, that's nice! (fatigue -20), but, it's much later in the day",
+    "calcs":  [
+      { "type": "give",   "list": "vitals",     "item": "fatigure", "operator":   "-",  "changeAmt":  25,   "override": true   }
+    ]
+  },    
 
   "hunt": {
     "key":        "hunt",
     "duration":   6,
     "successMsg": "You caught/killed a rabbit (%s%s%i). You feel tired (%s%s%i), but accomplished - you're a warrior!", 
     "calcs":  [
-      { "type": "give",   "itemStr": "inventory.bows",     "operator":   "+",  "changeAmt":  1   },
-      { "type": "give",   "itemStr": "inventory.meat",     "operator":   "+",  "changeAmt":  1   },
-      { "type": "give",   "itemStr": "vitals.hunger",      "operator":   "-",  "changeAmt":  6   },      
-      { "type": "take",   "itemStr": "inventory.bows",     "operator":   "-",  "changeAmt":  1   },
-      { "type": "take",   "itemStr": "inventory.arrows",   "operator":   "-",  "changeAmt":  3   },
-      { "type": "take",   "itemStr": "vitals.fatigue",     "operator":   "+",  "changeAmt":  10,   "override": true   }
+      { "type": "give",   "list": "inventory",  "item": "bows",     "operator":   "+",  "changeAmt":  1   },
+      { "type": "give",   "list": "inventory",  "item": "meat",     "operator":   "+",  "changeAmt":  1   },
+      { "type": "give",   "list": "vitals",     "item": "hunger",   "operator":   "-",  "changeAmt":  6   },      
+      { "type": "take",   "list": "inventory",  "item": "bows",     "operator":   "-",  "changeAmt":  1   },
+      { "type": "take",   "list": "inventory",  "item": "arrows",   "operator":   "-",  "changeAmt":  3   },
+      { "type": "take",   "list": "vitals",     "item": "fatigue",  "operator":   "+",  "changeAmt":  10,   "override": true   }
     ]
   }
 

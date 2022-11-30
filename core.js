@@ -11,7 +11,7 @@ const l=console.log;
 const e=function(msg){console.error("**ERROR**: %s",msg)};
 
 let core = {
-  gameMainLoop: function gameMainLoop(userInput, inventory, vitals, actions){
+  gameMainLoop: function gameMainLoop(userInput, inventoryOrig, vitalsOrig, actions){
     //  ** ANY FAILURE below immediately jumps out of function **
     
     //  0. print "status" 
@@ -24,43 +24,65 @@ let core = {
 
     //  2. check if input is a LEGIT input
     //     a. EXECUTE valid Game COMMANDS
-        if (core.isInputAValidGameCommand(userInput)) return core.doCommandWithResult(userInput);
+        if ( core.isInputAValidGameCommand(userInput.toLowerCase()) ) return core.doCommandWithResult(userInput.toLowerCase());
 
     //     b. check to see if this is a LEGIT game-play action
-    if (!core.isInputAValidGameAction(userInput, actions)) 
+    if (!core.isInputAValidGameAction(userInput.toLowerCase(), actions)) 
     return true;      // RETURNing TRUE here b/c we ARE NOT DEAD and want 
                       //   to continue code execution
                       //   (REMEMBER:  return false would mean we died)
 
     // now that we know it's valid, set action for further processing/use
-    var action=actions[userInput];
+    var action=actions[userInput.toLowerCase()];
+    
+    var inventory = structuredClone(inventoryOrig);
+    var vitals = structuredClone(vitalsOrig);
+    g.c2 = {};
+    g.c2.inventory = inventory;
+    g.c2.vitals = vitals;
+
     // if below is false, then skip to NEXT input READLINE, which requires a return of true
     if (!core.canPerformAction(action, inventory, vitals)) return true;
 
     // else do not return and we continue to the next line of code...
     //  which is to ACTUALLY execute the command
+    core.doGameAction(action, inventory, vitals);
 
-
-    //  4. perform action by:
-    //     a. perform "give"s... THEN
-    //     b. perform "take"s (perform 3b, but on REAL inventory )
-    //==========================================================================>    
-    doPerformAction: function doPerformAction(action, inventory, vitals){}
 
     //  5. pass time (update any time-dependent variables )
     //     a. based on action.duration * vitals.COST
     //==========================================================================>    
     doPassTime: function doPassTime(action, inventory, vitals){}
+      //loop through vitals
+      //  do dflt vital.takePerHour -
+      //    EXCEPT for action.calcs.take.vitals => override dflt vital.takePerHour
 
     //  6. TODO: perform random events
     //     a. update values (e.g. inventory and/or vitals)
     //==========================================================================>    
-    doRandomActOfGod: function doRandomActOfGod(inventory, vitals){}
+    doRandomActOfGod: function doRandomActOfGod(inventory, vitals){
+      var actsOfGod = [
+        { event: "storm",   probability: 40,  injury: 10  },
+        { event: "bear",    probability: 5,   injury: 70  },
+        { event: "wolves",  probability: 10,  injury: 45  },
+        { event: "fall",    probability: 20,  injury: 25  },
+        { event: "cut",     probability: 15,  injury: 32  },                        
+      ];
+      var actChoice = Math.random() * actsOfGod.length;
+      var act = actsOfGod[actChoice];
+      var chance = Math.random() * 100;
+      if (chance <= act.probability) { 
+        l(act.event);
+        vitals.injury = vitals.injury + act.injury;
+      }
+    }
     
     //  7. check for death    ==>  TODO:  Game Over / Play Again
     //     a. verify that all VITALS are < 100
     //==========================================================================>    
-    isDead: function isDead(vitals){}
+    isDead: function isDead(vitals){
+
+    }
 
     //  8. loop back to beginning
     return true;
@@ -73,10 +95,14 @@ let core = {
   },
 
   doSecretTestCalc: function doSecretTestCalc(userInput, inventory, vitals){
-    if ( userInput.toLowerCase().startsWith("/p") ) {
+    if ( userInput.toLowerCase() == "/p" ) {
       output.printStats1(g.time,g.c);
       return true;
     }
+    if ( userInput.toLowerCase() == "/p2" ) {
+      output.printStats1(g.time,g.c2);
+      return true;
+    }    
     if (  userInput.toLowerCase().startsWith("/a ") ){
       var words = userInput.toLowerCase().split(" ");
       var targetListAbbr = words[1].split(".")[0];
@@ -183,150 +209,262 @@ let core = {
   //     d. verify TAKE vital > zero (i.e. otherwise at least ONE requirment failed)
   //        i.  IF false => print ERROR message (i.e. you're not hungry && NEXT LOOP)
   //==========================================================================>
-  canPerformAction: function canPerformAction(action, inventoryOrig, vitalsOrig){
+  canPerformAction: function canPerformAction(action, inventory, vitals){
     // lets clone these so that we can make changes without 
     //  affecting the real/originals
-    var inventory = structuredClone(inventoryOrig);
-    var vitals = structuredClone(vitalsOrig);
-    //var numTakeCalcs = 0;
-    var numInValidConds = 0;   // all we care is if this is > 0 when we're done
 
-    // we're only looking at the calc prop of the ACTION object, we don't
-    //  care about the other properties !="calcs" (e.g. key, duration, msgs)
-    
-    // action.calcs was an object ==> now I've made it an array 
-    //  (see code below this to iterate through the array)
 
-    for (var calcIdx in action.calcs){   // array iteration instead of object iteration
-      // let's look through each item in the "calcs" property/subObject
+    if (canDoInvTakeCalcs(action)) { 
+      canPerformAction = true;
+      return canPerformAction;
+      // we don't return false b/c that means we died
+    }
 
-      // lets make it easier to refer to the actual indicidual "calc item" 
-      var calc = action.calcs[calcIdx];
+    function canDoInvTakeCalcs(action) {
+      //prepare for keeping tracking of ANY of these InvTakeCalc conditions fail
+      var numInValidTakeConds = 0;   // a successful command means this > 0 when we're done
 
-      // store the name of the GameItem we want to CALC FROM as a string
-      var calcItem_fullLbl = calc.itemStr;
+      // we're only looking at the CALCS prop of the ACTION object, we don't
+      //  care about the other properties !="calcs" (e.g. key, duration, msgs)
+      var invTakeCalcs = getInvTakeCalcs(action.calcs);
 
-      // calcItem_fullLbl includes BOTH the list name (e.g. "inventory", 
-      //  "vitals")  AND  the item name (e.g. wood, fish, worms, etc..),
-      //  let's get the individual parts of the _fullLabel as a prefix
-      //  and suffix
-      calc.itemStr_prefix = calcItem_fullLbl.split(".")[0];
-      calc.itemStr_suffix = calcItem_fullLbl.split(".")[1];
+      // if we don't find any invTakeCalcs (null/undefined) then print a developer error??
+      if (!(invTakeCalcs)) { e("missing invTakeCalcs"); }
+            
+      for (var calcIdx in invTakeCalcs){
+        if (!canDoInvTakeCalc(invTakeCalcs[calcIdx]))         
+        // TRUE: numInValidConds++  (now it will be greater than 0 if 
+        //  false (meaning at least one failed)
+        numInValidTakeConds++;
+
+        //  => this means we don't perform the actiion [all have to be 
+        //  successful, i.e. you need to have enough of EACH AND EVERY/ALL
+        //   if the inventory and vitals to perform this calculation/action])    
+      }          
+      // if ANY of these tests fail then RETURN FALSE ==>
+      //  this means we CANNOT perform the action
+      return (numInValidTakeConds == 0)
+    }
+
+    function getInvTakeCalcs(calcs) {
+      // prepare to store all the "inventory takes" in an array
+      var invTakeCalcs = [];
+
+      for (var calcIdx in action.calcs) { // array iteration instead of object iteration
+        // let's look through each item in the "calcs" property/subObject
+        // lets make it easier to refer to the actual indicidual "calc item"
+        //  that we're looking at, at the moment
+        var calc = action.calcs[calcIdx];
+
+        // the name of the GameItem we want to CALC FROM as a string is 
+        //  stored in calc.list and calc.item combined
+        if (!calc.list || !calc.item) { e("missing ITEM NAME (list & item)"); }
+
+        if (calc.list=="inventory" && calc.type=="take") {
+          invTakeCalcs.push(calc);
+        }
+      }
+      return invTakeCalcs;
+    }
+
+    function canDoInvTakeCalc(calc) {
+      // store the full string/name which we need to use to build an 
+      //  actual code reference to the gameItem object
+      var gameItem_fullEvalStr = calc.list + "." + calc.item;
+      var gameItemBal_evalStr = gameItem_fullEvalStr + ".bal";
 
       // now store a reference to the ACTUAL GameItem by 'eval'ing the 
       //  STRING NAME of the GameItem, which is the string in calc.itemStr/calcItem_fullLbl
-      calc.gameItem = eval(calc.itemStr);
+      calc.gameItem = eval(gameItem_fullEvalStr);
 
       // store original balance to use in error message, in case this calculation fails
       calc.preCalcBal = calc.gameItem.bal;
+                        
+      // if the preCalcBal MINUS the amount to change (subtract, since 
+      //  this is a TAKE operation) equals less than ZERO, then we didn't
+      //  have enough of this inventory item/resource to perform this
+      //  in the first place => NOW => store True/False in boolean var
+      calc.willCalcCondFail_str = "(preCalcBal - calc.changeAmt < 0)";
+      calc.willCalcCondFail_str2 = "(" + calc.preCalcBal + "-" + calc.changeAmt + " < 0" + ")";
+      calc.willCalcCondFail = (calc.preCalcBal - calc.changeAmt < 0);
 
+      // set up the ACTUAL 'perform calculation' statement      
+      var doTakeCalc_evalStr = gameItemBal_evalStr + "=" + gameItemBal_evalStr + calc.operator + calc.changeAmt;
+      // e.g. (doTakeCalc_evalStr = "inventory.wood = inventory.wood - 5"  or  "vitals.hunger = vitals.hunger + 10"
 
-      // more specifically let's first look at all the "take" calcs/ops
-      if (calc.type == "take"){       
+      // go RIGHT AHEAD and perform the operation on THIS CLONED copy by EVALing the "doTakeCalc string"
+      eval (doTakeCalc_evalStr);
 
-          calc.willCalcCondFail = false;
-          calc.willCalcCondFail_str = "";
-          calc.willCalcCondFail_str2 = "";
+      // store post calculation balance for comparison (?)                    
+      calc.postCalcBal = calc.gameItem.bal;
+      // not sure we use this ????
 
-
-          // Now prepare the Conditional Statement EVAL STRINGS 
-          //  depending on which list we're looking at ==> determined 
-          //  by our takeItem_prefix variable 
-          //if (calc.itemStr_prefix == "inventory") {
-          if (calc.itemStr_prefix == "inventory") {
-            
-            //var calc.itemStr_prefix = "invClone";
-            
-            // if the preCalcBal MINUS the amount to change (subtract, since 
-            //  this is a TAKE operation) equals less than ZERO, then we didn't
-            //  have enough of this inventory item/resource to perform this
-            //  in the first place => NOW => store True/False in boolean var
-            calc.willCalcCondFail_str = "(preCalcBal - calc.changeAmt < 0)";
-            calc.willCalcCondFail_str2 = "(" + calc.preCalcBal + "-" + calc.changeAmt + " < 0" + ")";
-            calc.willCalcCondFail = (calc.preCalcBal - calc.changeAmt < 0);
-          } else
-          if (calc.itemStr_prefix == "vitals") {
-            
-            //var calc.itemStr_prefix = "vitClone";
-            
-            // if the preCalcBal ALONE <= 0, then we ARE AT 100%
-            //  of that vital (e.g. we're not hungry, tired, thirsty, cold) so
-            //  we should disallow this action => NOW => store True/False 
-            //  in boolean var
-            
-            // this is the condition for GIVE not take 
-            calc.willCalcCondFail_str = "(preCalcBal >= 100)";
-            calc.willCalcCondFail_str2 = "(" + calc.preCalcBal + ">= 100";            
-            calc.willCalcCondFail = (calc.preCalcBal >= 100);
-          }
-          //calcItem_fullLbl = calc.itemStr_prefix + "." + calc.itemStr_suffix;
-
-          // set up the ACTUAL 'perform calculation' statement
-          //  THIS is exactly the same for all give and takes ???????
-          
-          //var doTakeCalc_evalStr = calcItem_fullLbl + ".bal=" + calcItem_fullLbl + ".bal" + calc.operator + calc.changeAmt.toString();
-          var doTakeCalc_evalStr = calc.itemStr + ".bal=" + calc.itemStr + ".bal" + calc.operator + calc.changeAmt.toString();
-          // e.g. (doTakeCalc_evalStr = "inventory.wood = inventory.wood - 5"  or  "vitals.hunger = vitals.hunger + 10"
-
-          // go RIGHT AHEAD and perform the operation on THIS CLONED copy by EVALing the "doTakeCalc string"
-          eval (doTakeCalc_evalStr);
-
-          // store post calculation balance for comparison (?)                    
-          calc.postCalcBal = calc.gameItem.bal;
-          // not sure we use this ????
-
-          if (!calc.willCalcCondFail){ // it's FALSE, that means the calc SUCCEEDED, 
-            l("This calc (%s) SUCCEEDED: %s[%s] is %s", 
-                doTakeCalc_evalStr, calc.willCalcCondFail_str, 
-                calc.willCalcCondFail_str2, calc.willCalcCondFail
-            );                  
-          } else
-          if (calc.willCalcCondFail){ // it's TRUE, that means the calc FAILED
-                                      //  so print error msg and increase 
-                                      //  failure number by one (if we have 
-                                      //  even 1 failure, then we won't allow 
-                                      //  this ACTION [i.e. we won't copy 
-                                      //  this clone back to the original])
-            // if ANY of these tests fail then RETURN FALSE
-            l("This calc (%s) FAILED: %s[%s] is %s", 
-                doTakeCalc_evalStr, calc.willCalcCondFail_str, 
-                calc.willCalcCondFail_str2, calc.willCalcCondFail
-            );      
-
-            //print the proper error message
-            // TODO: replace below with reference to dflt err msg in inventory object
-            //if (calc.itemStr_prefix == "invClone") {
-            if (calc.itemStr_prefix == "inventory") {  
-              //l("Sorry, you need to have at least %i %s to do that - but, you (only) have %i %s!", calc.changeAmt, takeItem_suffix, preCalcBal, takeItem_suffix);
-              l(inventory.none.dflt_doFailMsg, calc.changeAmt, calc.itemStr_suffix, calc.preCalcBal, calc.itemStr_suffix);
-            } else
-
-            if (calc.itemStr_prefix == "vitals") {    
-              // FAIL message for a TAKE-VITALS means you are 100 or more ==> you're DEAD
-              l(calc.gameItem.dieMsg);
-            }
-            // TRUE: numInValidConds++  (now it will be greater than 0 later 
-            numInValidConds++;
-
-            //  => this means we don't perform the actiion [all have to be 
-            //  successful, i.e. you need to have enough ALL if the inventory 
-            //  and vitals to perform this calculation/action])            
-          }
-
-          //print these regardless of whether it's false(succeeded) or true(failed)
-          l("postCalcBal:"+calc.postCalcBal);            
-          l();
-        } // END:  if (calc.type == "take"){
-        else
-        if (calc.type == "give"){ // array iteration instead of object iteration
-        }
-
-      } // END:  for (var calcIdx in action.calcs){ 
-    //} // END:  for (var invItem_lbl in invClone) {
-
-    return (numInValidConds > 0)
-
+      //print these regardless of whether it's false(succeeded) or true(failed)
+      l("postCalcBal:"+calc.postCalcBal);            
+      l();
+      if (!calc.willCalcCondFail){ // it's FALSE, that means the calc SUCCEEDED, 
+        l("This calc (%s) SUCCEEDED: %s[%s] is %s", 
+            doTakeCalc_evalStr, calc.willCalcCondFail_str, 
+            calc.willCalcCondFail_str2, calc.willCalcCondFail
+        );                  
+        return true;  // return true if that calc succeeds
+      } else  { // it's TRUE, that means the calc FAILED
+                //  so print error msg and increase 
+                //  failure number by one (if we have 
+                //  even 1 failure, then we won't allow 
+                //  this ACTION [i.e. we won't copy 
+                //  this clone back to the original])
+                
+        l("This calc (%s) FAILED: %s[%s] is %s", 
+            doTakeCalc_evalStr, calc.willCalcCondFail_str, 
+            calc.willCalcCondFail_str2, calc.willCalcCondFail
+        );      
+        l(inventory.none.dflt_doFailMsg, calc.changeAmt, calc.itemStr_suffix, calc.preCalcBal, calc.itemStr_suffix);
+        return false;   // return false b/c this calc failed        
+      }
+    } // END:  doInvTakeCalc
   }, // END:  function canPerformAction(action, inventory, vitals){
+
+
+  //  4. perform action by:
+  //     a. perform "give"s... THEN
+  //     b. perform "take"s (perform 3b, but on REAL inventory )
+  //==========================================================================>    
+  doGameAction: function doGameAction(action, inventory, vitals){
+    doInvGiveCalcs(action,inventory);
+    doVitGiveCalcs(action, vitals);
+    function doInvGiveCalcs(action, inventory){
+     // we're only looking at the CALCS prop of the ACTION object, we don't
+      //  care about the other properties !="calcs" (e.g. key, duration, msgs)
+      var invGiveCalcs = getInvGiveCalcs(action.calcs);
+
+      // if we don't find any invGiveCalcs (null/undefined) then print a developer error??
+      if (!(invGiveCalcs)) { e("missing invGiveCalcs"); }
+            
+      for (var calcIdx in invGiveCalcs){
+        doInvGiveCalc(invGiveCalcs[calcIdx]);
+      }                
+      function getInvGiveCalcs(calcs) {
+        // prepare to store all the "inventory takes" in an array
+        var invGiveCalcs = [];
+
+        for (var calcIdx in action.calcs) { // array iteration instead of object iteration
+          // let's look through each item in the "calcs" property/subObject
+          // lets make it easier to refer to the actual indicidual "calc item"
+          //  that we're looking at, at the moment
+          var calc = action.calcs[calcIdx];
+
+          // the name of the GameItem we want to CALC FROM as a string is 
+          //  stored in calc.list and calc.item combined
+          if (!calc.list || !calc.item) { e("missing ITEM NAME (list & item)"); }
+
+          if (calc.list=="inventory" && calc.type=="give") {
+            invGiveCalcs.push(calc);
+          }
+        }
+        return invGiveCalcs;
+      }
+      function doInvGiveCalc(calc) {
+        // store the full string/name which we need to use to build an 
+        //  actual code reference to the gameItem object
+        var gameItem_fullEvalStr = calc.list + "." + calc.item;
+        var gameItemBal_evalStr = gameItem_fullEvalStr + ".bal";
+
+        // now store a reference to the ACTUAL GameItem by 'eval'ing the 
+        //  STRING NAME of the GameItem, which is the string in calc.itemStr/calcItem_fullLbl
+        calc.gameItem = eval(gameItem_fullEvalStr);
+
+        // set up the ACTUAL 'perform calculation' statement      
+        var doTakeCalc_evalStr = gameItemBal_evalStr + "=" + gameItemBal_evalStr + calc.operator + calc.changeAmt;
+        // e.g. (doTakeCalc_evalStr = "inventory.wood = inventory.wood - 5"  or  "vitals.hunger = vitals.hunger + 10"
+
+        // go RIGHT AHEAD and perform the operation on THIS CLONED copy by EVALing the "doTakeCalc string"
+        eval (doTakeCalc_evalStr);
+
+        //print these regardless of whether it's false(succeeded) or true(failed)
+        l("postCalcBal:"+calc.postCalcBal);            
+        l();
+      } // END: function doInvGiveCalc(calc) {
+    } // END: function doInvGiveCalcs(action, inventory)
+    function doVitGiveCalcs(action, vitals){
+      // we're only looking at the CALCS prop of the ACTION object, we don't
+      //  care about the other properties !="calcs" (e.g. key, duration, msgs)
+      var vitGiveCalcs = getVitGiveCalcs(action.calcs);    
+      
+      // if we don't find any invGiveCalcs (null/undefined) then print a developer error??
+      if (!(vitGiveCalcs)) { e("missing vitGiveCalcs"); }
+            
+      for (var calcIdx in vitGiveCalcs){
+        doVitGiveCalc(vitGiveCalcs[calcIdx]);
+      }     
+      function getVitGiveCalcs(calcs) {
+        // prepare to store all the "inventory takes" in an array
+        var vitGiveCalcs = [];
+
+        for (var calcIdx in action.calcs) { // array iteration instead of object iteration
+          // let's look through each item in the "calcs" property/subObject
+          // lets make it easier to refer to the actual indicidual "calc item"
+          //  that we're looking at, at the moment
+          var calc = action.calcs[calcIdx];
+
+          // the name of the GameItem we want to CALC FROM as a string is 
+          //  stored in calc.list and calc.item combined
+          if (!calc.list || !calc.item) { e("missing ITEM NAME (list & item)"); }
+
+          if (calc.list=="vitals" && calc.type=="give") {
+            vitGiveCalcs.push(calc);
+          }
+        }
+        return vitGiveCalcs;
+      }             
+      function doVitGiveCalc(calc) {
+        // store the full string/name which we need to use to build an 
+        //  actual code reference to the gameItem object
+        var gameItem_fullEvalStr = calc.list + "." + calc.item;
+        var gameItemBal_evalStr = gameItem_fullEvalStr + ".bal";
+
+        // now store a reference to the ACTUAL GameItem by 'eval'ing the 
+        //  STRING NAME of the GameItem, which is the string in calc.itemStr/calcItem_fullLbl
+        calc.gameItem = eval(gameItem_fullEvalStr);
+
+        // now store a reference to the ACTUAL GameItem by 'eval'ing the 
+        //  STRING NAME of the GameItem, which is the string in calc.itemStr/calcItem_fullLbl
+        calc.gameItem = eval(gameItem_fullEvalStr);
+
+        // store original balance to use to set bal to ZERO if it drops BELOW ZERO from 
+        //  the calculation - i.e. you can't have LESS THAN ZERO hunger, thirst, etc.
+        calc.preCalcBal = calc.gameItem.bal;
+                
+        // set up the ACTUAL 'perform calculation' statement      
+        var doTakeCalc_evalStr = gameItemBal_evalStr + "=" + gameItemBal_evalStr + calc.operator + calc.changeAmt;
+        // e.g. (doTakeCalc_evalStr = "inventory.wood = inventory.wood - 5"  or  "vitals.hunger = vitals.hunger + 10"
+
+        // go RIGHT AHEAD and perform the operation on THIS CLONED copy by EVALing the "doTakeCalc string"
+        eval (doTakeCalc_evalStr);
+
+        // store post calculation balance for comparison (?)                    
+        calc.postCalcBal = calc.gameItem.bal;
+
+    /////////////////////
+    //zeroOutVitalsIfBelowZero
+    /////////////////////
+
+        // set bal to ZERO if it drops BELOW ZERO from the calculation - 
+        //  i.e. you can't have LESS THAN ZERO hunger, thirst, etc.        
+        if (calc.postCalcBal < 0) calc.gameItem.bal = 0;
+
+        //print these regardless of whether it's false(succeeded) or true(failed)
+        l("postCalcBal:"+calc.postCalcBal);            
+        l();
+      } // END: function doInvGiveCalc(calc) {      
+
+    } // END: function doVitGiveCalcs(action, vitals)
+  },
+
+
+
+
+
 
   check: function check(line,inventory, vitals, action, time, timeInterval) {
  

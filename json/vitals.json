@@ -32,6 +32,15 @@
     "dieMsg":       "You've died from exhaustion!!!",
     "hourlyInc":    5
   },    
+  "injury": {
+    "key":          "injury",
+    "bal":          0,
+    "vis":          "always",
+    "doFailMsg":    "You're completely healed",
+    "doFailMsg_2":  "You don't requiring healing",
+    "dieMsg":       "You've died from your injuries!!!",
+    "hourlyInc":    0
+  },      
   "none":     {
     "key":          "none",
     "bal":          0, 
