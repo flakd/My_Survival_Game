@@ -71,10 +71,8 @@ let core = {
         g.c.vitals = structuredClone(vitals);
       }    
     }
-    output.printStats1(g.time,g.c);
-    //return true;
-
     doPassTime();
+    output.printStats1(g.time,g.c);
 
     //  5. pass time (update any time-dependent variables )
     //     a. based on action.duration * vitals.COST
@@ -84,8 +82,23 @@ let core = {
 
       for (var vitalLbl in vitals){
         var vital = vitals[vitalLbl];
-        vital.bal+= vital.takePerHour * action.numHours;
+
+        if (vitalLbl != "none") {
+
+          for (var calcIdx in action.calcs) {
+            var calc = action.calcs[calcIdx];
+
+            if (calc.list == "vital")
+
+              if (vitalLbl != calc.item) {
+                vital.bal+= vital.takePerHour * action.numHours;
+              } else {
+                vital.bal+= calc.changeAmt;
+              }
+            }
+          }
       }
+      g.time+=action.numHours;
     }
       //loop through vitals
       //  do dflt vital.takePerHour -
