@@ -288,7 +288,7 @@ let core = {
 
       // we're only looking at the CALCS prop of the ACTION object, we don't
       //  care about the other properties !="calcs" (e.g. key, duration, msgs)
-      var invTakeCalcs = getInvTakeCalcs(action.calcs);
+      var invTakeCalcs = core.getSpecificCalcs("inventory","take");
 
       // if we don't find any invTakeCalcs (null/undefined) then print a developer error??
       if (!(invTakeCalcs)) { e("missing invTakeCalcs"); }
@@ -308,26 +308,7 @@ let core = {
       return (numInValidTakeConds == 0)
     }
 
-    function getInvTakeCalcs(calcs) {
-      // prepare to store all the "inventory takes" in an array
-      var invTakeCalcs = [];
 
-      for (var calcIdx in action.calcs) { // array iteration instead of object iteration
-        // let's look through each item in the "calcs" property/subObject
-        // lets make it easier to refer to the actual indicidual "calc item"
-        //  that we're looking at, at the moment
-        var calc = action.calcs[calcIdx];
-
-        // the name of the GameItem we want to CALC FROM as a string is 
-        //  stored in calc.list and calc.item combined
-        if (!calc.list || !calc.item) { e("missing ITEM NAME (list & item)"); }
-
-        if (calc.list=="inventory" && calc.type=="take") {
-          invTakeCalcs.push(calc);
-        }
-      }
-      return invTakeCalcs;
-    } // END: getInvTakeCalcs(calcs)
 
     function canDoInvTakeCalc(calc) {
       // store the full string/name which we need to use to build an 
@@ -396,7 +377,7 @@ let core = {
 
       // we're only looking at the CALCS prop of the ACTION object, we don't
       //  care about the other properties !="calcs" (e.g. key, duration, msgs)
-      var invTakeCalcs = getInvTakeCalcs(action.calcs);
+      var invTakeCalcs = core.getSpecificCalcs("inventory","take");
 
       // if we don't find any invTakeCalcs (null/undefined) then print a developer error??
       if (!(invTakeCalcs)) { e("missing invTakeCalcs"); }
@@ -415,27 +396,6 @@ let core = {
       //  this means we CANNOT perform the action
       return (numInValidTakeConds == 0)
 
-
-      function getInvTakeCalcs(calcs) {
-        // prepare to store all the "inventory takes" in an array
-        var invTakeCalcs = [];
-
-        for (var calcIdx in action.calcs) { // array iteration instead of object iteration
-          // let's look through each item in the "calcs" property/subObject
-          // lets make it easier to refer to the actual indicidual "calc item"
-          //  that we're looking at, at the moment
-          var calc = action.calcs[calcIdx];
-
-          // the name of the GameItem we want to CALC FROM as a string is 
-          //  stored in calc.list and calc.item combined
-          if (!calc.list || !calc.item) { e("missing ITEM NAME (list & item)"); }
-
-          if (calc.list=="inventory" && calc.type=="take") {
-            invTakeCalcs.push(calc);
-          }
-        }
-        return invTakeCalcs;
-      }
 
       function doInvTakeCalc(calc) {
         // store the full string/name which we need to use to build an 
@@ -601,7 +561,26 @@ let core = {
   },
 
 
+  getSpecificCalcs: function getSpecificCalcs(list, type) {
+    // prepare to store all the "inventory takes" in an array
+    var specificCalcs = [];
 
+    for (var calcIdx in action.calcs) { // array iteration instead of object iteration
+      // let's look through each item in the "calcs" property/subObject
+      // lets make it easier to refer to the actual indicidual "calc item"
+      //  that we're looking at, at the moment
+      var calc = action.calcs[calcIdx];
+
+      // the name of the GameItem we want to CALC FROM as a string is 
+      //  stored in calc.list and calc.item combined
+      if (!calc.list || !calc.item) { e("missing ITEM or LIST name"); }
+
+      if (calc.list==list && calc.type==type) {
+        specificCalcs.push(calc);
+      }
+    }
+    return specificCalcs;
+  }, // END: getInvTakeCalcs(calcs)
 
 
 
