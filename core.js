@@ -16,7 +16,7 @@ let core = {
     
     //  0. print "status" 
     //core.printStatus();
-    //output.printStats1(g.time,g.c);
+    //output.printStats1(g.gameHour,g.c);
 
 
     //  1. read inputs from user
@@ -71,8 +71,12 @@ let core = {
         g.c.vitals = structuredClone(vitals);
       }    
     }
-    doPassTime();
-    output.printStats1(g.time,g.c);
+    doPassTime(action, inventory, vitals);
+    output.printStats1(g.gameHour,g.c);
+    if ( doRandomActOfGod(inventory, vitals) ) {
+      output.printStats1(g.gameHour,g.c);
+    }
+    return (!isDead(vitals));
 
     //  5. pass time (update any time-dependent variables )
     //     a. based on action.duration * vitals.COST
@@ -80,16 +84,20 @@ let core = {
     //doPassTime: function doPassTime(action, inventory, vitals){
     function doPassTime(action, inventory, vitals){
 
+      //loop through vitals
       for (var vitalLbl in vitals){
         var vital = vitals[vitalLbl];
 
-        if (vitalLbl != "none") {
+        if (vitalLbl != "none") {   // skip the "none" vital, that's just 
+                                    //  used for default values/storage
 
           for (var calcIdx in action.calcs) {
             var calc = action.calcs[calcIdx];
 
-            if (calc.list == "vital")
+            if (calc.list == "vitals")
 
+              //  do dflt vital.takePerHour -
+              //    EXCEPT for action.calcs.take.vitals => override dflt vital.takePerHour      
               if (vitalLbl != calc.item) {
                 vital.bal+= vital.takePerHour * action.numHours;
               } else {
@@ -98,11 +106,9 @@ let core = {
             }
           }
       }
-      g.time+=action.numHours;
+      g.gameHour+=action.numHours;
     }
-      //loop through vitals
-      //  do dflt vital.takePerHour -
-      //    EXCEPT for action.calcs.take.vitals => override dflt vital.takePerHour
+
 
     //  6. TODO: perform random events
     //     a. update values (e.g. inventory and/or vitals)
@@ -115,26 +121,48 @@ let core = {
         { event: "fall",    probability: 20,  injury: 25  },
         { event: "cut",     probability: 15,  injury: 32  },                        
       ];
-      var actChoice = Math.random() * actsOfGod.length;
-      var act = actsOfGod[actChoice];
-      var chance = Math.random() * 100;
-      if (chance <= act.probability) { 
-        l(act.event);
-        vitals.injury = vitals.injury + act.injury;
+      function getRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
       }
+      var randomNumber = getRandomInt(0, actsOfGod.length);
+      var actChoice =  randomNumber;
+      var actOfGod = actsOfGod[actChoice];
+      var chance = getRandomInt(0,100);
+      if (chance <= actOfGod.probability) { 
+        l(actOfGod.event);
+        vitals.injury.bal = vitals.injury.bal + actOfGod.injury;
+        return true;
+      }
+      else return false;
     }
     
     //  7. check for death    ==>  TODO:  Game Over / Play Again
     //     a. verify that all VITALS are < 100
     //==========================================================================>    
     isDead: function isDead(vitals){
+      var numDeaths =0;
 
+      for (var vitalLbl in vitals){
+        var vital = vitals[vitalLbl];
+
+        if (vitalLbl != "none") {   // skip the "none" vital, that's just 
+                                    //  used for default values/storage
+          if (vital.bal >= 100) {
+            l(vital.dieMsg);
+            numDeaths++;
+          }
+        }
+
+      }
+      return (numDeaths > 0);
     }
 
     // print status at the end... AFTER the command is executed, 
     //  so we can see the results/new numbers, otherwise we are always looking
     //  at the previous numbers each time we execute a command
-    //output.printStats1(g.time,g.c);
+    //output.printStats1(g.gameHour,g.c);
 
     //  8. loop back to beginning
     return true;
@@ -148,11 +176,11 @@ let core = {
 
   doSecretTestCalc: function doSecretTestCalc(userInput, inventory, vitals){
     if ( userInput.toLowerCase() == "/p" ) {
-      output.printStats1(g.time,g.c);
+      output.printStats1(g.gameHour,g.c);
       return true;
     }
     if ( userInput.toLowerCase() == "/p2" ) {
-      output.printStats1(g.time,g.c2);
+      output.printStats1(g.gameHour,g.c2);
       return true;
     }    
     if (  userInput.toLowerCase().startsWith("/a ") ){
