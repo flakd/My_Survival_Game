@@ -15,10 +15,12 @@ var rl;
 const l=console.log;
 const e=function(msg){console.error("**ERROR**: %s",msg)};
 
-var time = 0;   //12 midnight
+var gameHour = 0;   //12 midnight
 var isQuit = false;
 var isGameOver = false;
-g.time = time;
+g.gameHour = gameHour;
+g.totalGameHoursPlayed = 0;
+g.gameDay = 0;
 g.isGameOver = isGameOver;
 g.isDeadCheck = isDeadCheck;
 g.startGame = startGame;
@@ -83,7 +85,7 @@ function isDeadCheck(line){
 function startGame() {
   g.isGameOver = false;
   core.resetAllStats(vitals, inventory);
-  output.printTitleBanner(time, c);
+  output.printTitleBanner(gameHour, c);
   rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
@@ -110,7 +112,7 @@ function startGame() {
       //if no errors, then let's print a 2 empty lines to give us some room on the screen
       l(" ==>\n");
 
-      if ( (ret=core.check(line,inventory, vitals, action, time)) === undefined
+      if ( (ret=core.check(line,inventory, vitals, action, gameHour)) === undefined
           ||  ret.time === undefined || ret.time===null
       ){
         e("while executing core.check()");
@@ -120,7 +122,7 @@ function startGame() {
       //  return;
       //}    
       // attribs is what stats/attributes we're going to change:  AON either inventory or vitals
-      if (!g.isGameOver) output.printStats1(time,c);
+      if (!g.isGameOver) output.printStats1(gameHour,c);
       return;
     } else {
       //e("**ERROR**:  action/actions[line] is missing"); return;
@@ -136,7 +138,7 @@ function startGame() {
         } else 
         if (line=="n" || line=="N") {
           isQuit = false;
-          output.printStats1(time,c);
+          output.printStats1(gameHour,c);
           return;
         }
       } else {
