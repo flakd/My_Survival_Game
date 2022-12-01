@@ -17,3 +17,93 @@
   "vitals":  ["none",  "=", "0"],
   "verb": "put out the fire"
 },
+
+
+"eatmeat": {
+  "key":        "eatmeat",
+  "inventory":{
+    "give":   {   "gameItem":   "none",     "operator":   "=",  "changeAmt":  0   },
+    "take":   {   "gameItem":   "meat",     "operator":   "-",  "changeAmt":  1   },
+    "msgs":   {   "okMsg":  "ate some meat, yummy (meat -1)", "errMsg": "Sorry, you need to have at least %i %s to do that - but, you (only) have %i %s!" }
+  },
+  "vitals":   {
+    "give":   {   "gameItem":   "hunger",  "operator":   "-",  "changeAmt":  10  },
+    "take":   {   "gameItem":   "fatigue",  "operator":   "+",  "changeAmt":  2   },
+    "msgs":   {   "okMsg":  "Ahhhh, you feel warmer, that's nice! (cold -3)", "errMsg": "Why waste wood, you're not cold right now" }
+  },
+  "numHours":  1
+},  
+"eatfish": {
+  "key":        "eatfish",
+  "inventory":{
+    "give":   {   "gameItem":   "none",     "operator":   "=",  "changeAmt":  0   },
+    "take":   {   "gameItem":   "fish",     "operator":   "-",  "changeAmt":  1   },
+    "msgs":   {   "okMsg":  "ate a fish - Yummy! (fish -1)", "errMsg": "Sorry, you need to have at least %i %s to do that - but, you (only) have %i %s!" }
+  },
+  "vitals":   {
+    "give":   {   "gameItem":   "hunger",   "operator":   "-",  "changeAmt":  6   },
+    "take":   {   "gameItem":   "fatigue",  "operator":   "-",  "changeAmt":  5   },
+    "msgs":   {   "okMsg":  "You ate something - your tummy is fuller (hunger -5)", "errMsg": "Should be no Vitals err msg here for EATFISH" }
+  },
+  "numHours":  1    
+},
+
+"fetch": {
+  "key":        "fetch",
+  "inventory":{
+    "give":   {   "gameItem":   "H20",      "operator":   "+",  "changeAmt":  5   },
+    "take":   {   "gameItem":   "none",     "operator":   "=",  "changeAmt":  0   },
+    "msgs":   {   "okMsg":  "fetched some water (H20 +5)", "errMsg": "Should be no Inventory err msg here for FETCH" }
+  },
+  "vitals":   {
+    "give":   {   "gameItem":   "none",  "operator":   "=",  "changeAmt":  0  },
+    "take":   {   "gameItem":   "fatigue",  "operator":   "+",  "changeAmt":  0   },
+    "msgs":   {   "okMsg":   "That took some effort (fatigue -10)", "errMsg": "Should be no Vitals err msg here for FETCH" }
+  },
+  "numHours":  1    
+},  
+
+"drink": {
+  "key":        "drink",
+  "inventory":{
+    "give":   {   "gameItem":   "none",     "operator":   "=",  "changeAmt":  0   },
+    "take":   {   "gameItem":   "H20",      "operator":   "-",  "changeAmt":  1   },
+    "msgs":   {   "okMsg":  "have a little less water for yourself (H20 -1)", "errMsg": "Sorry, you need to have at least %i %s to do that - but, you (only) have %i %s!" }
+  },
+  "vitals":   {
+    "give":   {   "gameItem":   "thirst",   "operator":   "-",  "changeAmt":  20  },
+    "take":   {   "gameItem":   "fatigue",  "operator":   "-",  "changeAmt":  5   },
+    "msgs":   {   "okMsg":   "Ahh... that water was refreshing! (thirst -20)", "errMsg": "You're not thirsty right now" }
+  },
+  "numHours":  1    
+},
+
+"fish": {
+  "key":        "fish",
+  "inventory":{
+    "give":   {   "gameItem":   "fish",     "operator":   "+",  "changeAmt":  1   },
+    "take":   {   "gameItem":   "worms",    "operator":   "-",  "changeAmt":  1   },
+    "msgs":   {   "okMsg":  "just caught a fish (fish +1)", "errMsg": "Sorry, you need to have at least %i %s to do that - but, you (only) have %i %s!" }
+  },
+  "vitals":   {
+    "give":   {   "gameItem":   "none",     "operator":   "=",  "changeAmt":  0   },
+    "take":   {   "gameItem":   "fatigue",  "operator":   "+",  "changeAmt":  1   },
+    "msgs":   {   "okMsg":   "That wasn't too tiring (fatigue +1)", "errMsg": "Should be no Vitals err msg here for FISH" }
+  },
+  "numHours":  1    
+},  
+
+"dig": {
+  "key":        "dig",
+  "inventory":{
+    "give":   {   "gameItem":   "worms",    "operator":   "+",  "changeAmt":  1   },
+    "take":   {   "gameItem":   "none",     "operator":   "=",  "changeAmt":  0   },
+    "msgs":   {   "okMsg":  "found a worm (worms +1", "errMsg": "Should not be an inventory ERR msg here for DIG" }
+  },
+  "vitals":   {
+    "give":   {   "gameItem":   "none",     "operator":   "=",  "changeAmt":  0   },
+    "take":   {   "gameItem":   "fatigue",  "operator":   "+",  "changeAmt":  1   },
+    "msgs":   {   "okMsg":   "That wasn't too tiring (fatigue +1)", "errMsg": "Should be no Vitals err msg here for DIG" }
+  },
+  "numHours":  1    
+},  

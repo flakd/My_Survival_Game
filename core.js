@@ -11,14 +11,9 @@ const l=console.log;
 const e=function(msg){console.error("**ERROR**: %s",msg)};
 
 let core = {
-  isStillAliveGameLoop: function isStillAliveGameLoop(userInput, inventoryOrig, vitalsOrig, actions){
+  isStillAliveGameLoop: function isStillAliveGameLoop(userInput, inventory, vitals, actions){
     //  ** ANY FAILURE below immediately jumps out of function **
     
-    //  0. print "status" 
-    //core.printStatus();
-    //output.printStats1(g.gameHour,g.c);
-
-
     //  1. read inputs from user
     //readInput: function readInput(){}
     //  WE ALREADY HAVE an input (that's being handled by rl.on() in main.js)
@@ -36,150 +31,132 @@ let core = {
 
     // now that we know it's valid, set action for further processing/use
     var action=actions[userInput.toLowerCase()];
-    
-    //var inventory = structuredClone(inventoryOrig);
-    //var vitals = structuredClone(vitalsOrig);
-    var inventory = inventoryOrig;
-    var vitals = vitalsOrig;
-
-    g.c2 = {};
-    g.c2.inventory = inventory;
-    g.c2.vitals = vitals;
 
     // if below is false, then skip to NEXT input READLINE, which requires a return of true
-    if (!core.canPerformAction(action, inventory, vitals)) {
+    if (!core.canDoGameAction(action, inventory, vitals)) {
+      return true;
     }
 
     // else do not return and we continue to the next line of code...
     //  which is to ACTUALLY execute the command
     core.doGameAction(action, inventory, vitals);
-    doMakeGameActionPermanent();
-    function doMakeGameActionPermanent(){
-      doCopyBackToOrig();
-
-      //
-      //
-      //    THIS ISN'T WORKING
-      //
-      //
-      function doCopyBackToOrig(){
-        //inventoryOrig = inventory;
-        //vitalsOrig = vitals;
-        //inventoryOrig = structuredClone(inventory);
-        //vitalsOrig = structuredClone(vitals);        
-        g.c.inventory = structuredClone(inventory);
-        g.c.vitals = structuredClone(vitals);
-      }    
-    }
-    doPassTime(action, inventory, vitals);
-    output.printStats1(g.gameHour,g.c);
-    if ( doRandomActOfGod(inventory, vitals) ) {
-      output.printStats1(g.gameHour,g.c);
-    }
-    return (!isDead(vitals)); // if you're dead, this is FALSE, which triggers 
-                              //  an rl.close() of the main  game READLINE 
-                              //  loop - but we want to confirm that you are 
-                              //  dead, or that you've quit
-
-    //  5. pass time (update any time-dependent variables )
-    //     a. based on action.duration * vitals.COST
-    //==========================================================================>    
-    //doPassTime: function doPassTime(action, inventory, vitals){
-    function doPassTime(action, inventory, vitals){
-
-      //loop through vitals
-      for (var vitalLbl in vitals){
-        var vital = vitals[vitalLbl];
-
-        if (vitalLbl != "none") {   // skip the "none" vital, that's just 
-                                    //  used for default values/storage
-
-          for (var calcIdx in action.calcs) {
-            var calc = action.calcs[calcIdx];
-
-            if (calc.list == "vitals")
-
-              //  do dflt vital.takePerHour -
-              //    EXCEPT for action.calcs.take.vitals => override dflt vital.takePerHour      
-              if (vitalLbl != calc.item) {
-                vital.bal+= vital.takePerHour * action.numHours;
-              } else {
-                vital.bal+= calc.changeAmt;
-              }
-            }
-          }
-      }
-      g.gameHour+=action.numHours;
-    }
 
 
-    //  6. TODO: perform random events
-    //     a. update values (e.g. inventory and/or vitals)
-    //==========================================================================>    
-    doRandomActOfGod: function doRandomActOfGod(inventory, vitals){
-      var actsOfGod = [
-        { event: "storm",   probability: 40,  injury: 10  },
-        { event: "bear",    probability: 5,   injury: 70  },
-        { event: "wolves",  probability: 10,  injury: 45  },
-        { event: "fall",    probability: 20,  injury: 25  },
-        { event: "cut",     probability: 15,  injury: 32  },                        
-      ];
-      function getRandomInt(min, max) {
-        min = Math.ceil(min);
-        max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
-      }
-      var randomNumber = getRandomInt(0, actsOfGod.length);
-      var actChoice =  randomNumber;
-      var actOfGod = actsOfGod[actChoice];
-      var chance = getRandomInt(0,100);
-      if (chance <= actOfGod.probability) { 
-        l(actOfGod.event);
-        vitals.injury.bal = vitals.injury.bal + actOfGod.injury;
-        return true;
-      }
-      else return false;
-    }
-    
-    //  7. check for death    ==>  TODO:  Game Over / Play Again
-    //     a. verify that all VITALS are < 100
-    //==========================================================================>    
-    isDead: function isDead(vitals){
-      var numDeaths =0;
-
-      for (var vitalLbl in vitals){
-        var vital = vitals[vitalLbl];
-
-        if (vitalLbl != "none") {   // skip the "none" vital, that's just 
-                                    //  used for default values/storage
-          if (vital.bal >= 100) {
-            l(vital.dieMsg);
-            numDeaths++;
-          }
-        }
-
-      }
-      if (numDeaths > 0) {
-        g.isDead = true;
-        return true;  // we are returning TRUE for this function - isDead()
-                      //  - which will trigger a return of false to the main 
-                      //  loop (see above:  "return (!isDead(vitals));"
-      }
-    }
+    //  5. -------------------------------------------------------------------->
+    // passTime() increases hours by action.numHours and...
+    //   increases vitals by vitals.takePerHour * action.numHours    
+    core.doPassTime(action, inventory, vitals);
 
     // print status at the end... AFTER the command is executed, 
     //  so we can see the results/new numbers, otherwise we are always looking
     //  at the previous numbers each time we execute a command
-    //output.printStats1(g.gameHour,g.c);
+    output.printStats1(g.gameHour,g.c);
 
+    //  6. -------------------------------------------------------------------->
+    // doRandomActOfGod() randomly adds elements like storms, bears, falls, etc.
+    //  that cause injury (or maybe later damage to equipment as well)
+    //  increases vitals by vitals.takePerHour * action.numHours    
+    if ( core.doRandomActOfGod(inventory, vitals) ) {
+      output.printStats1(g.gameHour,g.c);
+    }
+    return (!core.isDead(vitals)); // if you're dead, this is FALSE, which triggers 
+                              //  an rl.close() of the main  game READLINE 
+                              //  loop - but we want to confirm that you are 
+                              //  dead, or that you've quit
+
+    //==========================================================================>
     //  8. loop back to beginning
+    //==========================================================================>
     return true;
 
   },
 
 
+  //==========================================================================>
+  //  5. pass time (update any time-dependent variables )
+  //     a. based on action.duration * vitals.COST
+  //==========================================================================>    
+  doPassTime: function doPassTime(action, inventory, vitals){
+    for (var vitalLbl in vitals){     //loop through vitals
+      var vital = vitals[vitalLbl];
 
+      if (vitalLbl != "none") {   // skip the "none" vital, that's just 
+                                  //  used for default values/storage
 
+        for (var calcIdx in action.calcs) {
+          var calc = action.calcs[calcIdx];
+
+          if (calc.list == "vitals")
+
+            //  do dflt vital.takePerHour -
+            //    EXCEPT for action.calcs.take.vitals => override dflt vital.takePerHour      
+            if (vitalLbl != calc.item) {
+              vital.bal+= vital.takePerHour * action.numHours;
+            } else {
+              vital.bal+= calc.changeAmt;
+            }
+          }
+        }
+    }
+    g.gameHour+=action.numHours;
+  },
+
+  //==========================================================================>  
+  //  6. TODO: perform random events
+  //     a. update values (e.g. inventory and/or vitals)
+  //==========================================================================>    
+  doRandomActOfGod: function doRandomActOfGod(inventory, vitals){
+    var actsOfGod = [
+      { event: "storm",   probability: 40,  injury: 10  },
+      { event: "bear",    probability: 5,   injury: 70  },
+      { event: "wolves",  probability: 10,  injury: 45  },
+      { event: "fall",    probability: 20,  injury: 25  },
+      { event: "cut",     probability: 15,  injury: 32  },                        
+    ];
+    function getRandomInt(min, max) {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
+    }
+    var randomNumber = getRandomInt(0, actsOfGod.length);
+    var actChoice =  randomNumber;
+    var actOfGod = actsOfGod[actChoice];
+    var chance = getRandomInt(0,100);
+    if (chance <= actOfGod.probability) { 
+      l(actOfGod.event);
+      vitals.injury.bal = vitals.injury.bal + actOfGod.injury;
+      return true;
+    }
+    else return false;
+  },
+
+  //==========================================================================>
+  //  7. check for death    ==>  TODO:  Game Over / Play Again
+  //     a. verify that all VITALS are < 100
+  //==========================================================================>    
+  isDead: function isDead(vitals){
+    var numDeaths =0;
+
+    for (var vitalLbl in vitals){
+      var vital = vitals[vitalLbl];
+
+      if (vitalLbl != "none") {   // skip the "none" vital, that's just 
+                                  //  used for default values/storage
+        if (vital.bal >= 100) {
+          l(vital.dieMsg);
+          numDeaths++;
+        }
+      }
+
+    }
+    if (numDeaths > 0) {
+      g.isDead = true;
+      return true;  // we are returning TRUE for this function - isDead()
+                    //  - which will trigger a return of false to the main 
+                    //  loop (see above:  "return (!isDead(vitals));"
+    }
+  },
+  
   doSecretTestCalc: function doSecretTestCalc(userInput, inventory, vitals){
     if ( userInput.toLowerCase() == "/p" ) {
       output.printStats1(g.gameHour,g.c);
@@ -294,14 +271,14 @@ let core = {
   //     d. verify TAKE vital > zero (i.e. otherwise at least ONE requirment failed)
   //        i.  IF false => print ERROR message (i.e. you're not hungry && NEXT LOOP)
   //==========================================================================>
-  canPerformAction: function canPerformAction(action, inventory, vitals){
+  canDoGameAction: function canDoGameAction(action, inventory, vitals){
     // lets clone these so that we can make changes without 
     //  affecting the real/originals
 
 
     if (canDoInvTakeCalcs(action)) { 
-      canPerformAction = true;
-      return canPerformAction;
+      canDoGameAction = true;
+      return canDoGameAction;
       // we don't return false b/c that means we died
     }
 
@@ -374,20 +351,10 @@ let core = {
       calc.willCalcCondFail_str2 = "(" + calc.preCalcBal + "-" + calc.changeAmt + " < 0" + ")";
       calc.willCalcCondFail = (calc.preCalcBal - calc.changeAmt < 0);
 
-      // set up the ACTUAL 'perform calculation' statement      
+      // set up the ACTUAL 'perform calculation' statement  ==>  ****** BUT DO NOT EVAL/EXECUTE it !!!!      
       var doTakeCalc_evalStr = gameItemBal_evalStr + "=" + gameItemBal_evalStr + calc.operator + calc.changeAmt;
       // e.g. (doTakeCalc_evalStr = "inventory.wood = inventory.wood - 5"  or  "vitals.hunger = vitals.hunger + 10"
 
-      // go RIGHT AHEAD and perform the operation on THIS CLONED copy by EVALing the "doTakeCalc string"
-      eval (doTakeCalc_evalStr);
-
-      // store post calculation balance for comparison (?)                    
-      calc.postCalcBal = calc.gameItem.bal;
-      // not sure we use this ????
-
-      //print these regardless of whether it's false(succeeded) or true(failed)
-      l("postCalcBal:"+calc.postCalcBal);            
-      l();
       if (!calc.willCalcCondFail){ // it's FALSE, that means the calc SUCCEEDED, 
         l("This calc (%s) SUCCEEDED: %s[%s] is %s", 
             doTakeCalc_evalStr, calc.willCalcCondFail_str, 
@@ -417,12 +384,13 @@ let core = {
   //     b. perform "take"s (perform 3b, but on REAL inventory )
   //==========================================================================>    
   doGameAction: function doGameAction(action, inventory, vitals){
-    doInvGiveCalcs(action,inventory);
-    doVitGiveCalcs(action, vitals);
+    doAllInvTakeCalcs(action,inventory);
+    doAllInvGiveCalcs(action,inventory);
+    doAllVitGiveCalcs(action, vitals);
 
 
 
-    function doInvTakeCalcs(action) {
+    function doAllInvTakeCalcs(action, inventory) {
       //prepare for keeping tracking of ANY of these InvTakeCalc conditions fail
       var numInValidTakeConds = 0;   // a successful command means this > 0 when we're done
 
@@ -480,16 +448,9 @@ let core = {
         calc.gameItem = eval(gameItem_fullEvalStr);
         if (!calc.gameItem) {e("possible misspelling of gameItem in JSON");}
 
-        // store original balance to use in error message, in case this calculation fails
         calc.preCalcBal = calc.gameItem.bal;
-                          
-        // if the preCalcBal MINUS the amount to change (subtract, since 
-        //  this is a TAKE operation) equals less than ZERO, then we didn't
-        //  have enough of this inventory item/resource to perform this
-        //  in the first place => NOW => store True/False in boolean var
-        calc.willCalcCondFail_str = "(preCalcBal - calc.changeAmt < 0)";
-        calc.willCalcCondFail_str2 = "(" + calc.preCalcBal + "-" + calc.changeAmt + " < 0" + ")";
-        calc.willCalcCondFail = (calc.preCalcBal - calc.changeAmt < 0);
+        l("preCalcBal:"+calc.preCalcBal);            
+        l();                          
 
         // set up the ACTUAL 'perform calculation' statement      
         var doTakeCalc_evalStr = gameItemBal_evalStr + "=" + gameItemBal_evalStr + calc.operator + calc.changeAmt;
@@ -498,40 +459,18 @@ let core = {
         // go RIGHT AHEAD and perform the operation on THIS CLONED copy by EVALing the "doTakeCalc string"
         eval (doTakeCalc_evalStr);
 
-        // store post calculation balance for comparison (?)                    
         calc.postCalcBal = calc.gameItem.bal;
-        // not sure we use this ????
-
-        //print these regardless of whether it's false(succeeded) or true(failed)
         l("postCalcBal:"+calc.postCalcBal);            
         l();
-        if (!calc.willCalcCondFail){ // it's FALSE, that means the calc SUCCEEDED, 
-          l("This calc (%s) SUCCEEDED: %s[%s] is %s", 
-              doTakeCalc_evalStr, calc.willCalcCondFail_str, 
-              calc.willCalcCondFail_str2, calc.willCalcCondFail
-          );                  
-          return true;  // return true if that calc succeeds
-        } else  { // it's TRUE, that means the calc FAILED
-                  //  so print error msg and increase 
-                  //  failure number by one (if we have 
-                  //  even 1 failure, then we won't allow 
-                  //  this ACTION [i.e. we won't copy 
-                  //  this clone back to the original])
-                  
-          l("This calc (%s) FAILED: %s[%s] is %s", 
-              doTakeCalc_evalStr, calc.willCalcCondFail_str, 
-              calc.willCalcCondFail_str2, calc.willCalcCondFail
-          );      
-          l(inventory.none.dflt_doFailMsg, calc.changeAmt, calc.item, calc.preCalcBal, calc.item);
-          return false;   // return false b/c this calc failed        
-        }
+
+
       } // END:  doInvTakeCalc
     } // END:  doInvTakeCalcs
 
 
 
 
-    function doInvGiveCalcs(action, inventory){
+    function doAllInvGiveCalcs(action, inventory){
      // we're only looking at the CALCS prop of the ACTION object, we don't
       //  care about the other properties !="calcs" (e.g. key, duration, msgs)
       var invGiveCalcs = getInvGiveCalcs(action.calcs);
@@ -589,7 +528,7 @@ let core = {
         l();
       } // END: function doInvGiveCalc(calc) {
     } // END: function doInvGiveCalcs(action, inventory)
-    function doVitGiveCalcs(action, vitals){
+    function doAllVitGiveCalcs(action, vitals){
       // we're only looking at the CALCS prop of the ACTION object, we don't
       //  care about the other properties !="calcs" (e.g. key, duration, msgs)
       var vitGiveCalcs = getVitGiveCalcs(action.calcs);    

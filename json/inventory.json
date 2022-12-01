@@ -54,6 +54,21 @@
     "bal":  0,
     "vis":  "GTzero"
   },    
+  "hut":  {
+    "key":  "hut",
+    "bal":  0,
+    "vis":  "GTzero"
+  },    
+  "stone":  {
+    "key":  "stone",
+    "bal":  0,
+    "vis":  "GTzero"
+  },    
+  "hammer":  {
+    "key":  "hammer",
+    "bal":  0,
+    "vis":  "GTzero"
+  },          
   "none": {
     "key":  "none",
     "bal":  0,
