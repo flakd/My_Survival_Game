@@ -115,6 +115,49 @@
       { "type":   "take",   "list": "inventory",  "item": "cord",     "operator":   "-",  "changeAmt":  2   },
       { "type":   "take",   "list": "vitals",     "item": "fatigue",  "operator":   "+",  "changeAmt":  75,   "override": true   }
     ]
-  }  
+  },
+
+  "fish": {
+    "key":        "fish",
+    "numHours":   1,    
+    "successMsg": "just caught a fish (%s%s%i) - luckily not too tiring (%s%s%i)", 
+    "calcs":  [
+      { "type":   "give",   "list": "inventory",  "item": "fish",     "operator":   "+",  "changeAmt":  1   },
+      { "type":   "take",   "list": "inventory",  "item": "worms",    "operator":   "-",  "changeAmt":  1   },
+      { "type":   "take",   "list": "vitals",     "item": "fatigue",  "operator":   "+",  "changeAmt":  1,   "override": true   }
+    ]
+  },
+  
+  "dig": {
+    "key":        "dig",
+    "numHours":    1,    
+    "successMsg":  "found a worm (%s%s%i), That wasn't too tiring (%s%s%i)", 
+    "calcs":  [
+      { "type":   "give",   "list": "inventory",  "item": "worms",    "operator":   "+",  "changeAmt":  1   },
+      { "type":   "take",   "list": "vitals",     "item": "fatigue",  "operator":   "+",  "changeAmt":  1,   "override": true   }
+    ]
+  },
+
+  "fetch": {
+    "key":        "fetch",
+    "numHours":   1,    
+    "successMsg": "fetched some water (%s%s%i). That took some effort (%s%s%i)",
+    "calcs":  [
+      { "type":   "give",   "list": "inventory",  "item": "H20",      "operator":   "+",  "changeAmt":  5   },
+      { "type":   "take",   "list": "vitals",     "item": "fatigue",  "operator":   "+",  "changeAmt":  1,   "override": true   }
+    ]
+  }, 
+  
+  "drink": {
+    "key":        "drink",
+    "numHours":   1,    
+    "successMsg": "have a little less water for yourself (%s%s%i). Ahh... that water was refreshing! (%s%s%i)",
+    "calcs":  [
+      { "type":   "take",   "list": "inventory",  "item": "H20",      "operator":   "-",  "changeAmt":  1   },
+      { "type":   "give",   "list": "vitals",     "item": "thirst",   "operator":   "-",  "changeAmt":  20,   "override": true   },
+      { "type":   "give",   "list": "vitals",     "item": "fatigue",  "operator":   "-",  "changeAmt":  1,   "override": true   }
+    ]
+  }
+
 
 }
