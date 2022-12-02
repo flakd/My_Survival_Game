@@ -11,17 +11,16 @@ const l=console.log;
 const e=function(msg){console.error("**ERROR**: %s",msg)};
 
 let core = {
+  //  1. read inputs from user
+  //readInput: function readInput(){}
+  //  WE ALREADY HAVE an input (that's being handled by rl.on() in main.js)
+  //    so, we don't need to write a function/nor call it here  
   isStillAliveGameLoop: function isStillAliveGameLoop(userInput, inventory, vitals, actions){
     //  ** ANY FAILURE below immediately jumps out of function **
     
-    //  1. read inputs from user
-    //readInput: function readInput(){}
-    //  WE ALREADY HAVE an input (that's being handled by rl.on() in main.js)
-    //    so, we don't need to write a function/nor call it here
-
     //  2. check if input is a LEGIT input
     //     a. EXECUTE valid Game COMMANDS
-        if ( core.isInputAValidGameCommand(userInput.toLowerCase()) ) return core.doCommandWithResult(userInput.toLowerCase());
+    if ( core.isInputAValidGameCommand(userInput.toLowerCase()) ) return core.doCommandWithResult(userInput.toLowerCase());
 
     //     b. check to see if this is a LEGIT game-play action
     if (!core.isInputAValidGameAction(userInput.toLowerCase(), actions)) 
@@ -40,7 +39,6 @@ let core = {
     // else do not return and we continue to the next line of code...
     //  which is to ACTUALLY execute the command
     core.doGameAction(g.c.action, inventory, vitals);
-
 
     //  5. -------------------------------------------------------------------->
     // passTime() increases hours by action.numHours and...
