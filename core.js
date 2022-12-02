@@ -30,22 +30,22 @@ let core = {
                       //   (REMEMBER:  return false would mean we died)
 
     // now that we know it's valid, set action for further processing/use
-    var action=actions[userInput.toLowerCase()];
+    g.c.action=actions[userInput.toLowerCase()];
 
     // if below is false, then skip to NEXT input READLINE, which requires a return of true
-    if (!core.canDoGameAction(action, inventory, vitals)) {
+    if (!core.canDoGameAction(g.c.action, inventory, vitals)) {
       return true;
     }
 
     // else do not return and we continue to the next line of code...
     //  which is to ACTUALLY execute the command
-    core.doGameAction(action, inventory, vitals);
+    core.doGameAction(g.c.action, inventory, vitals);
 
 
     //  5. -------------------------------------------------------------------->
     // passTime() increases hours by action.numHours and...
     //   increases vitals by vitals.takePerHour * action.numHours    
-    core.doPassTime(action, inventory, vitals);
+    core.doPassTime(g.c.action, inventory, vitals);
 
     // print status at the end... AFTER the command is executed, 
     //  so we can see the results/new numbers, otherwise we are always looking
@@ -93,7 +93,12 @@ let core = {
             if (vitalLbl != calc.item) {
               vital.bal+= vital.takePerHour * action.numHours;
             } else {
-              vital.bal+= calc.changeAmt;
+              if (calc.item.Operator_Str == "-"){
+                vital.bal = vital.bal - calc.changeAmt;
+              } else 
+              if (calc.item.Operator_Str == "+"){
+                vital.bal = vital.bal + calc.changeAmt;
+              }
             }
           }
         }
@@ -565,11 +570,11 @@ let core = {
     // prepare to store all the "inventory takes" in an array
     var specificCalcs = [];
 
-    for (var calcIdx in action.calcs) { // array iteration instead of object iteration
+    for (var calcIdx in g.c.action.calcs) { // array iteration instead of object iteration
       // let's look through each item in the "calcs" property/subObject
       // lets make it easier to refer to the actual indicidual "calc item"
       //  that we're looking at, at the moment
-      var calc = action.calcs[calcIdx];
+      var calc = g.c.action.calcs[calcIdx];
 
       // the name of the GameItem we want to CALC FROM as a string is 
       //  stored in calc.list and calc.item combined
