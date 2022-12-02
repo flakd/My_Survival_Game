@@ -128,7 +128,8 @@ let core = {
     var actOfGod = actsOfGod[actChoice];
     var chance = getRandomInt(0,100);
     if (chance <= actOfGod.probability) { 
-      l(actOfGod.event);
+      l(" *** Oh NO!  BAD LUCK!!! *** ==>  %S", actOfGod.event.toUpperCase);
+      l();
       vitals.injury.bal = vitals.injury.bal + actOfGod.injury;
       return true;
     }
