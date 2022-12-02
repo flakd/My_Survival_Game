@@ -222,7 +222,11 @@ let core = {
 
     var action = actions[userInput];     // e.g.  line = "light"
     if (!action) {
-      e("**ERROR**:  ACTION (actions[line]) is NOT present (empty or undefined)"); return false;
+      //e("**ERROR**:  ACTION (actions[line]) is NOT present (empty or undefined)");
+      l();
+      l("Sorry, that's not a VALID ACTION, try something else");
+      l();
+      return false;
     }
 
     //if no errors, then let's print a 2 empty lines to give us some room on the screen
