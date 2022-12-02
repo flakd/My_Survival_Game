@@ -23,6 +23,7 @@ g.isGameOver = false;
 g.isDead = false;
 g.isDeadCheck = isDeadCheck;
 g.startGame = startGame;
+//g.resetAllStats = resetAllStats
 
 parseJSONs.loadJSONs();
 g.c = {};
@@ -75,9 +76,30 @@ function isDeadCheck(line){
   }   
 };
 
+//const objectMap = (obj, fn) =>
+function objectMap(obj, fn) {
+  Object.fromEntries(
+    Object.entries(obj).map(
+      ([k, v], i) => [k, fn(v, k, i)]
+    )
+  );
+}
+
+function resetAllStats(vitals, inventory) {
+  objectMap(vitals, v => 0);
+  l(vitals);
+  objectMap(inventory, v => 0); 
+  l(inventory);
+  //const myObject = { a: 1, b: 2, c: 3 }
+  //console.log(objectMap(myObject, v => 2 * v)) 
+}
+
+
+    
+
 function startGame() {
   g.isGameOver = false;
-  core.resetAllStats(g.c.vitals, g.c.inventory);
+  resetAllStats(g.c.vitals, g.c.inventory);
   output.printTitleBanner(g.gameHour, c);
   rl = readline.createInterface({
     input: process.stdin,

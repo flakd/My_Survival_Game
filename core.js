@@ -84,20 +84,37 @@ let core = {
         for (var calcIdx in action.calcs) {
           var calc = action.calcs[calcIdx];
 
+          // can I use getSpecificCalcs() here ??
           if (calc.list == "vitals")
 
             //  do dflt vital.takePerHour -
             //    EXCEPT for action.calcs.take.vitals => override dflt vital.takePerHour      
-            if (vitalLbl != calc.item) {
-              vital.bal+= vital.takePerHour * action.numHours;
-            } else {
-              if (calc.item.Operator_Str == "-"){
+            if (vitalLbl == calc.item) {
+              if (calc.operator == "-"){
                 vital.bal = vital.bal - calc.changeAmt;
               } else 
-              if (calc.item.Operator_Str == "+"){
+              if (calc.operator == "+"){
                 vital.bal = vital.bal + calc.changeAmt;
               }
+            } else {
+              vital.bal+= vital.takePerHour * action.numHours;              
             }
+            if (vital.bal > vital.dangerLimit) {
+              l();
+              if (!vitals.none.dflt_dangerMsg) e("missing vitals.none.dflt_dangerMsg");
+              l(vitals.none.dflt_dangerMsg,vitalLbl,vitalLbl);
+              l();
+              continue;   // if above danger, we don't want to ALSO print 
+                          //  WARNING MSG, so skip to next iteration/vital
+                          //  otherwise, fall through to below and then 
+                          //  check for warningLimit instead
+            }
+            if (vital.bal > vital.warningLimit) {
+              l();
+              l(vital.warningMsg,vital.dieMsg2);
+              l();
+              continue;
+            }            
           }
         }
     }
@@ -126,9 +143,11 @@ let core = {
     var actOfGod = actsOfGod[actChoice];
     var chance = getRandomInt(0,100);
     if (chance <= actOfGod.probability) { 
-      l(" *** Oh NO!  BAD LUCK!!! *** ==>  %s", actOfGod.event.toUpperCase());
-      l();
-      vitals.injury.bal = vitals.injury.bal + actOfGod.injury;
+      var actualDamage = actOfGod.injury * getRandomInt(0,100) / 100;
+      var actualDamageInt = Math.round(actualDamage);
+      vitals.injury.bal = vitals.injury.bal + (actualDamageInt);
+      l(" *** Oh NO!  BAD LUCK!!! *** ==>  %s: injury: %i", actOfGod.event.toUpperCase(), actualDamageInt);
+      l();      
       return true;
     }
     else return false;
