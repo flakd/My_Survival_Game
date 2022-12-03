@@ -16,7 +16,7 @@ let core = {
   //  WE ALREADY HAVE an input (that's being handled by rl.on() in main.js)
   //    so, we don't need to write a function/nor call it here  
   isStillAliveGameLoop: function isStillAliveGameLoop(userInput, inventory, vitals, actions){
-    //  ** ANY FAILURE below immediately jumps out of function **
+    //  ** ANY FAILURE (return false) below immediately jumps out of function **
     
     //  2. check if input is a LEGIT input
     //     a. EXECUTE valid Game COMMANDS
@@ -99,21 +99,23 @@ let core = {
             } else {
               vital.bal+= vital.takePerHour * action.numHours;              
             }
+
+            if (vital.bal < 0) vital.bal = 0;
+
             if (vital.bal > vital.dangerLimit) {
               l();
               if (!vitals.none.dflt_dangerMsg) e("missing vitals.none.dflt_dangerMsg");
               l(vitals.none.dflt_dangerMsg,vitalLbl,vitalLbl);
               l();
-              continue;   // if above danger, we don't want to ALSO print 
+                          // if above danger, we don't want to ALSO print 
                           //  WARNING MSG, so skip to next iteration/vital
                           //  otherwise, fall through to below and then 
                           //  check for warningLimit instead
-            }
+            } else
             if (vital.bal > vital.warningLimit) {
               l();
               l(vital.warningMsg,vital.dieMsg2);
               l();
-              continue;
             }            
           }
         }
