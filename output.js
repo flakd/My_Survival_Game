@@ -12,7 +12,11 @@ let output = {
       msg+= "You've";      
     }    
     msg+=" got the following:";
-    l("**  TIME: %s  ********  %s", ( ('0' + (time%24)).slice(-2) + ':00 hrs' ), msg  );
+    var myDay = Math.floor(time / 24);
+    var myTime = time%24
+    var dayStr = myDay.toString().padStart(3,"0"); 
+    var timeStr = myTime.toString().padStart(2,"0");
+    l("**   [ D A Y : %s ]   ****   [ T I M E: %s hrs ]", dayStr, timeStr );
     //l("=================================================================================");
     l("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");  
 
