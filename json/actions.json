@@ -5,7 +5,7 @@
     "successMsg": "You lit a fire (fire +3).  Ahhhh, you feel warmer, that's nice! (cold -3)",
     "calcs":  [
       { "type":   "give",   "list": "inventory",  "item": "fire",     "operator":   "+",  "changeAmt":  3   },
-      { "type":   "take",   "list": "inventory",  "item": "wood",     "operator":   "-",  "changeAmt":  5   },
+      { "type":   "take",   "list": "inventory",  "item": "wood",     "operator":   "-",  "changeAmt":  2   },
       { "type":   "give",   "list": "vitals",     "item": "cold",     "operator":   "-",  "changeAmt":  10,   "override": true   },
       { "type":   "take",   "list": "vitals",     "item": "fatigue",  "operator":   "+",  "changeAmt":  5,    "override": true   }
     ]

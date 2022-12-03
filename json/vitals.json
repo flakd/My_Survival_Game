@@ -42,7 +42,7 @@
     "doFailMsg":    "You're completely rested",
     "doFailMsg_2":  "You don't feel tired",
     "dieMsg":       "You've died from exhaustion!!!",
-    "takePerHour":  10,
+    "takePerHour":  1,
     "warningLimit": 60,
     "dangerLimit":  80,
     "warningMsg":   "You're becoming exhausted, you won't be able to go on much longer without some rest%s!",
