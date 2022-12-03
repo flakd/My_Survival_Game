@@ -17,7 +17,7 @@ const e=function(msg){console.error("**ERROR**: %s",msg)};
 
 g.isQuit = false;
 g.gameHour = 0;   //12 midnight
-g.totalGameHoursPlayed = 0;
+//g.totalGameHoursPlayed = 0;
 g.gameDay = 0;
 g.isGameOver = false;
 g.isDead = false;
@@ -115,7 +115,13 @@ function startGame() {
     } else {    // ELSE core.isStillAliveGameLoop has returned FALSE which means
                 //  the game is trying to END -- i.e. 1) you're dead,  or  
                 //  2) you entered the q/quit command -- so we need to dbl-chk
-      if (isDead) {
+      // gameSTATE:  +before play, 
+      //              +playing, 
+      //              +playing skip turn (bad command), 
+      //              +died - replay? 
+      //              +dead +quit - verify quit 
+      
+                if (isDead) {
         g.isGameOver = true;
         return isDeadCheck();
       }
