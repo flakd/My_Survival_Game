@@ -98,7 +98,7 @@
     "calcs":  [
       { "type":   "give",   "list": "inventory",  "item": "bows",     "operator":   "+",  "changeAmt":  1   },
       { "type":   "give",   "list": "inventory",  "item": "meat",     "operator":   "+",  "changeAmt":  1   },
-      { "type":   "give",   "list": "vitals",     "item": "hunger",   "operator":   "-",  "changeAmt":  6   },      
+      { "type":   "give",   "list": "vitals",     "item": "hunger",   "operator":   "-",  "changeAmt":  6,   "override": true   },
       { "type":   "take",   "list": "inventory",  "item": "bows",     "operator":   "-",  "changeAmt":  1   },
       { "type":   "take",   "list": "inventory",  "item": "arrows",   "operator":   "-",  "changeAmt":  3   },
       { "type":   "take",   "list": "vitals",     "item": "fatigue",  "operator":   "+",  "changeAmt":  10,   "override": true   }
