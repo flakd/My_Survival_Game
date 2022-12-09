@@ -75,11 +75,13 @@ let core = {
   //     a. based on action.duration * vitals.COST
   //==========================================================================>    
   doPassTime: function doPassTime(action, inventory, vitals){
-    for (var vitalLbl in vitals){     //loop through vitals
-      var vital = vitals[vitalLbl];
+    for (var vitalLbl in vitals){     //loop through all vital objects, e.g. thirst, hunger, fatigue
+      if (vitalLbl == "default") continue;   // skip the "default" vital, we only use it just 
+                                          //  used for default values/storage
 
-      if (vitalLbl != "none") {   // skip the "none" vital, that's just 
-                                  //  used for default values/storage
+      var vital = vitals[vitalLbl];   //store the actual current vital object e.g. thirst
+
+      
 
         for (var calcIdx in action.calcs) {
           var calc = action.calcs[calcIdx];
@@ -104,8 +106,8 @@ let core = {
 
             if (vital.bal > vital.dangerLimit) {
               l();
-              if (!vitals.none.dflt_dangerMsg) e("missing vitals.none.dflt_dangerMsg");
-              l(vitals.none.dflt_dangerMsg,vitalLbl,vitalLbl);
+              if (!vitals.default.dflt_dangerMsg) e("missing vitals.default.dflt_dangerMsg");
+              l(vitals.default.dflt_dangerMsg,vitalLbl,vitalLbl);
               l();
                           // if above danger, we don't want to ALSO print 
                           //  WARNING MSG, so skip to next iteration/vital
@@ -165,7 +167,7 @@ let core = {
     for (var vitalLbl in vitals){
       var vital = vitals[vitalLbl];
 
-      if (vitalLbl != "none") {   // skip the "none" vital, that's just 
+      if (vitalLbl != "default") {   // skip the "default" vital, that's just 
                                   //  used for default values/storage
         if (vital.bal >= 100) {
           l(vital.dieMsg);
@@ -382,7 +384,7 @@ let core = {
             doTakeCalc_evalStr, calc.willCalcCondFail_str, 
             calc.willCalcCondFail_str2, calc.willCalcCondFail
         );      
-        l(inventory.none.dflt_doFailMsg, calc.changeAmt, calc.item, calc.preCalcBal, calc.item);
+        l(inventory.default.dflt_doFailMsg, calc.changeAmt, calc.item, calc.preCalcBal, calc.item);
         return false;   // return false b/c this calc failed        
       }
     } // END:  canDoInvTakeCalc
