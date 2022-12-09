@@ -11,18 +11,25 @@ const l=console.log;
 const e=function(msg){console.error("**ERROR**: %s",msg)};
 
 let core = {
+  //------------------------------------------------------------------------>
   //  1. read inputs from user
-  //readInput: function readInput(){}
-  //  WE ALREADY HAVE an input (that's being handled by rl.on() in main.js)
-  //    so, we don't need to write a function/nor call it here  
+  //      readInput: function readInput(){}
+  //      WE ALREADY HAVE an input (that's being handled by rl.on() 
+  //      in main.js) so we don't need to write a function/nor call it here  
+  //------------------------------------------------------------------------>
   isStillAliveGameLoop: function isStillAliveGameLoop(userInput, inventory, vitals, actions){
     //  ** ANY FAILURE (return false) below immediately jumps out of function **
     
-    //  2. check if input is a LEGIT input
-    //     a. EXECUTE valid Game COMMANDS
-    if ( core.isInputAValidGameCommand(userInput.toLowerCase()) ) return core.doCommandWithResult(userInput.toLowerCase());
+    //------------------------------------------------------------------------>
+    //  2. check if input is a LEGIT input (commands not actions)
+    //     a. EXECUTE valid Game COMMANDS like [quit, help, about] etc.
+    //------------------------------------------------------------------------>
+    if ( core.isInputAValidGameCommand(userInput.toLowerCase()) ) 
+    return core.doCommandWithResult(userInput.toLowerCase());
 
-    //     b. check to see if this is a LEGIT game-play action
+    //------------------------------------------------------------------------>
+    //  2.b. check to see if this is a valid Game play ACTIONS
+    //------------------------------------------------------------------------>
     if (!core.isInputAValidGameAction(userInput.toLowerCase(), actions)) 
     return true;      // RETURNing TRUE here b/c we ARE NOT DEAD and want 
                       //   to continue code execution
@@ -31,268 +38,66 @@ let core = {
     // now that we know it's valid, set action for further processing/use
     g.c.action=actions[userInput.toLowerCase()];
 
-    // if below is false, then skip to NEXT input READLINE, which requires a return of true
+    //------------------------------------------------------------------------>
+    //  3. canDoGameAction() - essentially checking InvTakeCalcs to see if 
+    //      we have the ALL the required amounts of inventory items.
+    //      If below is false, then skip to NEXT input READLINE, which 
+    //      requires a return of true
+    //------------------------------------------------------------------------>
     if (!core.canDoGameAction(g.c.action, inventory, vitals)) {
       return true;
     }
 
-    // else do not return and we continue to the next line of code...
-    //  which is to ACTUALLY execute the command
+    //------------------------------------------------------------------------>
+    //  4. DoGameAction() - else do not return and we continue to the next 
+    //      line of code...  which is to ACTUALLY execute the command
+    //------------------------------------------------------------------------>
     core.doGameAction(g.c.action, inventory, vitals);
 
-    //  5. -------------------------------------------------------------------->
-    // passTime() increases hours by action.numHours and...
-    //   increases vitals by vitals.takePerHour * action.numHours    
+    //------------------------------------------------------------------------>    
+    //  5. passTime() increases hours by action.numHours and...
+    //      increases vitals by vitals.takePerHour * action.numHours    
+    //------------------------------------------------------------------------>    
     core.doPassTime(g.c.action, inventory, vitals);
 
-    // print status at the end... AFTER the command is executed, 
+    //------------------------------------------------------------------------>
+    //  6.  print status at the end... AFTER the command is executed, 
     //  so we can see the results/new numbers, otherwise we are always looking
     //  at the previous numbers each time we execute a command
+    //------------------------------------------------------------------------>
     output.printStats1(g.gameHour,g.c);
 
-    //  6. -------------------------------------------------------------------->
-    // doRandomActOfGod() randomly adds elements like storms, bears, falls, etc.
+    //------------------------------------------------------------------------>
+    //  7. doRandomActOfGod() randomly adds elements like storms, bears, falls, etc.
     //  that cause injury (or maybe later damage to equipment as well)
     //  increases vitals by vitals.takePerHour * action.numHours    
+    //------------------------------------------------------------------------>
     if ( core.doRandomActOfGod(inventory, vitals) ) {
       output.printStats1(g.gameHour,g.c);
     }
-    return (!core.isDead(vitals)); // if you're dead, this is FALSE, which triggers 
-                              //  an rl.close() of the main  game READLINE 
-                              //  loop - but we want to confirm that you are 
-                              //  dead, or that you've quit
 
-    //==========================================================================>
-    //  8. loop back to beginning
-    //==========================================================================>
+    //------------------------------------------------------------------------>
+    //  8. function isDead() to check if any of the VITALS are above 100
+    //------------------------------------------------------------------------>
+    if (core.isDead(vitals))  { // if you're dead, then RETURN FALSE, which triggers 
+      return false;             //  an rl.close() of the main  game READLINE loop
+    } 
+
+    //------------------------------------------------------------------------>
+    //  9. haveIBeenRescued() performs a random function check to see if you 
+    //  have been rescued
+    //------------------------------------------------------------------------>
+    if (haveIBeenRescued()){    // similar to above (the previous if-else 
+      return false;             //  with isDead()), RETURN FALSE here, which 
+    }                           //  triggers an rl.close() of the main game 
+                                //  READLINE loop
+                                
+    //------------------------------------------------------------------------>
+    //  10. loop back to beginning
+    //------------------------------------------------------------------------>
     return true;
 
   },
-
-
-  //==========================================================================>
-  //  5. pass time (update any time-dependent variables )
-  //     a. based on action.duration * vitals.COST
-  //==========================================================================>    
-  doPassTime: function doPassTime(action, inventory, vitals){
-    for (var vitalLbl in vitals){     //loop through all vital objects, e.g. thirst, hunger, fatigue
-      if (vitalLbl == "default") continue;   // skip the "default" vital, we only use it just 
-                                          //  used for default values/storage
-
-      var vital = vitals[vitalLbl];   //store the actual current vital object e.g. thirst
-
-      
-
-        for (var calcIdx in action.calcs) {
-          var calc = action.calcs[calcIdx];
-
-          // can I use getSpecificCalcs() here ??
-          if (calc.list == "vitals")
-
-            //  do dflt vital.takePerHour -
-            //    EXCEPT for action.calcs.take.vitals => override dflt vital.takePerHour      
-            if (vitalLbl == calc.item) {
-              if (calc.operator == "-"){
-                vital.bal = vital.bal - calc.changeAmt;
-              } else 
-              if (calc.operator == "+"){
-                vital.bal = vital.bal + calc.changeAmt;
-              }
-            } else {
-              vital.bal+= vital.takePerHour * action.numHours;              
-            }
-
-            if (vital.bal < 0) vital.bal = 0;
-
-            if (vital.bal > vital.dangerLimit) {
-              l();
-              if (!vitals.default.dflt_dangerMsg) e("missing vitals.default.dflt_dangerMsg");
-              l(vitals.default.dflt_dangerMsg,vitalLbl,vitalLbl);
-              l();
-                          // if above danger, we don't want to ALSO print 
-                          //  WARNING MSG, so skip to next iteration/vital
-                          //  otherwise, fall through to below and then 
-                          //  check for warningLimit instead
-            } else
-            if (vital.bal > vital.warningLimit) {
-              l();
-              l(vital.warningMsg,vital.dieMsg2);
-              l();
-            }            
-          }
-        }
-    }
-    g.gameHour+=action.numHours;
-  },
-
-  //==========================================================================>  
-  //  6. TODO: perform random events
-  //     a. update values (e.g. inventory and/or vitals)
-  //==========================================================================>    
-  doRandomActOfGod: function doRandomActOfGod(inventory, vitals){
-    var actsOfGod = [
-      { event: "storm",   probability: 40,  injury: 10  },
-      { event: "bear",    probability: 5,   injury: 70  },
-      { event: "wolves",  probability: 10,  injury: 45  },
-      { event: "fall",    probability: 20,  injury: 25  },
-      { event: "cut",     probability: 15,  injury: 32  },                        
-    ];
-    function getRandomInt(min, max) {
-      min = Math.ceil(min);
-      max = Math.floor(max);
-      return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
-    }
-    var randomNumber = getRandomInt(0, actsOfGod.length);
-    var actChoice =  randomNumber;
-    var actOfGod = actsOfGod[actChoice];
-    var chance = getRandomInt(0,100);
-    if (chance <= actOfGod.probability) { 
-      var actualDamage = actOfGod.injury * getRandomInt(0,100) / 100;
-      var actualDamageInt = Math.round(actualDamage);
-      vitals.injury.bal = vitals.injury.bal + (actualDamageInt);
-      l(" *** Oh NO!  BAD LUCK!!! *** ==>  %s: injury: %i", actOfGod.event.toUpperCase(), actualDamageInt);
-      l();      
-      return true;
-    }
-    else return false;
-  },
-
-  //==========================================================================>
-  //  7. check for death    ==>  TODO:  Game Over / Play Again
-  //     a. verify that all VITALS are < 100
-  //==========================================================================>    
-  isDead: function isDead(vitals){
-    var numDeaths =0;
-
-    for (var vitalLbl in vitals){
-      var vital = vitals[vitalLbl];
-
-      if (vitalLbl != "default") {   // skip the "default" vital, that's just 
-                                  //  used for default values/storage
-        if (vital.bal >= 100) {
-          l(vital.dieMsg);
-          numDeaths++;
-        }
-      }
-
-    }
-    if (numDeaths > 0) {
-      g.isDead = true;
-      return true;  // we are returning TRUE for this function - isDead()
-                    //  - which will trigger a return of false to the main 
-                    //  loop (see above:  "return (!isDead(vitals));"
-    }
-  },
-  
-  doSecretTestCalc: function doSecretTestCalc(userInput, inventory, vitals){
-    if ( userInput.toLowerCase() == "/p" ) {
-      output.printStats1(g.gameHour,g.c);
-      return true;
-    }
-    if ( userInput.toLowerCase() == "/p2" ) {
-      output.printStats1(g.gameHour,g.c2);
-      return true;
-    }    
-    if (  userInput.toLowerCase().startsWith("/a ") ){
-      var words = userInput.toLowerCase().split(" ");
-      var targetListAbbr = words[1].split(".")[0];
-      var targetList = "";
-      var targetItem = words[1].split(".")[1];      
-      if (targetListAbbr == "i") targetList = "inventory";
-      if (targetListAbbr == "v") targetList = "vitals";
-      var evalStr = "targetList.targetItem.bal = targetList.targetItem.bal " +  words[2];   
-      l(evalStr);
-      // add to inventory or vital
-      l(targetList);
-      l(targetItem);
-      //var tList = eval(targetList);
-      //var tItem = eval(targetList + "." + targetItem);
-      l(g.c[targetList]);
-      var tList = g.c[targetList];
-      var tItem = eval("tList." + targetItem);
-
-      l(tItem.bal );
-      tItem.bal = tItem.bal + eval(words[2]);
-      //eval(evalStr);
-      l( tItem.bal );
-      return true;
-    } else {
-      //l("invalid input to FUNCTION doSecretTestCalc(userInput)"); 
-      return false;
-    }
-  },
-
-  isInputAValidGameCommand: function isInputAValidGameCommand(userInput, inventory, vitals){
-    switch (userInput.toLowerCase()){
-      case "q":     //TODO:  comment out for production      
-      case "quit": 
-      case "h", "help": 
-      case "about": 
-      case "list": 
-        break;
-      default:
-        //      case "~a", "~s":
-        return core.doSecretTestCalc(userInput.toLowerCase(), inventory, vitals);
-        //return false;        
-    }
-    l(" <= '%s' is a VALID Command =>\n", userInput);
-    return true;
-  },
-
-  isInputAValidGameAction: function isInputAValidGameAction(userInput, actions){
-    if (!actions) {e("**ERROR**:  actions is missing"); return false;}
-
-    var action = actions[userInput];     // e.g.  line = "light"
-    if (!action) {
-      //e("**ERROR**:  ACTION (actions[line]) is NOT present (empty or undefined)");
-      l();
-      l("Sorry, that's not a VALID ACTION, try something else");
-      l();
-      return false;
-    }
-
-    //if no errors, then let's print a 2 empty lines to give us some room on the screen
-    l(" <= '%s' is a VALID Action =>\n", userInput);
-    return true;
-  },
-
-  isInputValid: function isInputValid(userInput, actions){
-    if (this.isInputAValidGameCommand(userInput)) return true;
-    if (this.isInputAValidGameAction(userInput, actions)) return true;    
-    
-    //  it's not valid in either of the ABOVE cases, so
-    //  therefore, it's FALSE (not a valid input)
-    return false;
-  },
-
-  doCommandWithResult: function doCommand(userInput){
-    // RETURN True will terminate execution -- see main 
-    //  "CALLER" function/loop
-    switch (userInput.toLowerCase()){
-      case "q":     //TODO:  comment out for production      
-        return false;
-        break;
-      case "quit": 
-        return false;        
-        break;
-      case "h", "help": 
-        l("Here's your help (e.g. help, quite, list, about")
-        return true;        
-        break;          
-      case "about": 
-        l("Game Goals:  About this game")
-        return true;        
-        break;          
-      case "list": 
-        //  print list of available game commands   
-        l("list of commands you can execute HERE");        
-        //  TODO:  core.printActions(actions);       
-        return true;        
-        break;                    
-      default:
-        return true;
-    }
-  },    
 
   //  3. check if action can be performed
   //     a. copy inventory
@@ -368,10 +173,10 @@ let core = {
       // e.g. (doTakeCalc_evalStr = "inventory.wood = inventory.wood - 5"  or  "vitals.hunger = vitals.hunger + 10"
 
       if (!calc.willCalcCondFail){ // it's FALSE, that means the calc SUCCEEDED, 
-        l("This calc (%s) SUCCEEDED: %s[%s] is %s", 
+/*         l("This calc (%s) SUCCEEDED: %s[%s] is %s", 
             doTakeCalc_evalStr, calc.willCalcCondFail_str, 
             calc.willCalcCondFail_str2, calc.willCalcCondFail
-        );                  
+        );     */              
         return true;  // return true if that calc succeeds
       } else  { // it's TRUE, that means the calc FAILED
                 //  so print error msg and increase 
@@ -380,15 +185,15 @@ let core = {
                 //  this ACTION [i.e. we won't copy 
                 //  this clone back to the original])
                 
-        l("This calc (%s) FAILED: %s[%s] is %s", 
+/*         l("This calc (%s) FAILED: %s[%s] is %s", 
             doTakeCalc_evalStr, calc.willCalcCondFail_str, 
             calc.willCalcCondFail_str2, calc.willCalcCondFail
-        );      
-        l(inventory.default.dflt_doFailMsg, calc.changeAmt, calc.item, calc.preCalcBal, calc.item);
+        );       */
+        l(inventory.default.dflt_doFailMsg, g.c.action.key, calc.preCalcBal, calc.item, calc.changeAmt, calc.item );
         return false;   // return false b/c this calc failed        
       }
     } // END:  canDoInvTakeCalc
-  }, // END:  function canPerformAction(action, inventory, vitals){
+  }, // END:  function canDoGameAction(action, inventory, vitals){
 
 
   //  4. perform action by:
@@ -589,7 +394,284 @@ let core = {
       } // END: function doInvGiveCalc(calc) {      
 
     } // END: function doVitGiveCalcs(action, vitals)
+  }, // END:  function doGameAction(action, inventory, vitals){
+
+
+  //  5. doPassTime() ========================================================>
+  //    pass time (update any time-dependent variables )
+  //     a. based on action.duration * vitals.COST
+  //==========================================================================>    
+  doPassTime: function doPassTime(action, inventory, vitals){
+    for (var vitalLbl in vitals){     //loop through all vital objects, e.g. thirst, hunger, fatigue
+      if (vitalLbl == "default") continue;  // skip the "default" vital, we 
+                                            //  only use it as a storage 
+                                            //  placeholder
+
+      var vital = vitals[vitalLbl];         // store the actual current vital 
+                                            //  object e.g. thirst we're (only)
+                                            //  looking at ALL 5 vitals and 
+                                            //  not the 'default' vital
+
+      
+        for (var calcIdx in action.calcs) {
+          var calc = action.calcs[calcIdx];
+
+          // can I use getSpecificCalcs() here ??
+          if (calc.list == "vitals") {
+
+            //  do dflt vital.takePerHour -
+            //    EXCEPT for action.calcs.take.vitals => override dflt vital.takePerHour      
+            if (vitalLbl == calc.item) {
+              if (calc.operator == "-"){
+                vital.bal = vital.bal - calc.changeAmt;
+              } else 
+              if (calc.operator == "+"){
+                vital.bal = vital.bal + calc.changeAmt;
+              }
+            }
+            if (vitalLbl != calc.item) {
+              vital.bal = vital.bal + (vital.takePerHour * action.numHours);              
+            }
+
+            if (vital.bal < 0) vital.bal = 0;
+
+            if (vital.bal > vital.dangerLimit) {
+              l();
+              if (!vitals.default.dflt_dangerMsg) e("missing vitals.default.dflt_dangerMsg");
+              l(vitals.default.dflt_dangerMsg,vitalLbl,vitalLbl);
+              l();
+                          // if above danger, we don't want to ALSO print 
+                          //  WARNING MSG, so skip to next iteration/vital
+                          //  otherwise, fall through to below and then 
+                          //  check for warningLimit instead
+            } else
+            if (vital.bal > vital.warningLimit) {
+              l();
+              l(vital.warningMsg,vital.dieMsg2);
+              l();
+            }            
+          }
+        }
+    }
+    g.gameHour+=action.numHours;
+    l("OK, that's a valid action... so, let's %s", g.c.action.key);
+    l();
+  }, // END:  function doPassTime(action, inventory, vitals){
+
+
+  /*  6. call to output.printStats1(g.gameHour,g.c); =========================> 
+  //=========================================================================*/
+
+
+  //  7. doRandomActOfGod() ==================================================>  
+  //  TODO: perform random events
+  //     a. update values (e.g. inventory and/or vitals)
+  //==========================================================================>    
+  doRandomActOfGod: function doRandomActOfGod(inventory, vitals){
+    var actsOfGod = [
+      { event: "storm",   probability: 40,  injury: 10  },
+      { event: "bear",    probability: 5,   injury: 70  },
+      { event: "wolves",  probability: 10,  injury: 45  },
+      { event: "fall",    probability: 20,  injury: 25  },
+      { event: "cut",     probability: 15,  injury: 32  },                        
+    ];
+    function getRandomInt(min, max) {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
+    }
+    var randomNumber = getRandomInt(0, actsOfGod.length);
+    var actChoice =  randomNumber;
+    var actOfGod = actsOfGod[actChoice];
+    var chance = getRandomInt(0,100);
+    if (chance <= actOfGod.probability) { 
+      var actualDamage = actOfGod.injury * getRandomInt(0,100) / 100;
+      var actualDamageInt = Math.round(actualDamage);
+      vitals.injury.bal = vitals.injury.bal + (actualDamageInt);
+      l(" *** Oh NO!  BAD LUCK!!! *** ==>  %s: injury: %i", actOfGod.event.toUpperCase(), actualDamageInt);
+      l();      
+      return true;
+    }
+    else return false;
+  }, // END:  function doRandomActOfGod(inventory, vitals){
+
+
+  //  8. isDead()  ===========================================================>
+  //        check for death    ==>  TODO:  Game Over / Play Again
+  //     a. verify that all VITALS are < 100
+  //==========================================================================>    
+  isDead: function isDead(vitals){
+    var numDeaths =0;
+
+    for (var vitalLbl in vitals){
+      var vital = vitals[vitalLbl];
+
+      if (vitalLbl != "default") {   // skip the "default" vital, that's just 
+                                  //  used for default values/storage
+        if (vital.bal >= 100) {
+          l(vital.dieMsg);
+          numDeaths++;
+        }
+      }
+
+    }
+    if (numDeaths > 0) {
+      g.isDead = true;
+      return true;  // we are returning TRUE for this function - isDead()
+                    //  - which will trigger a return of false to the main 
+                    //  loop (see above:  "return (!isDead(vitals));"
+    }
+  }, // END:  function isDead(vitals){
+  
+
+  //  9. haveIBeenRescued() ==================================================>
+  //    performs a random function check to see if you have been rescued
+  //==========================================================================>    
+  haveIBeenRescued: function haveIBeenRescued(){
+    var chancesOfRescue = [
+      { startDay: 0,    endDay: 3,    probability: 0    },
+      { startDay: 4,    endDay: 4,    probability: 10   },
+      { startDay: 5,    endDay: 5,    probability: 20   },
+      { startDay: 6,    endDay: 6,    probability: 30   },
+      { startDay: 7,    endDay: 7,    probability: 40   },
+      { startDay: 8,    endDay: 8,    probability: 50   },
+      { startDay: 9,    endDay: 9,    probability: 60   },
+      { startDay: 10,   endDay: 10,   probability: 80   },
+      { startDay: 11,   endDay: 11,   probability: 100  }
+    ];
+    function getRandomInt(min, max) {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
+    }
+    var prob = getRandomInt(0, 100);
+    for (var chanceIdx in chancesOfRescue){
+      var chance = chancesOfRescue[chanceIdx];
+      var gameDay = Math.floor(g.gameHour / 24);
+
+      if (gameDay >= chance.startDay && gameDay <= chance.endDay){
+        if (prob <= chance.probability) {
+          l("YOU'VE BEEN RESCUED.  CONGRATULATIONS!  YOU WON THE GAME!");
+          return true;
+        }
+      }
+    }
+    return false;
+  }, // END:  function function haveIBeenRescued(){
+
+
+  doSecretTestCalc: function doSecretTestCalc(userInput, inventory, vitals){
+    if ( userInput.toLowerCase() == "/p" ) {
+      output.printStats1(g.gameHour,g.c);
+      return true;
+    }
+    if ( userInput.toLowerCase() == "/p2" ) {
+      output.printStats1(g.gameHour,g.c2);
+      return true;
+    }    
+    if (  userInput.toLowerCase().startsWith("/a ") ){
+      var words = userInput.toLowerCase().split(" ");
+      var targetListAbbr = words[1].split(".")[0];
+      var targetList = "";
+      var targetItem = words[1].split(".")[1];      
+      if (targetListAbbr == "i") targetList = "inventory";
+      if (targetListAbbr == "v") targetList = "vitals";
+      var evalStr = "targetList.targetItem.bal = targetList.targetItem.bal " +  words[2];   
+      l(evalStr);
+      // add to inventory or vital
+      l(targetList);
+      l(targetItem);
+      //var tList = eval(targetList);
+      //var tItem = eval(targetList + "." + targetItem);
+      l(g.c[targetList]);
+      var tList = g.c[targetList];
+      var tItem = eval("tList." + targetItem);
+
+      l(tItem.bal );
+      tItem.bal = tItem.bal + eval(words[2]);
+      //eval(evalStr);
+      l( tItem.bal );
+      return true;
+    } else {
+      //l("invalid input to FUNCTION doSecretTestCalc(userInput)"); 
+      return false;
+    }
   },
+
+
+  isInputAValidGameCommand: function isInputAValidGameCommand(userInput, inventory, vitals){
+    switch (userInput.toLowerCase()){
+      case "q":     //TODO:  comment out for production      
+      case "quit": 
+      case "h", "help": 
+      case "about": 
+      case "list": 
+        break;
+      default:
+        //      case "~a", "~s":
+        return core.doSecretTestCalc(userInput.toLowerCase(), inventory, vitals);
+        //return false;        
+    }
+    //l(" <= '%s' is a VALID Command =>\n", userInput);
+    return true;
+  },
+
+
+  isInputAValidGameAction: function isInputAValidGameAction(userInput, actions){
+    if (!actions) {e("**ERROR**:  actions is missing"); return false;}
+
+    var action = actions[userInput];     // e.g.  line = "light"
+    if (!action) {
+      //e("**ERROR**:  ACTION (actions[line]) is NOT present (empty or undefined)");
+      l();
+      l("Sorry, that's not a VALID ACTION, try something else");
+      l();
+      return false;
+    }
+
+    //if no errors, then let's print a 2 empty lines to give us some room on the screen
+    //l(" <= '%s' is a VALID Action =>\n", userInput);
+    return true;
+  },
+
+  isInputValid: function isInputValid(userInput, actions){
+    if (this.isInputAValidGameCommand(userInput)) return true;
+    if (this.isInputAValidGameAction(userInput, actions)) return true;    
+    
+    //  it's not valid in either of the ABOVE cases, so
+    //  therefore, it's FALSE (not a valid input)
+    return false;
+  },
+
+  doCommandWithResult: function doCommand(userInput){
+    // RETURN True will terminate execution -- see main 
+    //  "CALLER" function/loop
+    switch (userInput.toLowerCase()){
+      case "q":     //TODO:  comment out for production      
+        return false;
+        break;
+      case "quit": 
+        return false;        
+        break;
+      case "h", "help": 
+        l("Here's your help (e.g. help, quite, list, about")
+        return true;        
+        break;          
+      case "about": 
+        l("Game Goals:  About this game")
+        return true;        
+        break;          
+      case "list": 
+        //  print list of available game commands   
+        l("list of commands you can execute HERE");        
+        //  TODO:  core.printActions(actions);       
+        return true;        
+        break;                    
+      default:
+        return true;
+    }
+  },    
+
 
 
   getSpecificCalcs: function getSpecificCalcs(list, type) {
