@@ -61,8 +61,8 @@
     "warningMsg":   "You've sustained some significant injuries, you might want to rest and heal up a bit%s!",
     "dieMsg2":      " before you die from your injuries"    
   },      
-  "none":     {
-    "key":          "none",
+  "default":     {
+    "key":          "default",
     "bal":          0, 
     "vis":          "never",
     "dflt_doFailMsg": "Sorry, but you don't need any of that right now, you have %i of vital:%s",

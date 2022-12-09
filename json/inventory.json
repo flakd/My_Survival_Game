@@ -69,8 +69,8 @@
     "bal":  0,
     "vis":  "GTzero"
   },          
-  "none": {
-    "key":  "none",
+  "default": {
+    "key":  "default",
     "bal":  0,
     "vis":  "never",
     "dflt_doFailCond_evalStr": "balance < 0", 

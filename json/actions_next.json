@@ -7,14 +7,14 @@
 "club":  {
   "fromInv": ["wood", "-", "3"],
   "toInv":   ["club", "=", "1"],
-  "vitals":  ["none",  "=", "0"],
+  "vitals":  ["default",  "=", "0"],
   "verb": "made a club (club +1)"
 },    
 
 "douse":  {
-  "fromInv": ["none",  "=", "0"],
+  "fromInv": ["default",  "=", "0"],
   "toInv":   ["fire", "=", "0"],
-  "vitals":  ["none",  "=", "0"],
+  "vitals":  ["default",  "=", "0"],
   "verb": "put out the fire"
 },
 
@@ -22,7 +22,7 @@
 "eatmeat": {
   "key":        "eatmeat",
   "inventory":{
-    "give":   {   "gameItem":   "none",     "operator":   "=",  "changeAmt":  0   },
+    "give":   {   "gameItem":   "default",     "operator":   "=",  "changeAmt":  0   },
     "take":   {   "gameItem":   "meat",     "operator":   "-",  "changeAmt":  1   },
     "msgs":   {   "okMsg":  "ate some meat, yummy (meat -1)", "errMsg": "Sorry, you need to have at least %i %s to do that - but, you (only) have %i %s!" }
   },
@@ -36,7 +36,7 @@
 "eatfish": {
   "key":        "eatfish",
   "inventory":{
-    "give":   {   "gameItem":   "none",     "operator":   "=",  "changeAmt":  0   },
+    "give":   {   "gameItem":   "default",     "operator":   "=",  "changeAmt":  0   },
     "take":   {   "gameItem":   "fish",     "operator":   "-",  "changeAmt":  1   },
     "msgs":   {   "okMsg":  "ate a fish - Yummy! (fish -1)", "errMsg": "Sorry, you need to have at least %i %s to do that - but, you (only) have %i %s!" }
   },

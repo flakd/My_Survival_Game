@@ -8,7 +8,9 @@
       { "type":   "take",   "list": "inventory",  "item": "wood",     "operator":   "-",  "changeAmt":  2   },
       { "type":   "give",   "list": "vitals",     "item": "cold",     "operator":   "-",  "changeAmt":  10,   "override": true   },
       { "type":   "take",   "list": "vitals",     "item": "fatigue",  "operator":   "+",  "changeAmt":  5,    "override": true   }
-    ]
+    ],
+    "doActMsg_1":  "let's light a/the fire",
+    "doActMsg_2":  "let's try lighting a/the fire"
   },
  
   "chop": {
@@ -19,7 +21,8 @@
       { "type":   "give",   "list": "inventory",  "item": "wood",     "operator":   "+",  "changeAmt":  5   },
       { "type":   "take",   "list": "inventory",  "item": "trees",    "operator":   "-",  "changeAmt":  1   },
       { "type":   "take",   "list": "vitals",     "item": "fatigue",  "operator":   "+",  "changeAmt":  15,   "override": true   }
-    ]
+    ],
+    "doActMsg_1":  "let's try chopping some wood"
   },
 
   "cord": {
