@@ -99,7 +99,7 @@ function resetAllStats(vitals, inventory) {
 
 function startGame() {
   g.isGameOver = false;
-  resetAllStats(g.c.vitals, g.c.inventory);
+  //resetAllStats(g.c.vitals, g.c.inventory);
   output.printTitleBanner(g.gameHour, c);
   rl = readline.createInterface({
     input: process.stdin,
