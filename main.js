@@ -110,16 +110,18 @@ function startGame() {
 
     //if (TRUE), we are alive => then RETURN (RETURN = jump to the next "RL loop")
     if (core.isStillAliveGameLoop(line, g.c.inventory, g.c.vitals, g.c.actions)) {
+      l();
       return;   // don't return TRUE or FALSE, just RETURN so that we continue
                 //  this rl.on() "event" function
     } else {    // ELSE core.isStillAliveGameLoop has returned FALSE which means
                 //  the game is trying to END -- i.e. 1) you're dead,  or  
                 //  2) you entered the q/quit command -- so we need to dbl-chk
-      // gameSTATE:  +before play, 
-      //              +playing, 
-      //              +playing skip turn (bad command), 
-      //              +died - replay? 
-      //              +dead +quit - verify quit 
+
+                        // gameSTATE:  +before play, 
+                        //              +playing, 
+                        //              +playing skip turn (bad command), 
+                        //              +died - replay? 
+                        //              +dead +quit - verify quit 
       
                 if (isDead) {
         g.isGameOver = true;

@@ -65,10 +65,10 @@
     "key":          "default",
     "bal":          0, 
     "vis":          "never",
-    "dflt_doFailMsg": "Sorry, but you don't need any of that right now, you have %i of vital:%s",
+    "noMeetReqs_msg": "Sorry, but you don't need any of that right now, you have %i of vital:%s",
     "dflt_dieMsg":    "Sorry, but you just died of too much %s",
     "dflt_dangerMsg": "You're %s amount/number is really high.  You're really in danger of dying from %s",    
-    "dflt_doFailCond_evalStr": "balance < 0",
-    "dflt_dieCond_evalStr": "balance >= 100"
+    "noMeetReqs_condEvalStr": "balance < 0",
+    "die_condEvalStr": "balance >= 100"
   }
 }

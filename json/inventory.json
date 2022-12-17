@@ -1,4 +1,19 @@
 {
+  "trees":{
+    "key":  "trees",    
+    "bal":  9999,
+    "vis":  "never"
+  },    
+  "machete":{
+    "key":  "machete",    
+    "bal":  1,
+    "vis":  "always"
+  },    
+  "flint":{
+    "key":  "flint",    
+    "bal":  1,
+    "vis":  "always"
+  },        
   "wood": {
     "key":  "wood",
     "bal":  0,
@@ -9,11 +24,6 @@
     "bal":  0,
     "vis":  "GTzero"
   },  
-  "trees":{
-    "key":  "trees",    
-    "bal":  9999,
-    "vis":  "always"
-  },    
   "fire": {
     "key":  "fire",
     "bal":  0,
@@ -68,12 +78,32 @@
     "key":  "hammer",
     "bal":  0,
     "vis":  "GTzero"
-  },          
+  },   
+  "shelter":  {
+    "key":  "shelter",
+    "bal":  0,
+    "vis":  "GTzero"
+  },               
+  "hide":  {
+    "key":  "hide",
+    "bal":  0,
+    "vis":  "GTzero"
+  },  
+  "shoes":  {
+    "key":  "shoes",
+    "bal":  0,
+    "vis":  "GTzero"
+  }, 
+  "clothes":  {
+    "key":  "clothes",
+    "bal":  0,
+    "vis":  "GTzero"
+  },                  
   "default": {
     "key":  "default",
     "bal":  0,
     "vis":  "never",
-    "dflt_doFailCond_evalStr": "balance < 0", 
-    "dflt_doFailMsg": "Sorry, can't %s right now. You have %i %s but need at least %i %s!" 
+    "noMeetReqs_condEvalStr": "balance < 0", 
+    "noMeetReqs_msg": "Sorry, can't %s right now. You have %i %s but need at least %i %s!" 
   }    
 }

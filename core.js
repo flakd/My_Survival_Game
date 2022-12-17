@@ -87,7 +87,7 @@ let core = {
     //  9. haveIBeenRescued() performs a random function check to see if you 
     //  have been rescued
     //------------------------------------------------------------------------>
-    if (haveIBeenRescued()){    // similar to above (the previous if-else 
+    if (core.haveIBeenRescued()){    // similar to above (the previous if-else 
       return false;             //  with isDead()), RETURN FALSE here, which 
     }                           //  triggers an rl.close() of the main game 
                                 //  READLINE loop
@@ -189,7 +189,7 @@ let core = {
             doTakeCalc_evalStr, calc.willCalcCondFail_str, 
             calc.willCalcCondFail_str2, calc.willCalcCondFail
         );       */
-        l(inventory.default.dflt_doFailMsg, g.c.action.key, calc.preCalcBal, calc.item, calc.changeAmt, calc.item );
+        l(inventory.default.noMeetReqs_msg, g.c.action.key, calc.preCalcBal, calc.item, calc.changeAmt, calc.item );
         return false;   // return false b/c this calc failed        
       }
     } // END:  canDoInvTakeCalc
@@ -320,8 +320,8 @@ let core = {
         // not sure we use this ????
                 
         //print these regardless of whether it's false(succeeded) or true(failed)
-        l("postCalcBal:"+calc.postCalcBal);            
-        l();
+        //l("postCalcBal:"+calc.postCalcBal);            
+        //l();
       } // END: function doInvGiveCalc(calc) {
     } // END: function doInvGiveCalcs(action, inventory)
     function doAllVitGiveCalcs(action, vitals){
@@ -389,8 +389,8 @@ let core = {
         if (calc.postCalcBal < 0) calc.gameItem.bal = 0;
 
         //print these regardless of whether it's false(succeeded) or true(failed)
-        l("postCalcBal:"+calc.postCalcBal);            
-        l();
+        //l("postCalcBal:"+calc.postCalcBal);            
+        //l();
       } // END: function doInvGiveCalc(calc) {      
 
     } // END: function doVitGiveCalcs(action, vitals)
@@ -400,7 +400,43 @@ let core = {
   //  5. doPassTime() ========================================================>
   //    pass time (update any time-dependent variables )
   //     a. based on action.duration * vitals.COST
-  //==========================================================================>    
+  //==========================================================================>  
+  /*
+      JavaScript function that is responsible for updating the values of 
+      various "vital" objects, such as thirst, hunger, and fatigue, based on 
+      some kind of action taken. The function takes three parameters:
+
+        action:     an object that contains information about the action being 
+                    taken, including an array of calculations to be performed 
+                    (calcs) and the number of hours that the action takes 
+                    (numHours).
+
+        inventory:  an object that represents the player's inventory. It is 
+                    not used in this function.
+
+        vitals:     an object that contains the vital objects (e.g. thirst, 
+                    hunger, fatigue) as properties.
+
+      1. The function first loops through all of the vital objects and stores 
+          the current vital object in a variable called vital. 
+      2. Then, it loops through the calculations defined in the action.calcs 
+          array and checks if the calculation is related to the vitals 
+          (calc.list == "vitals"). 
+      3. If it is, the function checks whether the vital being updated 
+          (vitalLbl) is the same as the item specified in the calculation 
+          (calc.item). 
+      4. If it is, the function applies the change specified in the 
+          calculation using the specified operator (+ or -). If the vital 
+          being updated is not the same as the item specified in the 
+          calculation, the function adds the default change per hour for 
+          that vital (vital.takePerHour * action.numHours) to the vital's 
+          balance (vital.bal).
+      5. After all of the calculations have been applied, the function checks 
+          whether the vital's balance is below 0 or above the danger or 
+          warning limits. If it is, it prints a corresponding message. 
+      6. Finally, the function increments the game hour by the number of hours 
+          the action took.  
+  */
   doPassTime: function doPassTime(action, inventory, vitals){
     for (var vitalLbl in vitals){     //loop through all vital objects, e.g. thirst, hunger, fatigue
       if (vitalLbl == "default") continue;  // skip the "default" vital, we 
@@ -412,7 +448,7 @@ let core = {
                                             //  looking at ALL 5 vitals and 
                                             //  not the 'default' vital
 
-      
+        var messageArray = [];
         for (var calcIdx in action.calcs) {
           var calc = action.calcs[calcIdx];
 
@@ -421,17 +457,36 @@ let core = {
 
             //  do dflt vital.takePerHour -
             //    EXCEPT for action.calcs.take.vitals => override dflt vital.takePerHour      
+  /*           if (vitalLbl == calc.item) {
+              if (calc.operator == "-"){
+                vital.bal = vital.bal - calc.changeAmt;
+              } else if (calc.operator == "+"){
+                vital.bal = vital.bal + calc.changeAmt;
+              }
+            } else if (vitalLbl != calc.item) {
+              vital.bal = vital.bal + (vital.takePerHour * action.numHours);              
+            } */
+
+/*             if (vitalLbl == calc.item) {
+              if (calc.operator == "-"){
+                vital.bal = vital.bal - calc.changeAmt;
+              } else if (calc.operator == "+"){
+                vital.bal = vital.bal + calc.changeAmt;
+              }
+            } else if (calc.list == "vitals") {
+              vital.bal = vital.bal + (vital.takePerHour * action.numHours);
+            } */
+
             if (vitalLbl == calc.item) {
               if (calc.operator == "-"){
                 vital.bal = vital.bal - calc.changeAmt;
-              } else 
-              if (calc.operator == "+"){
+              } else if (calc.operator == "+"){
                 vital.bal = vital.bal + calc.changeAmt;
               }
-            }
-            if (vitalLbl != calc.item) {
-              vital.bal = vital.bal + (vital.takePerHour * action.numHours);              
-            }
+              if (calc.override) {
+                vital.overridden = true;
+              }
+            } 
 
             if (vital.bal < 0) vital.bal = 0;
 
@@ -450,12 +505,37 @@ let core = {
               l(vital.warningMsg,vital.dieMsg2);
               l();
             }            
+
+          } // END: if (calc.list == "vitals") {
+
+          if (calc.message) {
+            var msgElement = calc.item + " " + calc.operator + calc.changeAmt;
+            //messageArray.push(new Array[action.item, action.operator, action.changeAmt]);
+            messageArray.push(msgElement);
           }
-        }
-    }
+
+        } // END: for (var calcIdx in action.calcs) {
+
+        if (!vital.overridden) {
+          vital.bal = vital.bal + (vital.takePerHour * action.numHours);
+        } else {
+          vital.overridden = false;
+        }// END: if (!vital.overridden) {
+
+    } // END: for (var vitalLbl in vitals){
+
+    if (messageArray.length > 2) {
+      e("CHECK actions.json, possible more than 2 'message' elements");
+      return false;
+    }    
+    
     g.gameHour+=action.numHours;
-    l("OK, that's a valid action... so, let's %s", g.c.action.key);
+
+    //l("OK, that's a valid action... so, let's %s", g.c.action.key);
+    l(action.successMsg,messageArray[0],messageArray[1]);
     l();
+    l();
+
   }, // END:  function doPassTime(action, inventory, vitals){
 
 
@@ -544,7 +624,7 @@ let core = {
       max = Math.floor(max);
       return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
     }
-    var prob = getRandomInt(0, 100);
+    var prob = getRandomInt(1, 100);
     for (var chanceIdx in chancesOfRescue){
       var chance = chancesOfRescue[chanceIdx];
       var gameDay = Math.floor(g.gameHour / 24);
