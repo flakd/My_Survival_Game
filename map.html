@@ -1,0 +1,252 @@
+<script>
+
+  function logWrite(msg){
+    log.innerHTML += msg;
+  }
+  function logWriteF(msg){
+    log.innerHTML += msg + "; ";
+  }
+  function logWriteLn(msg){
+    if (msg===undefined) msg = "";
+    log.innerHTML += msg + "<br>\n";
+  }  
+  function logWriteFull(msg){
+    log.innerHTML = msg;
+  }    
+  lw=logWrite;
+  lwf=logWriteF;
+  lwln=logWriteLn;
+  lwFull=logWriteFull;
+
+
+  const MAP_WIDTH = 10;
+  const MAP_HEIGHT = 10;
+
+  // Initialize the map with all cells set to 0 (empty)
+  let map = new Array(MAP_HEIGHT);
+  for (let i = 0; i < MAP_HEIGHT; i++) {
+    map[i] = new Array(MAP_WIDTH).fill(0);
+  }
+
+  // Choose a random starting point for the map
+  //let startX = Math.floor(Math.random() * MAP_WIDTH);
+  let startX = 5
+  //let startY = Math.floor(Math.random() * MAP_HEIGHT);
+  let startY = 6
+
+  // Use a depth-first search to generate the map
+  let stack = [[startX, startY]];
+  //while (stack.length > 0 ) {
+  while (stack.length > 0 && stack.length <= 20) {
+    let x, y, neighbors;
+
+    // Pop the top element off the stack
+    [x, y] = stack.pop();
+
+    // Mark the cell as part of the map
+    map[y][x] = 1;
+    //map[y][x] = Math.floor(Math.random() * (i + 1));
+
+    // Get a list of neighbors that are not yet part of the map
+    neighbors = getUnvisitedNeighbors(x, y, map);
+
+    // Add the neighbors to the stack, randomly shuffled
+    shuffle(neighbors);
+    stack.push(...neighbors);
+  }
+
+  function getUnvisitedNeighbors(x, y, map) {
+    let neighbors = [];
+    if (y > 0 && map[y - 1][x] === 0) neighbors.push([x, y - 1]);
+    if (y < MAP_HEIGHT - 1 && map[y + 1][x] === 0) neighbors.push([x, y + 1]);
+    if (x > 0 && map[y][x - 1] === 0) neighbors.push([x - 1, y]);
+    if (x < MAP_WIDTH - 1 && map[y][x + 1] === 0) neighbors.push([x + 1, y]);
+    return neighbors;
+  }
+
+  function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      let j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  }
+
+</script>
+<style>
+  .grid {
+    width: 250px;
+    height: 250px;
+    margin: 20px;
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(10, 1fr);    
+    border: 1px solid black;
+  }
+#log {
+  width: 500px;
+  height: 300px;
+}
+.grid, #log {
+  border: 1px solid black;
+}
+
+  .cell {
+/*     border: 1px solid black; */
+    background-color: grey;
+    width: 25px;
+    height: 25px; 
+    text-align: center;
+    vertical-align: middle;
+    font-size: larger; 
+    padding: 0px;  
+    border: 1px solid black;
+
+  }
+
+  .cell.filled {
+    background-color: green;
+  }
+</style>
+
+<div class="grid">
+  <!-- Cells will be added here dynamically by JavaScript -->
+</div>
+<div id="log">
+</div>
+
+<script>
+  const grid = document.querySelector('.grid');
+  const log = document.querySelector("#log");
+
+  let numCell = 0;
+  let startCellNum = null;
+  let numFilled = 0;
+  // Iterate over the map array and create a cell element for each element
+  for (let y = 0; y < map.length; y++) {
+    for (let x = 0; x < map[y].length; x++) {  
+      let cell = document.createElement('div');
+      cell.id = numCell.toString().padStart(2,"0");
+      cell.setAttribute("name",x + "," + y);
+      cell.classList.add('cell');
+      if (map[y][x] === 1) {
+        cell.classList.add('filled');
+        if (startCellNum === null) startCellNum = numCell;
+        cell.innerHTML="<span id='player_"+numCell+"' style='display:none;'>&#128116;</span>"
+      }
+      grid.appendChild(cell);
+      numCell++;
+    }
+  }
+
+  // this doesn't seem to get me a reference to the first cell/square
+  //        WHY????
+      var startXname = (startX + 1).toString();
+      var startYname = (startY + 1).toString();
+      var startName = startXname + "," + startYname;
+      //lwf(startName);
+
+  //START
+  // set currentCellNum to start Cell Num - which 
+  //  we set when  we filled the very first cell
+  let currentCellNum = startCellNum;
+
+  // get this number as a string, so we can use it to retrieve the element
+  //  this anon function self-call should store the value of the 
+ //  function as a var to make it easier to use
+  let currCellIdStrByNum = (function(){
+    return currentCellNum.toString();
+  })();
+
+  // similar concept to the above.  now getting the actual document element - 
+  //  the cell itself (the div)
+  let currCellElByIdStr = (function(){
+    return document.getElementById(currCellIdStrByNum);
+  })();
+
+  let nameStr = currCellElByIdStr.getAttribute("name");
+  let idStr = currCellElByIdStr.getAttribute("id");
+  lwf("nameStr: " + nameStr);
+  lwln();
+  lwf("idStr: " + idStr);
+  lwln();
+  let XYStrings = [];
+  XYStrings = nameStr.split(","); 
+  let xPosStr = XYStrings[0];
+  let yPosStr = XYStrings[1];
+  let xPosInt = parseInt(xPosStr);
+  let yPosInt = parseInt(yPosStr);
+
+
+  // the player is the SPAN element, *inside* the DIV
+  let player = currCellElByIdStr.firstChild;
+  player.setAttribute("style","display:inline");
+
+  
+  document.addEventListener("keydown", (event) => {
+  //if (event.isComposing || event.keyCode === 229) {
+    //lw(event.keyCode);
+    //lw(event.code);
+    //lw(event.key);
+    lwln(event.key);
+    lwln("xPosInt: " + xPosInt);
+    lwln("yPosInt: " + yPosInt);
+
+    let isValidMove = false;
+    let nextCell;
+    let nextPlayerVisible;
+    let nextCellName;    
+    let playerId;
+    switch (event.key){
+      case "ArrowUp":
+        if (yPosInt -1 < 0) return;
+        if (map[yPosInt-1][xPosInt] === 0) return;
+        nextCellName = xPosInt + "," + (yPosInt - 1).toString();
+        lwln(nextCellName);
+        playerId = "player_" + (yPosInt + 1).toString() + xPosInt;
+        lwln(playerId);
+        nextPlayerVisible = document.getElementById(playerId);        
+        nextPlayerVisible.setAttribute("style","display:inline");
+        isValidMove = true;
+        break;
+      case "ArrowDown":        
+        if (yPosInt +1 > (MAP_HEIGHT - 1)) return;
+        if (map[yPosInt + 1, xPosInt] === 0) return;
+        nextCellName = xPosInt + "," + (yPosInt + 1).toString();
+        lwln(nextCellName);
+        playerId = "player_" + (yPosInt + 1).toString() + xPosInt;
+        lwln(playerId);
+        //nextCell = document.getElementsByName(nextCellName);        
+        //nextPlayerVisible = nextCell.firstChild;
+        nextPlayerVisible = document.getElementById(playerId);
+        nextPlayerVisible.setAttribute("style","display:inline");        
+        isValidMove = true;
+        break;
+      case "ArrowLeft":
+        if (xPosInt -1 < 0) return;
+        if (map[yPosInt][xPosInt-1] === 0) return;
+        nextCellName = (xPosInt-1).toString() + "," + yPosInt;
+        lwln(nextCellName);
+        playerId = "player_" + yPosInt.toString() + (xPosInt-1).toString();
+        lwln(playerId);
+        nextPlayerVisible = document.getElementById(playerId);        
+        nextPlayerVisible.setAttribute("style","display:inline");
+        isValidMove = true;
+        break;
+      case "ArrowRight":
+        if (xPosInt +1 < 0) return;
+        if (map[yPosInt][xPosInt+1] === 0) return;
+        nextCellName = (xPosInt+1).toString() + "," + yPosInt;
+        lwln(nextCellName);
+        playerId = "player_" + yPosInt.toString() + (xPosInt+1).toString();
+        lwln(playerId);
+        nextPlayerVisible = document.getElementById(playerId);        
+        nextPlayerVisible.setAttribute("style","display:inline");
+        isValidMove = true;
+        break;
+      //default:
+      //  return;
+    }    
+    return;
+  });
+  
+</script>
