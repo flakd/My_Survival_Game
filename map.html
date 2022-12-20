@@ -163,27 +163,36 @@
     return document.getElementById(currCellIdStrByNum);
   })();
 
-  let nameStr = currCellElByIdStr.getAttribute("name");
-  let idStr = currCellElByIdStr.getAttribute("id");
+  let currentCell = currCellElByIdStr; 
+  //let idStr = currCellElByIdStr.getAttribute("id");
+  //lwf("idStr: " + idStr);
+  //lwln();
+
+  let player = currentCell.firstChild;
+  player.setAttribute("style","display:inline");  
+
+  let nameStr = currentCell.getAttribute("name");
   lwf("nameStr: " + nameStr);
   lwln();
-  lwf("idStr: " + idStr);
-  lwln();
+
   let XYStrings = [];
   XYStrings = nameStr.split(","); 
   let xPosStr = XYStrings[0];
   let yPosStr = XYStrings[1];
   let xPosInt = parseInt(xPosStr);
-  let yPosInt = parseInt(yPosStr);
-
-
-  // the player is the SPAN element, *inside* the DIV
-  let player = currCellElByIdStr.firstChild;
-  player.setAttribute("style","display:inline");
-
+  let yPosInt = parseInt(yPosStr);  
   
   document.addEventListener("keydown", (event) => {
-  //if (event.isComposing || event.keyCode === 229) {
+
+
+
+
+    // the player is the SPAN element, *inside* the DIV
+    //let player = currCellElByIdStr.firstChild;
+    let player = currentCell.firstChild;
+    player.setAttribute("style","display:inline");
+    
+
     //lw(event.keyCode);
     //lw(event.code);
     //lw(event.key);
@@ -201,51 +210,51 @@
         if (yPosInt -1 < 0) return;
         if (map[yPosInt-1][xPosInt] === 0) return;
         nextCellName = xPosInt + "," + (yPosInt - 1).toString();
-        lwln(nextCellName);
-        playerId = "player_" + (yPosInt + 1).toString() + xPosInt;
-        lwln(playerId);
-        nextPlayerVisible = document.getElementById(playerId);        
-        nextPlayerVisible.setAttribute("style","display:inline");
+        playerId = "player_" + (yPosInt - 1).toString() + xPosInt;
+        yPosInt--;
         isValidMove = true;
         break;
       case "ArrowDown":        
         if (yPosInt +1 > (MAP_HEIGHT - 1)) return;
         if (map[yPosInt + 1, xPosInt] === 0) return;
-        nextCellName = xPosInt + "," + (yPosInt + 1).toString();
-        lwln(nextCellName);
+        nextCellName = xPosInt + "," + (yPosInt + 1).toString();        
         playerId = "player_" + (yPosInt + 1).toString() + xPosInt;
-        lwln(playerId);
+        ////lwln(nextCellName);
+        ////lwln(playerId);
         //nextCell = document.getElementsByName(nextCellName);        
         //nextPlayerVisible = nextCell.firstChild;
-        nextPlayerVisible = document.getElementById(playerId);
-        nextPlayerVisible.setAttribute("style","display:inline");        
+        ////nextPlayerVisible = document.getElementById(playerId);
+        ////nextPlayerVisible.setAttribute("style","display:inline");        
+        yPosInt++;
         isValidMove = true;
         break;
       case "ArrowLeft":
         if (xPosInt -1 < 0) return;
         if (map[yPosInt][xPosInt-1] === 0) return;
         nextCellName = (xPosInt-1).toString() + "," + yPosInt;
-        lwln(nextCellName);
         playerId = "player_" + yPosInt.toString() + (xPosInt-1).toString();
-        lwln(playerId);
-        nextPlayerVisible = document.getElementById(playerId);        
-        nextPlayerVisible.setAttribute("style","display:inline");
+        xPosInt--;
         isValidMove = true;
         break;
       case "ArrowRight":
         if (xPosInt +1 < 0) return;
         if (map[yPosInt][xPosInt+1] === 0) return;
         nextCellName = (xPosInt+1).toString() + "," + yPosInt;
-        lwln(nextCellName);
         playerId = "player_" + yPosInt.toString() + (xPosInt+1).toString();
-        lwln(playerId);
-        nextPlayerVisible = document.getElementById(playerId);        
-        nextPlayerVisible.setAttribute("style","display:inline");
+        xPosInt++;
         isValidMove = true;
         break;
       //default:
       //  return;
     }    
+    if (isValidMove){
+      lwln(nextCellName);      
+      lwln(playerId);
+      nextPlayerVisible = document.getElementById(playerId);        
+      nextPlayerVisible.setAttribute("style","display:inline");
+      player.setAttribute("style","display:none");
+      player = nextPlayerVisible;
+    }
     return;
   });
   
