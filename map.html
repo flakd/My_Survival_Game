@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-US">
  
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>My Survival Game</title>
@@ -12,21 +12,67 @@
     <script src="js/drawMap.js" type="text/JavaScript"></script>
     <script src="js/handleMovement.js" type="text/JavaScript"></script>    
   </head>
+  <body>
+    <div id="game" style="background-color: grey;">
+      <div id="sky-container" class="box" style="background-color: skyblue; z-index:-2">
+        <div id="sky" class="sky box" style="z-index:0">
+          <img id="sun" src="images/hand-drawn-sun2.png" width="100px" height="100px" style="top: 50px;">
+        </div>
+         <div id="left-of-sky" class="box hide-sun" style="z-index: 1;">
+          <img id="white1" src="images/single_white_pixel.png" width="800px" height="5px">
+        </div>
+        <div id="right-of-sky" class="box hide-sun" style="z-index: 1;">
+          <img id="white2" src="images/single_white_pixel.png" width="200px" height="500px">
+        </div>
+        <div id="bottom-of-sky" class="box hide-sun" style="z-index: 1;"  style="top:110px;">
+          <img id="white4" src="images/single_white_pixel.png" width="400px" height="400px">
+        </div>      
+      </div>
 
+      <div class="grid" style="z-index: 999;">
+        <!-- Cells will be added here dynamically by JavaScript -->
+      </div>
+      <div id="log">
+      </div>
+    </div>
+  </body>
+  <script>
+  drawMap();
 
-<center>
-  <div class="sky">    
-  </div>
-  <div class="grid">
-    <!-- Cells will be added here dynamically by JavaScript -->
-  </div>
-  <div id="log">
-  </div>
-</center>
-
-<script>
-drawMap();
-
-handleMovement();
+  handleMovement();
+    
+  </script>
   
-</script>
+  <style>
+    #sun {
+      position: relative;
+      cursor: pointer;
+    }
+  </style>    
+  <script>
+    let sun = document.getElementById("sun");
+    //train.onclick = function() {
+    //train.onclick = move;
+
+    function move(){
+      let start = Date.now();
+
+      let timer = setInterval(function() {
+        let timePassed = Date.now() - start;
+
+        //sun.style.top = ((timePassed / 2000 * -1))  + 'px';
+        if (timePassed < 15000) {
+          sun.style.left = timePassed / 50 + 'px';
+          sun.style.top = (100 + (timePassed / 200 * -1))  + 'px';
+        } else if (timePassed > 15000) {
+          sun.style.left = timePassed / 50 + 'px';
+          sun.style.top = ( (timePassed / 200) - 50)  + 'px';
+        }
+        if (timePassed > 30000) clearInterval(timer);
+
+      }, 20);
+    }
+    move();
+  </script>
+
+</html>

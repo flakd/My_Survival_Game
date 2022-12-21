@@ -1,11 +1,40 @@
+#game{
+  top: 10px;
+  padding: 0px;
+  margin-top: 20px;
+  margin-bottom: 0px;
+  height: 818px;
+  width: 802px;
+  margin-left: auto;
+  margin-right: auto;  
+}
+.box {
+  border: 1px solid black;  
+}
+.hide-sun {
+  display:block;
+  position: absolute;
+  top:0;
+  background-color: white;
+  z-index: 99;
+  margin-left: auto;
+  margin-right: auto;
+    visibility:visible;
+}
 .sky {
+  display: block;
+  position: relative;
+  left: -40px;
   width: 400px;
-  height: 200px;
+  height: 110px;
   margin-left: auto;
   margin-right: auto;
   border: 1px solid black;
+  z-index: -1;
 }
 .grid {
+  position: absolute;
+  left: 200px;
   width: 400px;
   height: 400px;
   display: grid;
@@ -16,7 +45,10 @@
   border: 1px solid black;
 }
 #log {
-  width: 500px;
+  position: absolute;
+  top: 600px;
+  left: 200px;
+  width: 400px;
   height: 300px;
   overflow-wrap: break-word;;
   overflow: scroll;
