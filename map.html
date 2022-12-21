@@ -1,304 +1,32 @@
-<script>
+<!DOCTYPE html>
+<html lang="en-US">
+ 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My Survival Game</title>
 
-  function logWrite(msg){
-    log.innerHTML += msg;
-  }
-  function logWriteF(msg){
-    log.innerHTML += msg + "; ";
-  }
-  function logWriteLn(msg){
-    if (msg===undefined) msg = "";
-    log.innerHTML += msg + "<br>\n";
-  }  
-  function logWriteFull(msg){
-    log.innerHTML = msg;
-  }    
-  lw=logWrite;
-  lwf=logWriteF;
-  lwln=logWriteLn;
-  lwFull=logWriteFull;
+    <link href="css/map.css" rel="stylesheet" type="text/css">
+    <script src="js/init.js" type="text/JavaScript"></script>
+    <script src="js/setupMap.js" type="text/JavaScript"></script>
+    <script src="js/drawMap.js" type="text/JavaScript"></script>
+    <script src="js/handleMovement.js" type="text/JavaScript"></script>    
+  </head>
 
 
-  const MAP_WIDTH = 10;
-  const MAP_HEIGHT = 10;
-
-  // Initialize the map with all cells set to 0 (empty)
-  let map = new Array(MAP_HEIGHT);
-  for (let i = 0; i < MAP_HEIGHT; i++) {
-    map[i] = new Array(MAP_WIDTH).fill(0);
-  }
-
-  // Choose a random starting point for the map
-  //let startX = Math.floor(Math.random() * MAP_WIDTH);
-  let startX = 5
-  //let startY = Math.floor(Math.random() * MAP_HEIGHT);
-  let startY = 6
-
-  // Use a depth-first search to generate the map
-  let stack = [[startX, startY]];
-  //while (stack.length > 0 ) {
-  while (stack.length > 0 && stack.length <= 10) {
-    let x, y, neighbors;
-
-    // Pop the top element off the stack
-    [x, y] = stack.pop();
-
-    // Mark the cell as part of the map
-    map[y][x] = 1;
-    //map[y][x] = Math.floor(Math.random() * (i + 1));
-
-    // Get a list of neighbors that are not yet part of the map
-    neighbors = getUnvisitedNeighbors(x, y, map);
-
-    // Add the neighbors to the stack, randomly shuffled
-    shuffle(neighbors);
-    stack.push(...neighbors);
-  }
-
-  function getUnvisitedNeighbors(x, y, map) {
-    let neighbors = [];
-    if (y > 0 && map[y - 1][x] === 0) neighbors.push([x, y - 1]);
-    if (y < MAP_HEIGHT - 1 && map[y + 1][x] === 0) neighbors.push([x, y + 1]);
-    if (x > 0 && map[y][x - 1] === 0) neighbors.push([x - 1, y]);
-    if (x < MAP_WIDTH - 1 && map[y][x + 1] === 0) neighbors.push([x + 1, y]);
-    return neighbors;
-  }
-
-  function shuffle(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-      let j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-  }
-
-</script>
-<style>
-  .grid {
-    width: 250px;
-    height: 250px;
-    margin: 20px;
-    display: grid;
-    grid-template-columns: repeat(10, 1fr);
-    grid-template-rows: repeat(10, 1fr);    
-    border: 1px solid black;
-  }
-  #log {
-    width: 500px;
-    height: 300px;
-  }
-  .grid, #log {
-    border: 1px solid black;
-  }
-
-  .cell {
-/*     border: 1px solid black; */
-    background-color: grey;
-    width: 40px;
-    height: 40px; 
-    text-align: left;
-    font-size: large; 
-    padding: 0px;  
-    /*border: 1px solid black;*/
-  }
-
-  .cell.filled {
-    background-color: green;
-  }
-
-  .fish {
-    display: block;
-    position: absolute;
-    z-index:2;
-    text-align: left;
-    vertical-align: text-top;
-    visibility: visible;    
-  }
-
-  .tree {
-    display: block;
-    position: absolute;
-    z-index:3;
-    text-align: left;
-    vertical-align: text-top;
-    visibility: visible;    
-  }
-
-  .mountain {
-    display: block;
-    position: absolute;
-    z-index:4;
-    text-align: left;
-    vertical-align: text-top;
-    visibility: visible;    
-  }
-
-  .player {
-    position: relative;
-    top: 15;
-    left: 20;
-    width: 100%;
-    z-index: 1;
-    text-align: left;
-    vertical-align: top;
-    float: right; 
-    visibility: visible;    
-  }
-
-</style>
-
-<div class="grid">
-  <!-- Cells will be added here dynamically by JavaScript -->
-</div>
-<div id="log">
-</div>
+<center>
+  <div class="sky">    
+  </div>
+  <div class="grid">
+    <!-- Cells will be added here dynamically by JavaScript -->
+  </div>
+  <div id="log">
+  </div>
+</center>
 
 <script>
-  const grid = document.querySelector('.grid');
-  const log = document.querySelector("#log");
+drawMap();
 
-  let numCell = 0;
-  let startCellNumStr = "";
-  let numCellStr = "";
-
-  let numFilled = 0;
-  let numFishes = 0;
-  let numTrees = 0;
-  let numMountains = 0;
-
-  // Iterate over the map array and create a cell element for each element
-  for (let y = 0; y < map.length; y++) {
-    for (let x = 0; x < map[y].length; x++) {  
-      let cell = document.createElement('div');
-      cell.id = numCell.toString().padStart(2,"0");
-      cell.setAttribute("name",x + "," + y);
-      cell.classList.add('cell');
-      if (map[y][x] === 1) {
-        cell.classList.add('filled');
-        //if (startCellNum === null) startCellNum = numCell;   
-        numCellStr = numCell.toString().padStart(2,"0");     
-        if (startCellNumStr === "") startCellNumStr = numCellStr;   
-        cell.innerHTML=   "<span id='player_"+numCellStr+"' class='player' style='display:none; z-index:100'>🚶🏻</span>";
-        if (numFishes === 0) {
-          cell.innerHTML+=  "<span id='fish_"+numCellStr+"' class='fish'>🐟</span>";
-          numFishes++;
-        } else if (numTrees === 0) {
-          cell.innerHTML+=  "<span id='tree_"+numCellStr+"' class='tree'>🌲</span>";
-          numTrees++;          
-        } else if (numMountains === 0) {
-          cell.innerHTML+=  "<span id='mountain_"+numCellStr+"' class='mountain'>🏔️</span>";
-          numMountains++;          
-        }
-
-      }
-      grid.appendChild(cell);
-      numCell++;
-    }
-  }
-
-  // this doesn't seem to get me a reference to the first cell/square
-  //        WHY????
-      var startXname = (startX + 1).toString();
-      var startYname = (startY + 1).toString();
-      var startName = startXname + "," + startYname;
-      //lwf(startName);
-
-  //START
-  // set currentCellNum to start Cell Num - which 
-  //  we set when  we filled the very first cell
-  //////let currentCellNum = startCellNum;
-
-  // get this number as a string, so we can use it to retrieve the element
-  //  this anon function self-call should store the value of the 
- //  function as a var to make it easier to use
-  /* let currCellIdStrByNum = (function(){
-    return currentCellNum.toString();
-  })(); */
-
-  // similar concept to the above.  now getting the actual document element - 
-  //  the cell itself (the div)
-  let currCellElByIdStr = (function(){
-    //return document.getElementById(currCellIdStrByNum);
-    console.log(startCellNumStr);
-    return document.getElementById("player_"+startCellNumStr).parentElement;
-  })();
-
-  let currentCell = currCellElByIdStr; 
-  //let idStr = currCellElByIdStr.getAttribute("id");
-  //lwf("idStr: " + idStr);
-  //lwln();
-
-  // the player is the SPAN element, *inside* the DIV
-  //let player = currCellElByIdStr.firstChild;
-  let player = currentCell.firstChild;
-  player.setAttribute("style","display:inline");  
-
-  let nameStr = currentCell.getAttribute("name");
-  lwf("nameStr: " + nameStr);
-  lwln();
-
-  let XYStrings = [];
-  XYStrings = nameStr.split(","); 
-  let xPosStr = XYStrings[0];
-  let yPosStr = XYStrings[1];
-  let xPosInt = parseInt(xPosStr);
-  let yPosInt = parseInt(yPosStr);  
-  
-  document.addEventListener("keydown", (event) => {
-
-    //player.setAttribute("style","display:inline");
-    
-    //lw(event.keyCode);
-    //lw(event.code);
-    //lw(event.key);
-    lwln(event.key);
-    lwln("xPosInt: " + xPosInt);
-    lwln("yPosInt: " + yPosInt);
-
-    let isValidMove = false;
-    let nextCell;
-    let nextPlayerVisible;
-    let nextCellName;    
-    let playerId;
-    switch (event.key){
-      case "ArrowUp":
-        if (yPosInt-1 < 0) return;
-        if (map[yPosInt-1][xPosInt] === 0) return;
-        yPosInt--;        
-        isValidMove = true;
-        break;
-      case "ArrowDown":        
-        if (yPosInt+1 > (MAP_HEIGHT - 1)) return;
-        if (map[yPosInt + 1][xPosInt] === 0) return;
-        yPosInt++;
-        isValidMove = true;
-        break;
-      case "ArrowLeft":
-        if (xPosInt-1 < 0) return;
-        if (map[yPosInt][xPosInt-1] === 0) return;
-        xPosInt--;
-        isValidMove = true;
-        break;
-      case "ArrowRight":
-        //if (xPosInt +1 < 0) return;
-        if (xPosInt+1 > (MAP_WIDTH - 1)) return;
-        if (map[yPosInt][xPosInt+1] === 0) return;
-        xPosInt++;
-        isValidMove = true;
-        break;
-      //default:
-      //  return;
-    }    
-    if (isValidMove){
-      nextCellName = xPosInt + "," + yPosInt;    
-      playerId = "player_" + yPosInt + xPosInt;  
-      lwln(nextCellName);      
-      lwln(playerId);
-      nextPlayerVisible = document.getElementById(playerId);        
-      nextPlayerVisible.setAttribute("style","display:inline");
-      player.setAttribute("style","display:none");
-      player = nextPlayerVisible;
-    }
-    return;
-  });
+handleMovement();
   
 </script>

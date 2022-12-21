@@ -1,0 +1,91 @@
+.sky {
+  width: 400px;
+  height: 200px;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid black;
+}
+.grid {
+  width: 400px;
+  height: 400px;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(10, 1fr);    
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid black;
+}
+#log {
+  width: 500px;
+  height: 300px;
+  overflow-wrap: break-word;;
+  overflow: scroll;
+  margin-left: auto;
+  margin-right: auto;
+}
+.grid, #log {
+  border: 1px solid black;
+}
+
+.cell {
+/*     border: 1px solid black; */
+  background-color: blue;
+  width: 40px;
+  height: 40px; 
+  text-align: left;
+  padding: 0px;  
+  /*border: 1px solid black;*/
+}
+
+.cell.filled {
+  background-color: green;
+}
+
+.water {
+  display: block;
+  position: absolute;
+  z-index:2;
+  text-align: left;
+  vertical-align: text-top;
+  visibility: visible;    
+}
+
+.fish {
+  display: block;
+  position: absolute;
+  z-index:2;
+  text-align: left;
+  vertical-align: text-top;
+  visibility: visible;    
+}
+
+.tree {
+  display: block;
+  position: absolute;
+  z-index:3;
+  text-align: left;
+  vertical-align: text-top;
+  visibility: visible;    
+}
+
+.mountain {
+  display: block;
+  position: absolute;
+  z-index:4;
+  text-align: left;
+  vertical-align: text-top;
+  visibility: visible;    
+}
+
+.player {
+  position: relative;
+  top: 12;
+  left: 20;
+  width: 100%;
+  z-index: 99;
+  text-align: left;
+  /* vertical-align: top; */
+  float: right; 
+  visibility: visible;   
+  font-size: 28pt; 
+}
