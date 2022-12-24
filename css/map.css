@@ -19,18 +19,17 @@
   z-index: 11;
 }
 .status {
-  height: 40px;
+  height: 80px;
+  width: 798px;
+  margin: auto;
+  overflow: auto;
+
+/*   display: block;
+  unicode-bidi: embed; */
+  font-family: monospace;
+/*   white-space: pre;   */
   border: 1px solid black;
-  display: block;
-  unicode-bidi: embed;
-  font-family: monospace;
-  white-space: pre;  
-}
-pre {
-  display: block;
-  unicode-bidi: embed;
-  font-family: monospace;
-  white-space: pre;
+
 }
 #sun-or-moon, #sun, #moon {
   position: relative;
@@ -54,10 +53,9 @@ pre {
   height: 110px;
   margin-left: auto;
   margin-right: auto;
-/*   border: 1px solid black;
  */  z-index: -1;
 }
-.grid {
+#grid {
   width: 400px;
   height: 400px;
   display: grid;
@@ -76,9 +74,9 @@ pre {
   margin-right: auto;
   border: 1px solid black;
 }
-#status, #command-input {
+#status {
   height: 40px;
-  width: 398px;
+  width: 200px;
   border: 1px solid black;
 }
 

@@ -11,12 +11,22 @@
     <script src="js/setupMap.js" type="text/JavaScript"></script>
     <script src="js/drawMap.js" type="text/JavaScript"></script>
     <script src="js/handleMovement.js" type="text/JavaScript"></script>    
-    <script src="js/sunOrMoonRising.js" type="text/JavaScript"></script>        
+    <script src="js/sunOrMoonRising.js" type="text/JavaScript"></script>  
+
+    <script src="json/actions.js" type="text/JavaScript"></script>     
+    <script src="json/inventory.js" type="text/JavaScript"></script>     
+    <script src="json/vitals.js" type="text/JavaScript"></script>     
+
+
+ 
+
+
   </head>
   <body>
     <div id="game">
       <div id="overlay">
         <div id="sky-container" class="box" style="z-index:-2">
+          
           <div style="background-color: skyblue; height:110px; width:400px; margin: 0 auto; position: relative;">
             <div id="sky" class="sky box" style="z-index:0">
               <img id="sun" src="images/hand-drawn-sun2.png" style="display:block;" width="100px" height="100px" style="top: 110px;">
@@ -24,22 +34,28 @@
             </div>
           </div>        
           <div id="map" style="position: relative;">
-            <div class="grid" style="z-index:3;"  style="left:600px;top:-110px;position: absolute;">
+            <div id="grid" style="z-index:3;"  style="left:600px;top:-110px;position: absolute;">
               <!-- Cells will be added here dynamically by JavaScript -->
-            </div>
-          </div>
-        </div>
+            </div><!-- CLOSE id="grid"-->
+          </div><!-- CLOSE id="map"-->
+        </div><!-- CLOSE id="sky-container"-->
 
-        <div class="container">
+        <div id="statuses-container">
           <div id="status-vitals" class="status"></div>
           <div id="status-inventory" class="status"></div>
-          <div id="status-feedback" class="status"></div>
-          <div><input id="command-input" type="text" /></div>
+          <div id="status-actions" class="status"></div>
+        </div><!-- CLOSE id="statuses-container"-->
+        <div id="input-output">        
+          <div id="status-feedback" class="io"></div>
+          <div id="command-input" class="io">
+            <input id="commands"  class="io" type="text"></input>
+          </div><!-- CLOSE id="command-input"-->
           <div id="logs-container" style="width: 400px;">
             <div id="log"></div>
             <div id="log2"></div>        
-          </div> 
-        </div>
+          </div><!-- CLOSE id="logs-container"--> 
+        </div><!-- CLOSE id="input-output"-->
+        
       </div><!-- CLOSE id="overlay"-->
     </div><!-- CLOSE id="game"-->
   </body>
@@ -48,7 +64,10 @@
   handleMovement();
   moveSunOrMoon("sun");      
   </script>
-  
+      <script src="output.js" type="text/JavaScript"></script>    
+      <script src="parseJSONs.js" type="text/JavaScript"></script>        
+      <script src="core.js" type="text/JavaScript"></script>        
+      <script src="main.js" type="text/JavaScript"></script>        
 
 
 </html>

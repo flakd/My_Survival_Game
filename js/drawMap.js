@@ -1,7 +1,7 @@
 let startCellNumStr = "";
 
 function drawMap(){
-  const grid = document.querySelector('.grid');
+  const grid = document.querySelector('#grid');
   const log = document.querySelector("#log");
 
   let numCell = 0;

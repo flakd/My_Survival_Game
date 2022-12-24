@@ -65,24 +65,28 @@ function handleMovement(){
     let playerId;
     switch (event.key){
       case "ArrowUp":
+        event.preventDefault()
         if (yPosInt-1 < 0) return;
         if (map[yPosInt-1][xPosInt] === 0) return;
         yPosInt--;        
         isValidMove = true;
         break;
-      case "ArrowDown":        
+      case "ArrowDown":       
+        event.preventDefault() 
         if (yPosInt+1 > (MAP_HEIGHT - 1)) return;
         if (map[yPosInt + 1][xPosInt] === 0) return;
         yPosInt++;
         isValidMove = true;
         break;
       case "ArrowLeft":
+        event.preventDefault()
         if (xPosInt-1 < 0) return;
         if (map[yPosInt][xPosInt-1] === 0) return;
         xPosInt--;
         isValidMove = true;
         break;
       case "ArrowRight":
+        event.preventDefault()
         //if (xPosInt +1 < 0) return;
         if (xPosInt+1 > (MAP_WIDTH - 1)) return;
         if (map[yPosInt][xPosInt+1] === 0) return;

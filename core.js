@@ -1,13 +1,13 @@
-let g;  //create my global object;
+/* let g;  //create my global object;
 if (global) { 
     g=global;
 } else
 if (window) { 
   g=window;
-}
-const { exit } = require('process');
-const output =  require('./output');
-const l=console.log;
+} */
+//const { exit } = require('process');
+/* const output =  require('./output');
+const l=console.log; */
 const e=function(msg){console.error("**ERROR**: %s",msg)};
 
 let core = {
@@ -91,7 +91,16 @@ let core = {
       return false;             //  with isDead()), RETURN FALSE here, which 
     }                           //  triggers an rl.close() of the main game 
                                 //  READLINE loop
-                                
+          
+
+    //------------------------------------------------------------------------>
+    //  10.a. scroll the feedback div/window to the bottom
+    //------------------------------------------------------------------------>                                
+    let elem = document.querySelector("#status-feedback");
+    elem.scrollTop = elem.scrollHeight;
+    document.querySelector("#status-feedback").scrollTop = elem.scrollHeight;
+
+
     //------------------------------------------------------------------------>
     //  10. loop back to beginning
     //------------------------------------------------------------------------>
@@ -189,7 +198,7 @@ let core = {
             doTakeCalc_evalStr, calc.willCalcCondFail_str, 
             calc.willCalcCondFail_str2, calc.willCalcCondFail
         );       */
-        l(inventory.default.noMeetReqs_msg, g.c.action.key, calc.preCalcBal, calc.item, calc.changeAmt, calc.item );
+        lwlnFeedback(inventory.default.noMeetReqs_msg, g.c.action.key, calc.preCalcBal, calc.item, calc.changeAmt, calc.item );
         return false;   // return false b/c this calc failed        
       }
     } // END:  canDoInvTakeCalc
@@ -245,8 +254,8 @@ let core = {
         if (!calc.gameItem) {e("possible misspelling of gameItem in JSON");}
 
         calc.preCalcBal = calc.gameItem.bal;
-        l("preCalcBal:"+calc.preCalcBal);            
-        l();                          
+/*        lwlnFeedback("preCalcBal:"+calc.preCalcBal);            
+       lwlnFeedback();        */                   
 
         // set up the ACTUAL 'perform calculation' statement      
         var doTakeCalc_evalStr = gameItemBal_evalStr + "=" + gameItemBal_evalStr + calc.operator + calc.changeAmt;
@@ -256,9 +265,9 @@ let core = {
         eval (doTakeCalc_evalStr);
 
         calc.postCalcBal = calc.gameItem.bal;
-        l("postCalcBal:"+calc.postCalcBal);            
-        l();
-
+/*        lwlnFeedback("postCalcBal:"+calc.postCalcBal);            
+       lwlnFeedback();
+ */
 
       } // END:  doInvTakeCalc
     } // END:  doInvTakeCalcs
@@ -491,19 +500,19 @@ let core = {
             if (vital.bal < 0) vital.bal = 0;
 
             if (vital.bal > vital.dangerLimit) {
-              l();
+              lwlnFeedback();
               if (!vitals.default.dflt_dangerMsg) e("missing vitals.default.dflt_dangerMsg");
-              l(vitals.default.dflt_dangerMsg,vitalLbl,vitalLbl);
-              l();
+              lwlnFeedback(vitals.default.dflt_dangerMsg,vitalLbl,vitalLbl);
+              lwlnFeedback();
                           // if above danger, we don't want to ALSO print 
                           //  WARNING MSG, so skip to next iteration/vital
                           //  otherwise, fall through to below and then 
                           //  check for warningLimit instead
             } else
             if (vital.bal > vital.warningLimit) {
-              l();
-              l(vital.warningMsg,vital.dieMsg2);
-              l();
+             lwlnFeedback();
+             lwlnFeedback(vital.warningMsg,vital.dieMsg2);
+             lwlnFeedback();
             }            
 
           } // END: if (calc.list == "vitals") {
@@ -532,9 +541,9 @@ let core = {
     g.gameHour+=action.numHours;
 
     //l("OK, that's a valid action... so, let's %s", g.c.action.key);
-    l(action.successMsg,messageArray[0],messageArray[1]);
-    l();
-    l();
+   lwlnFeedback(action.successMsg,messageArray[0],messageArray[1]);
+   lwlnFeedback();
+   lwlnFeedback();
 
   }, // END:  function doPassTime(action, inventory, vitals){
 
@@ -568,8 +577,8 @@ let core = {
       var actualDamage = actOfGod.injury * getRandomInt(0,100) / 100;
       var actualDamageInt = Math.round(actualDamage);
       vitals.injury.bal = vitals.injury.bal + (actualDamageInt);
-      l(" *** Oh NO!  BAD LUCK!!! *** ==>  %s: injury: %i", actOfGod.event.toUpperCase(), actualDamageInt);
-      l();      
+     lwlnFeedback(" *** Oh NO!  BAD LUCK!!! *** ==>  %s: injury: %i", actOfGod.event.toUpperCase(), actualDamageInt);
+     lwlnFeedback();      
       return true;
     }
     else return false;
@@ -589,7 +598,7 @@ let core = {
       if (vitalLbl != "default") {   // skip the "default" vital, that's just 
                                   //  used for default values/storage
         if (vital.bal >= 100) {
-          l(vital.dieMsg);
+         lwlnFeedback(vital.dieMsg);
           numDeaths++;
         }
       }
@@ -631,13 +640,15 @@ let core = {
 
       if (gameDay >= chance.startDay && gameDay <= chance.endDay){
         if (prob <= chance.probability) {
-          l("YOU'VE BEEN RESCUED.  CONGRATULATIONS!  YOU WON THE GAME!");
+         lwlnFeedback("YOU'VE BEEN RESCUED.  CONGRATULATIONS!  YOU WON THE GAME!");
           return true;
         }
       }
     }
     return false;
   }, // END:  function function haveIBeenRescued(){
+
+  
 
 
   doSecretTestCalc: function doSecretTestCalc(userInput, inventory, vitals){
@@ -781,6 +792,6 @@ let core = {
 
 
 
-module.exports = core;
+//module.exports = core;
 
 

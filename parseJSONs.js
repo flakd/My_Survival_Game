@@ -1,7 +1,7 @@
-const fs = require('fs');
+//const fs = require('fs');
 const l = console.log;
 
-let parseJSONs = {
+window.parseJSONs = {
   path: "./json/",
   Objects: {
     "inventory":{},
@@ -34,6 +34,6 @@ parseJSONs.print = () => {
   console.log("I just executed parseJSONs.print()@parseJSONs.js");
 }
 
-module.exports = parseJSONs;
+//module.exports = parseJSONs;
 
 

@@ -1,6 +1,25 @@
-const l = console.log;
+//const l = console.log;
 
-let output = {
+let sv = document.querySelector("#status-vitals");
+let si = document.querySelector("#status-inventory");
+let sa = document.querySelector("#status-actions");
+let sf = document.querySelector("#status-feedback");
+
+lwrVitals = function(msg, target){ lwr(msg,sv);}
+lwlnVitals = function(msg, target){ lwln(msg,sv);}
+
+lwrInventory = function(msg, target){ lwr(msg,si);}
+lwlnInventory = function(msg, target){ lwln(msg,si);}
+
+lwrActions = function(msg, target){ lwr(msg,sa);}
+lwlnActions = function(msg, target){ lwln(msg,sa);}
+
+lwrFeedback = function(msg, target){ lwr(msg,sf);}
+lwlnFeedback = function(msg, target){ lwln(msg,sf);}
+
+
+//let output = {
+  window.output = {  
   printStats1: function printStats1(time, cObj, cols, prePadding, colWidth, verb){
     if (!cols) { cols = 7;}
     if (!prePadding) { prePadding = "";}
@@ -16,27 +35,23 @@ let output = {
     var myTime = time%24
     var dayStr = myDay.toString().padStart(3,"0"); 
     var timeStr = myTime.toString().padStart(2,"0");
-    l("**   [ D A Y : %s ]   ****   [ T I M E: %s hrs ]", dayStr, timeStr );
-    //l("=================================================================================");
-    l("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");  
+    lwrVitals("**   [ D A Y : %s ]   ****   [ T I M E: %s hrs ]", dayStr, timeStr );
+    lwlnVitals("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");  
 
-    this.printStats2(cObj.vitals, 5, "   ", 15, "| ");
+    this.printStats2("vitals", cObj.vitals, 5, "   ", 15, "| ");
 
-    l("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");  
+    lwlnVitals("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");  
 
-    if (this.printStats2(cObj.inventory) == 0) {
-      l("No possessions at the moment!");
+    if (this.printStats2("inventory", cObj.inventory) == 0) {
+      lwlnInventory("No possessions at the moment!");
     }
-    l("=================================================================================");
+    lwlnInventory("=================================================================================");
 
 
-    //l("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-    l();
-    l("~~~~~~~~~~~~~~~~~~~~~~~~~~~~  ACTIONS you can take:  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-    //l("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+    lwrActions();
+    lwlnActions("~~~~~~~~~~~~~~~~~~~~~~~~~~~~  ACTIONS you can take:  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
     var actions = cObj.actions;
     var numListItems=0;
-    //msg="|    ";   //reset msg from above (it last says "You've got the following:")
     msg="  ";   //reset msg from above (it last says "You've got the following:")
 
     for (var actionLbl in actions) {
@@ -55,14 +70,14 @@ let output = {
       }    
 
     }
-    if (msg !="") l(msg);
-    l("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+    if (msg !="") lwlnActions(msg);
+    lwlnActions("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
     //l("=================================================================================");
-    l("\n\n");
+    lwlnActions("\n\n");
     return numListItems;
   },
 
-  printStats2: function printStats2(list, cols, prePadding, colWidth, firstChar){
+  printStats2: function printStats2(vitalsOrInventory, list, cols, prePadding, colWidth, firstChar){
     if (!cols) { cols = 7;}
     if (!prePadding) { prePadding = "";}    
     if (!colWidth) { colWidth = 15;}
@@ -101,24 +116,31 @@ let output = {
         if (numListItems % cols == 0 && numListItems != 0) {
           msg+=lMsg;
           msg+=" |";
-          //l(msg);
         } else {
           msg+=lMsg;
         }
         
       }
     }
-    if (msg !="") l(msg);
+    if (msg !="") {
+      if (vitalsOrInventory==="vitals"){
+        lwrVitals(msg);
+      } else if (vitalsOrInventory==="inventory"){
+        lwrInventory(msg);
+      }
+    }        
     return numListItems;
   },
 
   printTitleBanner: function printTitleBanner(time, c){
-    l("\n\n\n");
-    l("Welcome to the game!");
-    l("\n\n");
+    let sf = document.querySelector("#status-feedback");
+    //console.log(sf);
+    lwlnFeedback("\n\n\n");
+    lwlnFeedback("Welcome to the game!");
+    lwlnFeedback("\n\n");
     this.printStats1(time, c);  
   }
 }
 
 
-module.exports = output;
+//module.exports = output;

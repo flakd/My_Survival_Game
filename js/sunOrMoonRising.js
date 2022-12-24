@@ -41,7 +41,7 @@ function moveSunOrMoon(sunMoon){
     else if (timePassed >= 55000 && timePassed < 64000) {
       lwln(sunOrMoon.style.top);
       sunOrMoon.style.left = ((timePassed / 150) -70) + 'px';
-      sunOrMoon.style.top = ( (timePassed / 75) - 745)  + 'px';
+      sunOrMoon.style.top = ( (timePassed / 75) - 744)  + 'px';
     }
 
     // sun or moon (day or night) lasts 64 seconds, then we switch to the other

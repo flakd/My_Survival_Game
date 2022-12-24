@@ -1,54 +1,37 @@
 
-  function logWrite(msg, logTarget){
+  function checkLog(logTarget){
+    let log;
     if ( (logTarget) && (logTarget instanceof Element) ) {
       log = logTarget;
     } else {
       log = document.querySelector("#log");
       if (!log) {
         console.log("You're missing/you need to specify an element with 'id=#log'");
-        return;
+        return false;
       }
-    } 
+    }     
+    return log;
+  }
+  function logWrite(msg, logTarget){
+    let log = checkLog(logTarget)
     log.innerHTML += msg;
   }
   function logWriteF(msg, logTarget){
-    if ( (logTarget) && (logTarget instanceof Element) ) {
-      log = logTarget;
-    } else {
-      log = document.querySelector("#log");
-      if (!log) {
-        console.log("You're missing/you need to specify an element with 'id=#log'");
-        return;
-      }
-    }
+    let log = checkLog(logTarget)
     log.innerHTML += msg + "; ";
   }
   function logWriteLn(msg, logTarget){
-    if ( (logTarget) && (logTarget instanceof Element) ) {
-      log = logTarget;
-    } else {
-      log = document.querySelector("#log");
-      if (!log) {
-        console.log("You're missing/you need to specify an element with 'id=#log'");
-        return;
-      }
-    }
-    if (msg===undefined) msg = "";
+    if (msg===undefined) msg = "";    
+    let log = checkLog(logTarget)
     log.innerHTML += msg + "<br>\n";
   }  
   function logWriteReplace(msg, logTarget){
-    if ( (logTarget) && (logTarget instanceof Element) ) {
-      log = logTarget;
-    } else {
-      log = document.querySelector("#log");
-      if (!log) {
-        console.log("You're missing/you need to specify an element with 'id=#log'");
-        return;
-      }
-    }
+    if (msg===undefined) msg = "";    
+    let log = checkLog(logTarget)
     log.innerHTML = msg;
   }    
   lw=logWrite;
   lwf=logWriteF;
   lwln=logWriteLn;
   lwr=logWriteReplace;
+
