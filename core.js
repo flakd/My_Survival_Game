@@ -94,11 +94,10 @@ let core = {
           
 
     //------------------------------------------------------------------------>
-    //  10.a. scroll the feedback div/window to the bottom
+    //  10.a. scroll the lwlnOutputback div/window to the bottom
     //------------------------------------------------------------------------>                                
-    let elem = document.querySelector("#status-feedback");
+    let elem = document.querySelector("#output");
     elem.scrollTop = elem.scrollHeight;
-    document.querySelector("#status-feedback").scrollTop = elem.scrollHeight;
 
 
     //------------------------------------------------------------------------>
@@ -198,7 +197,7 @@ let core = {
             doTakeCalc_evalStr, calc.willCalcCondFail_str, 
             calc.willCalcCondFail_str2, calc.willCalcCondFail
         );       */
-        lwlnFeedback(inventory.default.noMeetReqs_msg, g.c.action.key, calc.preCalcBal, calc.item, calc.changeAmt, calc.item );
+        lwlnOutput(inventory.default.noMeetReqs_msg, g.c.action.key, calc.preCalcBal, calc.item, calc.changeAmt, calc.item );
         return false;   // return false b/c this calc failed        
       }
     } // END:  canDoInvTakeCalc
@@ -254,8 +253,8 @@ let core = {
         if (!calc.gameItem) {e("possible misspelling of gameItem in JSON");}
 
         calc.preCalcBal = calc.gameItem.bal;
-/*        lwlnFeedback("preCalcBal:"+calc.preCalcBal);            
-       lwlnFeedback();        */                   
+/*        lwlnOutput("preCalcBal:"+calc.preCalcBal);            
+       lwlnOutput();        */                   
 
         // set up the ACTUAL 'perform calculation' statement      
         var doTakeCalc_evalStr = gameItemBal_evalStr + "=" + gameItemBal_evalStr + calc.operator + calc.changeAmt;
@@ -265,8 +264,8 @@ let core = {
         eval (doTakeCalc_evalStr);
 
         calc.postCalcBal = calc.gameItem.bal;
-/*        lwlnFeedback("postCalcBal:"+calc.postCalcBal);            
-       lwlnFeedback();
+/*        lwlnOutput("postCalcBal:"+calc.postCalcBal);            
+       lwlnOutput();
  */
 
       } // END:  doInvTakeCalc
@@ -500,19 +499,19 @@ let core = {
             if (vital.bal < 0) vital.bal = 0;
 
             if (vital.bal > vital.dangerLimit) {
-              lwlnFeedback();
+              lwlnOutput();
               if (!vitals.default.dflt_dangerMsg) e("missing vitals.default.dflt_dangerMsg");
-              lwlnFeedback(vitals.default.dflt_dangerMsg,vitalLbl,vitalLbl);
-              lwlnFeedback();
+              lwlnOutput(vitals.default.dflt_dangerMsg,vitalLbl,vitalLbl);
+              lwlnOutput();
                           // if above danger, we don't want to ALSO print 
                           //  WARNING MSG, so skip to next iteration/vital
                           //  otherwise, fall through to below and then 
                           //  check for warningLimit instead
             } else
             if (vital.bal > vital.warningLimit) {
-             lwlnFeedback();
-             lwlnFeedback(vital.warningMsg,vital.dieMsg2);
-             lwlnFeedback();
+             lwlnOutput();
+             lwlnOutput(vital.warningMsg,vital.dieMsg2);
+             lwlnOutput();
             }            
 
           } // END: if (calc.list == "vitals") {
@@ -541,9 +540,9 @@ let core = {
     g.gameHour+=action.numHours;
 
     //l("OK, that's a valid action... so, let's %s", g.c.action.key);
-   lwlnFeedback(action.successMsg,messageArray[0],messageArray[1]);
-   lwlnFeedback();
-   lwlnFeedback();
+   lwlnOutput(action.successMsg,messageArray[0],messageArray[1]);
+   lwlnOutput();
+   lwlnOutput();
 
   }, // END:  function doPassTime(action, inventory, vitals){
 
@@ -577,8 +576,8 @@ let core = {
       var actualDamage = actOfGod.injury * getRandomInt(0,100) / 100;
       var actualDamageInt = Math.round(actualDamage);
       vitals.injury.bal = vitals.injury.bal + (actualDamageInt);
-     lwlnFeedback(" *** Oh NO!  BAD LUCK!!! *** ==>  %s: injury: %i", actOfGod.event.toUpperCase(), actualDamageInt);
-     lwlnFeedback();      
+     lwlnOutput(" *** Oh NO!  BAD LUCK!!! *** ==>  %s: injury: %i", actOfGod.event.toUpperCase(), actualDamageInt);
+     lwlnOutput();      
       return true;
     }
     else return false;
@@ -598,7 +597,7 @@ let core = {
       if (vitalLbl != "default") {   // skip the "default" vital, that's just 
                                   //  used for default values/storage
         if (vital.bal >= 100) {
-         lwlnFeedback(vital.dieMsg);
+         lwlnOutput(vital.dieMsg);
           numDeaths++;
         }
       }
@@ -640,7 +639,7 @@ let core = {
 
       if (gameDay >= chance.startDay && gameDay <= chance.endDay){
         if (prob <= chance.probability) {
-         lwlnFeedback("YOU'VE BEEN RESCUED.  CONGRATULATIONS!  YOU WON THE GAME!");
+         lwlnOutput("YOU'VE BEEN RESCUED.  CONGRATULATIONS!  YOU WON THE GAME!");
           return true;
         }
       }
