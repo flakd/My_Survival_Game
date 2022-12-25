@@ -1,61 +1,77 @@
-#game{
-  
+#game, #logs-container {
   padding: 0px;
   margin-top: 0px;
   margin-bottom: 0px;
-  height: 818px;
-  width: 802px;
   margin-left: auto;
   margin-right: auto;  
+  width: 602px;  
 }
-
-.container {
-  width: 400px;
-  margin: 0 auto;
+#game {
+  height: 618px;
+}
+top {
+  height:600px;
+  display: contents;
+}
+#logs-container {
+  height: 300px;
 }
 #overlay  {
   position: relative;
   background-color: white;
   z-index: 11;
 }
+#statuses-container{
+  width: 200px;
+  float: right;
+}
 .status {
-  height: 80px;
-  width: 798px;
+  width: 198px;
   margin: auto;
   overflow: auto;
-
-/*   display: block;
-  unicode-bidi: embed; */
   font-family: monospace;
-/*   white-space: pre;   */
   border: 1px solid black;
-
 }
-#sun-or-moon, #sun, #moon {
+#status-timeDayScore{
+  height: 80px;  
+}
+#status-vitals {
+  height: 80px;
+}
+#status-inventory {
+  height: 130px;
+}
+#status-actions {
+  height: 160px;
+}
+#sun, #moon {
   position: relative;
   cursor: pointer;
+  width: 100px;
+  height: 100px;
+  top: 110px;
 }
-.hide-sun {
-  display:block;
-  position: absolute;
-  background-color: white;
-  z-index: 9;
-  margin-left: auto;
-  margin-right: auto;
-    visibility:visible;
+#sky-box {
+  background-color: skyblue; 
+  height:110px; 
+  width:400px; 
+  margin: 0 auto;
+  float:left;
+  position: relative;
 }
 .sky {
   display: block;
   position: relative;
   overflow: hidden;
-
   width: 400px;
   height: 110px;
   margin-left: auto;
   margin-right: auto;
- */  z-index: -1;
+  z-index: -1;
 }
+
 #grid {
+  /* left:600px;top:-110px;position: absolute; */
   width: 400px;
   height: 400px;
   display: grid;
@@ -64,9 +80,10 @@
   margin-left: auto;
   margin-right: auto;
 }
-#log, #log2 {
+
+#log, #log2, #log3 {
   float:left;
-  width: 49%;
+  width: 198px;
   height: 200px;
   overflow-wrap: break-word;;
   overflow: auto;
@@ -74,70 +91,33 @@
   margin-right: auto;
   border: 1px solid black;
 }
-#status {
-  height: 40px;
-  width: 200px;
-  border: 1px solid black;
-}
 
 .cell {
-/*     border: 1px solid black; */
   background-color: blue;
   width: 40px;
   height: 40px; 
   text-align: left;
   padding: 0px;  
-  /*border: 1px solid black;*/
 }
 
 .cell.filled {
   background-color: green;
 }
 
-.water {
+.water, .fish, .tree, .mountain {
   display: block;
   position: absolute;
   z-index:2;
   text-align: left;
-  vertical-align: text-top;
-  visibility: visible;    
-}
-
-.fish {
-  display: block;
-  position: absolute;
-  z-index:2;
-  text-align: left;
-  vertical-align: text-top;
-  visibility: visible;    
-}
-
-.tree {
-  display: block;
-  position: absolute;
-  z-index:3;
-  text-align: left;
-  vertical-align: text-top;
-  visibility: visible;    
-}
-
-.mountain {
-  display: block;
-  position: absolute;
-  z-index:4;
-  text-align: left;
-  vertical-align: text-top;
   visibility: visible;    
 }
 
 .player {
   position: relative;
   top: 12;
-  left: 20;
+  left: 40;
   width: 100%;
   z-index: 10;
-  text-align: left;
-  /* vertical-align: top; */
   float: right; 
   visibility: visible;   
   font-size: 28pt; 
