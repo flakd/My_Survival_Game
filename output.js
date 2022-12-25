@@ -1,9 +1,13 @@
 //const l = console.log;
 
+let st = document.querySelector("#status-timeDayScore");
 let sv = document.querySelector("#status-vitals");
 let si = document.querySelector("#status-inventory");
 let sa = document.querySelector("#status-actions");
-let sf = document.querySelector("#status-feedback");
+let so = document.querySelector("#output");
+
+lwrTDS = function(msg, target){ lwr(msg,st);}
+lwlnTDS = function(msg, target){ lwln(msg,st);}
 
 lwrVitals = function(msg, target){ lwr(msg,sv);}
 lwlnVitals = function(msg, target){ lwln(msg,sv);}
@@ -14,8 +18,8 @@ lwlnInventory = function(msg, target){ lwln(msg,si);}
 lwrActions = function(msg, target){ lwr(msg,sa);}
 lwlnActions = function(msg, target){ lwln(msg,sa);}
 
-lwrFeedback = function(msg, target){ lwr(msg,sf);}
-lwlnFeedback = function(msg, target){ lwln(msg,sf);}
+lwrOutput = function(msg, target){ lwr(msg,so);}
+lwlnOutput = function(msg, target){ lwln(msg,so);}
 
 
 //let output = {
@@ -35,17 +39,17 @@ lwlnFeedback = function(msg, target){ lwln(msg,sf);}
     var myTime = time%24
     var dayStr = myDay.toString().padStart(3,"0"); 
     var timeStr = myTime.toString().padStart(2,"0");
-    lwrVitals("**   [ D A Y : %s ]   ****   [ T I M E: %s hrs ]", dayStr, timeStr );
-    lwlnVitals("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");  
+    lwrTDS("**   [ D A Y : %s ]   ****   [ T I M E: %s hrs ]", dayStr, timeStr );
+    //lwlnVitals("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");  
 
     this.printStats2("vitals", cObj.vitals, 5, "   ", 15, "| ");
 
-    lwlnVitals("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");  
+    //lwlnVitals("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");  
 
     if (this.printStats2("inventory", cObj.inventory) == 0) {
       lwlnInventory("No possessions at the moment!");
     }
-    lwlnInventory("=================================================================================");
+    //lwlnInventory("=================================================================================");
 
 
     lwrActions();
@@ -124,7 +128,7 @@ lwlnFeedback = function(msg, target){ lwln(msg,sf);}
     }
     if (msg !="") {
       if (vitalsOrInventory==="vitals"){
-        lwrVitals(msg);
+        lwlnVitals(msg);
       } else if (vitalsOrInventory==="inventory"){
         lwrInventory(msg);
       }
@@ -133,11 +137,10 @@ lwlnFeedback = function(msg, target){ lwln(msg,sf);}
   },
 
   printTitleBanner: function printTitleBanner(time, c){
-    let sf = document.querySelector("#status-feedback");
     //console.log(sf);
-    lwlnFeedback("\n\n\n");
-    lwlnFeedback("Welcome to the game!");
-    lwlnFeedback("\n\n");
+    lwlnOutput("\n\n\n");
+    lwlnOutput("Welcome to the game!");
+    lwlnOutput("\n\n");
     this.printStats1(time, c);  
   }
 }
