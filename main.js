@@ -113,7 +113,7 @@ function startGame() {
 
     let line = "";
     if (event.key === "Enter")  {
-      cline = document.querySelector("#command-input").value;
+      line = document.querySelector("#command-input").value;
 
       //As long as the following remains TRUE, then we are alive => so therefore
       //  afterwards we RETURN (RETURN = jump to the next "RL loop")
