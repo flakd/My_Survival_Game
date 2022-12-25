@@ -11,7 +11,6 @@
 }
 top {
   height:600px;
-  display: contents;
 }
 #logs-container {
   height: 300px;
@@ -33,17 +32,40 @@ top {
   border: 1px solid black;
 }
 #status-timeDayScore{
-  height: 80px;  
+  height: 17px;
+  padding: 4px; 
 }
 #status-vitals {
-  height: 80px;
+  height: 51px;
 }
 #status-inventory {
-  height: 130px;
+  height: 200px;
 }
 #status-actions {
-  height: 160px;
+  height: 200px;
 }
+#input-output {
+  float: left;
+  width: 602px;
+}
+#output, #command-input {
+  overflow-wrap: break-word;
+  overflow: auto;
+  height: 60px;
+  border: 1px solid black;
+}
+#command-input {
+  display: inline-block;
+  overflow: auto;
+  width: 80px;
+}
+#output {
+  float:right;
+  overflow: auto;
+  width: 490px;
+}
+
+
 #sun, #moon {
   position: relative;
   cursor: pointer;
