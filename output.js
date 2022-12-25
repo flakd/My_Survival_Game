@@ -36,10 +36,12 @@ lwlnOutput = function(msg, target){ lwln(msg,so);}
     }    
     msg+=" got the following:";
     var myDay = Math.floor(time / 24);
-    var myTime = time%24
+    var myTime = time%24;
+    var myScore = 0;
     var dayStr = myDay.toString().padStart(3,"0"); 
     var timeStr = myTime.toString().padStart(2,"0");
-    lwrTDS("**   [ D A Y : %s ]   ****   [ T I M E: %s hrs ]", dayStr, timeStr );
+    var scoreStr = myScore.toString().padStart(5,"0");
+    lwrTDS(`DAY:${dayStr}, ${timeStr}Hrs, ${scoreStr}Pts`);
     //lwlnVitals("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");  
 
     this.printStats2("vitals", cObj.vitals, 5, "   ", 15, "| ");
@@ -53,7 +55,8 @@ lwlnOutput = function(msg, target){ lwln(msg,so);}
 
 
     lwrActions();
-    lwlnActions("~~~~~~~~~~~~~~~~~~~~~~~~~~~~  ACTIONS you can take:  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+    lwlnActions("ACTIONS you can take:");
+    lwlnActions("~~~~~~~~~~~~~~~~~~~~~");
     var actions = cObj.actions;
     var numListItems=0;
     msg="  ";   //reset msg from above (it last says "You've got the following:")
@@ -75,7 +78,7 @@ lwlnOutput = function(msg, target){ lwln(msg,so);}
 
     }
     if (msg !="") lwlnActions(msg);
-    lwlnActions("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+    //lwlnActions("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
     //l("=================================================================================");
     lwlnActions("\n\n");
     return numListItems;
@@ -128,7 +131,7 @@ lwlnOutput = function(msg, target){ lwln(msg,so);}
     }
     if (msg !="") {
       if (vitalsOrInventory==="vitals"){
-        lwlnVitals(msg);
+        lwrVitals(msg);
       } else if (vitalsOrInventory==="inventory"){
         lwrInventory(msg);
       }
