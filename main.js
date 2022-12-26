@@ -118,7 +118,11 @@ function startGame() {
       //As long as the following remains TRUE, then we are alive => so therefore
       //  afterwards we RETURN (RETURN = jump to the next "RL loop")
       if (core.isStillAliveGameLoop(line, g.c.inventory, g.c.vitals, g.c.actions)) {
-        l();
+        //l();
+
+        let elem = document.querySelector("#output");
+        elem.scrollTop = elem.scrollHeight;
+  
         return;   // don't return TRUE or FALSE, just RETURN so that we continue
                   //  this rl.on() "event" function
       } else {    // ELSE core.isStillAliveGameLoop has returned FALSE which means
