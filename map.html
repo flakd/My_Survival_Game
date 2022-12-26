@@ -33,7 +33,11 @@
           </div><!-- CLOSE id="sky-box"-->
 
           <div id="statuses-container">
-            <div id="status-timeDayScore" class="status"></div>
+            <div id="timeDayScore-container">
+              <div id="day"></div>
+              <div id="time"></div>
+              <div id="score"></div>
+            </div>
             <div id="status-vitals" class="status"></div>
             <div id="status-inventory" class="status"></div>
             <div id="status-actions" class="status"></div>
@@ -66,14 +70,16 @@
         
   </body>
   <script>
-  drawMap();
-  handleMovement();
-  moveSunOrMoon("sun");      
-  </script>
-      <script src="output.js" type="text/JavaScript"></script>    
-      <script src="parseJSONs.js" type="text/JavaScript"></script>        
-      <script src="core.js" type="text/JavaScript"></script>        
-      <script src="main.js" type="text/JavaScript"></script>        
+    //document.querySelector("#command-input").focus();
+    drawMap();
+    handleMovement();
+    moveSunOrMoon("sun");      
+    document.getElementById("command-input").focus();
 
+  </script>
+  <script src="output.js" type="text/JavaScript"></script>    
+  <script src="parseJSONs.js" type="text/JavaScript"></script>        
+  <script src="core.js" type="text/JavaScript"></script>        
+  <script src="main.js" type="text/JavaScript"></script>        
 
 </html>

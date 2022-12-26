@@ -31,9 +31,19 @@ top {
   font-family: monospace;
   border: 1px solid black;
 }
-#status-timeDayScore{
+#time, #day, #score{
+  margin: auto;
+  font-family: monospace;
+  border: 1px solid black;  
+  float: left;
   height: 17px;
   padding: 4px; 
+}
+#time, #day {
+  width: 55px;
+}
+#score{
+  width: 65px;
 }
 #status-vitals {
   height: 51px;
@@ -57,7 +67,8 @@ top {
 #command-input {
   display: inline-block;
   overflow: auto;
-  width: 80px;
+  width: 95px;
+  font-size: 20pt;
 }
 #output {
   float:right;

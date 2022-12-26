@@ -1,13 +1,21 @@
 //const l = console.log;
 
-let st = document.querySelector("#status-timeDayScore");
+let timeDiv = document.querySelector("#time");
+let dayDiv = document.querySelector("#day");
+let scoreDiv = document.querySelector("#score");
 let sv = document.querySelector("#status-vitals");
 let si = document.querySelector("#status-inventory");
 let sa = document.querySelector("#status-actions");
 let so = document.querySelector("#output");
 
-lwrTDS = function(msg, target){ lwr(msg,st);}
-lwlnTDS = function(msg, target){ lwln(msg,st);}
+lwrTime = function(msg){ lwr(msg, timeDiv);}
+lwlnTime = function(msg){ lwln(msg, timeDiv);}
+
+lwrDay = function(msg){ lwr(msg, dayDiv);}
+lwlnDay = function(msg){ lwln(msg, dayDiv);}
+
+lwrScore = function(msg){ lwr(msg, scoreDiv);}
+lwlnScore = function(msg){ lwln(msg, scoreDiv);}
 
 lwrVitals = function(msg, target){ lwr(msg,sv);}
 lwlnVitals = function(msg, target){ lwln(msg,sv);}
@@ -41,7 +49,9 @@ lwlnOutput = function(msg, target){ lwln(msg,so);}
     var dayStr = myDay.toString().padStart(3,"0"); 
     var timeStr = myTime.toString().padStart(2,"0");
     var scoreStr = myScore.toString().padStart(5,"0");
-    lwrTDS(`DAY:${dayStr}, ${timeStr}Hrs, ${scoreStr}Pts`);
+    lwrDay(`DAY:${dayStr}`);
+    lwrTime(`${timeStr}Hrs`);
+    lwrScore(`${scoreStr}Pts`);
     //lwlnVitals("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");  
 
     this.printStats2("vitals", cObj.vitals, 5, "   ", 15, "| ");
