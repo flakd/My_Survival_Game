@@ -7,11 +7,8 @@
     <title>My Survival Game</title>
 
     <link href="css/map.css" rel="stylesheet" type="text/css">
-    <script src="js/init.js" type="text/JavaScript"></script>
-    <script src="js/setupMap.js" type="text/JavaScript"></script>
-    <script src="js/drawMap.js" type="text/JavaScript"></script>
-    <script src="js/handleMovement.js" type="text/JavaScript"></script>    
-    <script src="js/sunOrMoonRising.js" type="text/JavaScript"></script>  
+
+
 
     <script src="json/actions.js" type="text/JavaScript"></script>     
     <script src="json/inventory.js" type="text/JavaScript"></script>     
@@ -69,17 +66,22 @@
     </div><!-- CLOSE id="logs-container"--> 
         
   </body>
+
+  <script src="js/init.js" type="text/JavaScript"></script>  
+  <script src="js/setupMap.js" type="text/JavaScript"></script>
+  <script src="js/drawMap.js" type="text/JavaScript"></script>
+  <script src="js/handleMovement.js" type="text/JavaScript"></script>    
+  <script src="js/sunOrMoonRising.js" type="text/JavaScript"></script>  
+
+  <script src="output.js" type="text/JavaScript"></script>    
+  <script src="parseJSONs.js" type="text/JavaScript"></script>        
+  <script src="core.js" type="text/JavaScript"></script>        
+  <script src="main.js" type="text/JavaScript"></script>        
   <script>
     //document.querySelector("#command-input").focus();
     drawMap();
     handleMovement();
     moveSunOrMoon("sun");      
     document.getElementById("command-input").focus();
-
   </script>
-  <script src="output.js" type="text/JavaScript"></script>    
-  <script src="parseJSONs.js" type="text/JavaScript"></script>        
-  <script src="core.js" type="text/JavaScript"></script>        
-  <script src="main.js" type="text/JavaScript"></script>        
-
 </html>
