@@ -16,14 +16,17 @@ var rl;
 //const e=function(msg){console.error("**ERROR**: %s",msg)};
 
 g.isQuit = false;
-g.gameHour = 0;   //12 midnight
+
+g.time = {};
+g.time.gameHour = 0;   //12 midnight
 //g.totalGameHoursPlayed = 0;
-g.gameDay = 0;
+//g.gameDay = 0;
 g.isGameOver = false;
 g.isDead = false;
 g.isDeadCheck = isDeadCheck;
-g.startGame = startGame;
-//g.resetAllStats = resetAllStats
+//g.startGame = startGame;
+
+////g.resetAllStats = resetAllStats
 
 //window.parseJSONs.loadJSONs();
 //window.c = {};
@@ -101,7 +104,7 @@ function resetAllStats(vitals, inventory) {
 function startGame() {
   g.isGameOver = false;
   //resetAllStats(g.c.vitals, g.c.inventory);
-  window.output.printTitleBanner(g.gameHour, c);
+  window.output.printTitleBanner(g.time.gameHour, c);
 /*   rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,

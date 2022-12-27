@@ -65,7 +65,7 @@ let core = {
     //  so we can see the results/new numbers, otherwise we are always looking
     //  at the previous numbers each time we execute a command
     //------------------------------------------------------------------------>
-    output.printStats1(g.gameHour,g.c);
+    output.printStats1(g.time.gameHour,g.c);
 
     //------------------------------------------------------------------------>
     //  7. doRandomActOfGod() randomly adds elements like storms, bears, falls, etc.
@@ -73,7 +73,7 @@ let core = {
     //  increases vitals by vitals.takePerHour * action.numHours    
     //------------------------------------------------------------------------>
     if ( core.doRandomActOfGod(inventory, vitals) ) {
-      output.printStats1(g.gameHour,g.c);
+      output.printStats1(g.time.gameHour,g.c);
     }
 
     //------------------------------------------------------------------------>
@@ -645,11 +645,11 @@ let core = {
 
   doSecretTestCalc: function doSecretTestCalc(userInput, inventory, vitals){
     if ( userInput.toLowerCase() == "/p" ) {
-      output.printStats1(g.gameHour,g.c);
+      output.printStats1(g.time.gameHour,g.c);
       return true;
     }
     if ( userInput.toLowerCase() == "/p2" ) {
-      output.printStats1(g.gameHour,g.c2);
+      output.printStats1(g.time.gameHour,g.c2);
       return true;
     }    
     if (  userInput.toLowerCase().startsWith("/a ") ){
