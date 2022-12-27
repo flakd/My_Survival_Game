@@ -49,8 +49,8 @@ lwlnOutput = function(msg, target){ lwln(msg,so);}
     var dayStr = myDay.toString().padStart(3,"0"); 
     var timeStr = myTime.toString().padStart(2,"0");
     var scoreStr = myScore.toString().padStart(5,"0");
-    lwrDay(`DAY:${dayStr}`);
-    lwrTime(`${timeStr}Hrs`);
+    //lwrDay(`DAY:${dayStr}`);
+    //lwrTime(`${timeStr}Hrs`);
     lwrScore(`${scoreStr}Pts`);
     //lwlnVitals("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");  
 
