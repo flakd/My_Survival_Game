@@ -10,7 +10,8 @@
       "request": "launch",
       "type": "msedge",
       //"url": "http://localhost:8080",
-      "url": "file:///Volumes/GoogleDrive/My%20Drive/gdDev/js/a_game/map.html",
+      //"url": "file:///Volumes/GoogleDrive/My%20Drive/gdDev/js/a_game/map.html",
+      "url": "file:///myDev/js/a_game/map.html",
       "webRoot": "${workspaceFolder}"
     },
     
@@ -19,7 +20,8 @@
       "request": "launch",
       "type": "chrome",
       //"url": "http://localhost:8080",
-      "url": "file:///Volumes/GoogleDrive/My%20Drive/gdDev/js/a_game/map.html",
+      //"url": "file:///Volumes/GoogleDrive/My%20Drive/gdDev/js/a_game/map.html",
+      "url": "file:///myDev/js/a_game/map.html",
       "webRoot": "${workspaceFolder}"
     },
 
@@ -27,7 +29,8 @@
       "name": "Launch Chrome local file w/existing profile",
       "request": "launch",
       "type": "chrome",
-      "url": "file:///Volumes/GoogleDrive/My%20Drive/gdDev/js/a_game/map.html",
+      //"url": "file:///Volumes/GoogleDrive/My%20Drive/gdDev/js/a_game/map.html",
+      "url": "file:///myDev/js/a_game/map.html",
       "webRoot": "${workspaceFolder}",
       "userDataDir": false,
       "runtimeArgs": ["--profile-directory=default"],
