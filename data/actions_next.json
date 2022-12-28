@@ -31,7 +31,7 @@
     "take":   {   "gameItem":   "fatigue",  "operator":   "+",  "changeAmt":  2   },
     "msgs":   {   "okMsg":  "Ahhhh, you feel warmer, that's nice! (cold -3)", "errMsg": "Why waste wood, you're not cold right now" }
   },
-  "numHours":  1
+  "numHrs":  1
 },  
 "eatfish": {
   "key":        "eatfish",
@@ -45,6 +45,6 @@
     "take":   {   "gameItem":   "fatigue",  "operator":   "-",  "changeAmt":  5   },
     "msgs":   {   "okMsg":  "You ate something - your tummy is fuller (hunger -5)", "errMsg": "Should be no Vitals err msg here for EATFISH" }
   },
-  "numHours":  1    
+  "numHrs":  1    
 },
 
