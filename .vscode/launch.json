@@ -4,6 +4,7 @@
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
+
     
     {
       "name": "Launch Edge",
@@ -33,7 +34,7 @@
       "url": "file:///myDev/js/a_game/index.html",
       "webRoot": "${workspaceFolder}",
       "userDataDir": false,
-      "runtimeArgs": ["--profile-directory=default"],
+      "runtimeArgs": ["--profile-directory=profile 10"],
     },
     
     {
