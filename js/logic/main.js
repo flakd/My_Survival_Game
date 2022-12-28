@@ -17,9 +17,9 @@ var rl;
 
 g.isQuit = false;
 
-g.time = {};
-g.time.gameHour = 0;   //12 midnight
-//g.totalGameHoursPlayed = 0;
+g.t = {};
+g.t.gameHr = 0;   //12 midnight
+//g.totalGameHrsPlayed = 0;
 //g.gameDay = 0;
 g.isGameOver = false;
 g.isDead = false;
@@ -104,7 +104,7 @@ function resetAllStats(vitals, inventory) {
 function startGame() {
   g.isGameOver = false;
   //resetAllStats(g.c.vitals, g.c.inventory);
-  window.output.printTitleBanner(g.time.gameHour, c);
+  window.output.printTitleBanner(g.t.gameHr, c);
 /*   rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,

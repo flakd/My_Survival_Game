@@ -55,8 +55,8 @@ let core = {
     core.doGameAction(g.c.action, inventory, vitals);
 
     //------------------------------------------------------------------------>    
-    //  5. passTime() increases hours by action.numHours and...
-    //      increases vitals by vitals.takePerHour * action.numHours    
+    //  5. passTime() increases Hrs by action.numHrs and...
+    //      increases vitals by vitals.takePerHr * action.numHrs    
     //------------------------------------------------------------------------>    
     core.doPassTime(g.c.action, inventory, vitals);
 
@@ -65,15 +65,15 @@ let core = {
     //  so we can see the results/new numbers, otherwise we are always looking
     //  at the previous numbers each time we execute a command
     //------------------------------------------------------------------------>
-    output.printStats1(g.time.gameHour,g.c);
+    output.printStats1(g.t.gameHr,g.c);
 
     //------------------------------------------------------------------------>
     //  7. doRandomActOfGod() randomly adds elements like storms, bears, falls, etc.
     //  that cause injury (or maybe later damage to equipment as well)
-    //  increases vitals by vitals.takePerHour * action.numHours    
+    //  increases vitals by vitals.takePerHr * action.numHrs    
     //------------------------------------------------------------------------>
     if ( core.doRandomActOfGod(inventory, vitals) ) {
-      output.printStats1(g.time.gameHour,g.c);
+      output.printStats1(g.t.gameHr,g.c);
     }
 
     //------------------------------------------------------------------------>
@@ -409,8 +409,8 @@ let core = {
 
         action:     an object that contains information about the action being 
                     taken, including an array of calculations to be performed 
-                    (calcs) and the number of hours that the action takes 
-                    (numHours).
+                    (calcs) and the number of Hrs that the action takes 
+                    (numHrs).
 
         inventory:  an object that represents the player's inventory. It is 
                     not used in this function.
@@ -429,13 +429,13 @@ let core = {
       4. If it is, the function applies the change specified in the 
           calculation using the specified operator (+ or -). If the vital 
           being updated is not the same as the item specified in the 
-          calculation, the function adds the default change per hour for 
-          that vital (vital.takePerHour * action.numHours) to the vital's 
+          calculation, the function adds the default change per Hr for 
+          that vital (vital.takePerHr * action.numHrs) to the vital's 
           balance (vital.bal).
       5. After all of the calculations have been applied, the function checks 
           whether the vital's balance is below 0 or above the danger or 
           warning limits. If it is, it prints a corresponding message. 
-      6. Finally, the function increments the game hour by the number of hours 
+      6. Finally, the function increments the game Hr by the number of Hrs 
           the action took.  
   */
   doPassTime: function doPassTime(action, inventory, vitals){
@@ -456,8 +456,8 @@ let core = {
           // can I use getSpecificCalcs() here ??
           if (calc.list == "vitals") {
 
-            //  do dflt vital.takePerHour -
-            //    EXCEPT for action.calcs.take.vitals => override dflt vital.takePerHour      
+            //  do dflt vital.takePerHr -
+            //    EXCEPT for action.calcs.take.vitals => override dflt vital.takePerHr      
   /*           if (vitalLbl == calc.item) {
               if (calc.operator == "-"){
                 vital.bal = vital.bal - calc.changeAmt;
@@ -465,7 +465,7 @@ let core = {
                 vital.bal = vital.bal + calc.changeAmt;
               }
             } else if (vitalLbl != calc.item) {
-              vital.bal = vital.bal + (vital.takePerHour * action.numHours);              
+              vital.bal = vital.bal + (vital.takePerHr * action.numHrs);              
             } */
 
 /*             if (vitalLbl == calc.item) {
@@ -475,7 +475,7 @@ let core = {
                 vital.bal = vital.bal + calc.changeAmt;
               }
             } else if (calc.list == "vitals") {
-              vital.bal = vital.bal + (vital.takePerHour * action.numHours);
+              vital.bal = vital.bal + (vital.takePerHr * action.numHrs);
             } */
 
             if (vitalLbl == calc.item) {
@@ -518,7 +518,7 @@ let core = {
         } // END: for (var calcIdx in action.calcs) {
 
         if (!vital.overridden) {
-          vital.bal = vital.bal + (vital.takePerHour * action.numHours);
+          vital.bal = vital.bal + (vital.takePerHr * action.numHrs);
         } else {
           vital.overridden = false;
         }// END: if (!vital.overridden) {
@@ -530,7 +530,7 @@ let core = {
       return false;
     }    
     
-    g.gameHour+=action.numHours;
+    g.gameHr+=action.numHrs;
 
     //l("OK, that's a valid action... so, let's %s", g.c.action.key);
    lwlnOutput(action.successMsg,messageArray[0],messageArray[1]);
@@ -540,7 +540,7 @@ let core = {
   }, // END:  function doPassTime(action, inventory, vitals){
 
 
-  /*  6. call to output.printStats1(g.gameHour,g.c); =========================> 
+  /*  6. call to output.printStats1(g.gameHr,g.c); =========================> 
   //=========================================================================*/
 
 
@@ -628,7 +628,7 @@ let core = {
     var prob = getRandomInt(1, 100);
     for (var chanceIdx in chancesOfRescue){
       var chance = chancesOfRescue[chanceIdx];
-      var gameDay = Math.floor(g.gameHour / 24);
+      var gameDay = Math.floor(g.gameHr / 24);
 
       if (gameDay >= chance.startDay && gameDay <= chance.endDay){
         if (prob <= chance.probability) {
@@ -645,11 +645,11 @@ let core = {
 
   doSecretTestCalc: function doSecretTestCalc(userInput, inventory, vitals){
     if ( userInput.toLowerCase() == "/p" ) {
-      output.printStats1(g.time.gameHour,g.c);
+      output.printStats1(g.t.gameHr,g.c);
       return true;
     }
     if ( userInput.toLowerCase() == "/p2" ) {
-      output.printStats1(g.time.gameHour,g.c2);
+      output.printStats1(g.t.gameHr,g.c2);
       return true;
     }    
     if (  userInput.toLowerCase().startsWith("/a ") ){
