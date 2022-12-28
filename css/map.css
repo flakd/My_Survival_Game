@@ -77,12 +77,12 @@ top {
 }
 
 
-#sun, #moon {
+#sun, #moon, #sunOrMoon {
   position: relative;
   cursor: pointer;
   width: 100px;
   height: 100px;
-  top: 110px;
+  /*top: 110px;*/
 }
 #sky-box {
   background-color: skyblue; 
