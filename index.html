@@ -8,8 +8,6 @@
 
     <link href="css/map.css" rel="stylesheet" type="text/css">
 
-
-
     <script src="data/actions.js" type="text/JavaScript"></script>     
     <script src="data/inventory.js" type="text/JavaScript"></script>     
     <script src="data/vitals.js" type="text/JavaScript"></script>     
@@ -24,8 +22,9 @@
           
           <div id="sky-box">
             <div id="sun-or-moon-container" class="sky" style="z-index:0">
-              <img id="sun" src="images/hand-drawn-sun2.png" style="display:block;">
+              <img id="sun" src="images/hand-drawn-sun2.png" style="display:none;">
               <img id="moon" src="images/moon2.png" style="display:none;">
+              <img id="sunOrMoon" src="images/hand-drawn-sun2.png" style="display:block;">
             </div>
           </div><!-- CLOSE id="sky-box"-->
 
@@ -81,7 +80,8 @@
     //document.querySelector("#command-input").focus();
     drawMap();
     handleMovement();
-    moveSunOrMoon("sun");      
+    //let sunOrMoon = sun;
+    moveSunOrMoon(sunOrMoon);      
     document.getElementById("command-input").focus();
   </script>
 </html>
