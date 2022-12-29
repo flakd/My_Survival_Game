@@ -27,6 +27,12 @@ let core = {
     if ( core.isInputAValidGameCommand(userInput.toLowerCase()) ) 
     return core.doCommandWithResult(userInput.toLowerCase());
 
+
+    if (g.whatImDoing.isBusy()) {
+      lwr(`Current Activity: ${g.whatImDoing.activity}`, document.querySelector("#log"));
+      lwrOutput(g.whatImDoing.getBusyMessage());
+      return true;
+    }
     //------------------------------------------------------------------------>
     //  2.b. check to see if this is a valid Game play ACTIONS
     //------------------------------------------------------------------------>
@@ -48,6 +54,7 @@ let core = {
       return true;
     }
 
+    g.whatImDoing.startActivity(g.c.action);
     //------------------------------------------------------------------------>
     //  4. DoGameAction() - else do not return and we continue to the next 
     //      line of code...  which is to ACTUALLY execute the command

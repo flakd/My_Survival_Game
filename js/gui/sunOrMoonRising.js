@@ -2,7 +2,7 @@
 function swapSunMoon(sunMoon){
   let sun = document.getElementById("sun");
   let moon = document.getElementById("moon");
-  let sunOrMoon;
+  let sunOrMoon = document.getElementById("sunOrMoon");
 
   if (!sun) {
     console.log("your missing the HTML element 'sun'");
@@ -60,37 +60,92 @@ function moveSunOrMoon(sunOrMoon){
 
 
   g.t.oneHr = 1500;     
-  g.t.riseSetDur = 500;
+  g.t.riseSetDur = 1350;
   g.t.dayStartHr = 0;   
   g.t.dayEndHr = 24;
   
   g.t.sunriseHr = 0;    g.t.sunriseStart = g.t.sunriseHr * g.t.oneHr;
                         g.t.sunriseDone = (g.t.sunriseHr * g.t.oneHr) + g.t.riseSetDur;    
   
-  g.t.sunsetHr = 15;    g.t.sunsetStart = g.t.sunsetHr * g.t.oneHr;
+  g.t.sunsetHr = 5;    g.t.sunsetStart = g.t.sunsetHr * g.t.oneHr;
                         g.t.sunsetDone = (g.t.sunsetHr * g.t.oneHr) + g.t.riseSetDur;    
 
   g.t.moonriseHr = 16;  g.t.moonriseStart = g.t.moonriseHr * g.t.oneHr;
                         g.t.moonriseDone = (g.t.moonriseHr * g.t.oneHr) + g.t.riseSetDur;    
 
-  g.t.moonsetHr = 23;   g.t.moonsetStart = g.t.moonsetHr * g.t.oneHr;
+  g.t.moonsetHr = 12;   g.t.moonsetStart = g.t.moonsetHr * g.t.oneHr;
                         g.t.moonsetDone = (g.t.moonsetHr * g.t.oneHr) + g.t.riseSetDur;
   
   g.t.sunMoonHeight = 3;
   g.t.sunMoonHeightStr = g.t.sunMoonHeight + "px";
-  g.t.xSpeedInterval = 100;
-  g.t.ySpeedInterval = 10;
+  g.t.xSpeedInterval = 300;
+  g.t.ySpeedInterval = 30;
   //g.t.xOffset = -70;
   g.t.xOffset = 0;
   //g.t.yOffset = -110; 
   g.t.yOffset = 0; 
 
+
+
+  g.whatImDoing = {};
+  g.whatImDoing.timeLeft = 0;
+  g.whatImDoing.activity = null;
+  g.whatImDoing.startActivity = function startActivity(action){ 
+    //  Is a procedure that MUST perform the start of the activity if 
+    //  possible.  It is possible if I am NOT BUSY doing anything else.
+    //  RETURNS: a boolean if the activity started 
+    g.whatImDoing.timeLeft = action.numHrs * 60;
+    g.whatImDoing.activity = action;
+  }
+  g.whatImDoing.passMinute = function passMinute(){
+    if (g.whatImDoing.activity === null) return;
+    g.whatImDoing.timeLeft--;
+    if (g.whatImDoing.timeLeft <= 0) {
+      g.whatImDoing.activity = null;
+      g.whatImDoing.timeLeft = 0;
+    }
+  }
+  g.whatImDoing.isBusy = function isBusy(){
+    if (g.whatImDoing.activity !== null) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  g.whatImDoing.getActivityName = function getActivityName(){
+    if (g.whatImDoing.isBusy()) {
+      return g.whatImDoing.activity.key;
+    }
+  }
+  g.whatImDoing.getActivityGerund = function getActivityGerund(){
+    if (g.whatImDoing.isBusy()) {
+      return g.whatImDoing.activity.gerund;
+    }
+  }
+  g.whatImDoing.getBusyMessage = function getBusyMessage(message){
+    if (g.whatImDoing.isBusy()) {
+      return `You can't do that right now, you're busy ${g.whatImDoing.getActivityGerund()} for the next ${g.whatImDoing.getTimeLeft()} minutes`;
+    } else {
+      return "sure thing... you're not busy";
+    }
+  }
+  g.whatImDoing.getTimeLeft = function getTimeLeft(){
+    if (g.whatImDoing.isBusy()) {
+      return g.whatImDoing.timeLeft;
+    } else {
+      return 0;
+    }
+  }
+
+
+
   let timer = setInterval(function() {
     g.t.tick++;
     g.t.totalTicks++;
-    if (g.t.tick > 1) {   // TimerInterval = 100ms right now, so this will be 1500 ms or 1.5 seconds
+    if (g.t.tick > 1) {   // TimerInterval = 50ms right now
       g.t.tick = 0;
       g.t.minute++;
+      g.whatImDoing.passMinute();
       g.t.totalMinutes++;
       if (g.t.minute > 59) {
         g.t.minute = 0;
@@ -118,37 +173,64 @@ function moveSunOrMoon(sunOrMoon){
 
     g.t.gameHr = Math.floor(g.t.passed / g.t.oneHr) + g.t.sunriseHr;
 
-    let hrStr = g.t.gameHr.toString().padStart(2,"0");
+    //let hrStr = g.t.gameHr.toString().padStart(2,"0");
+    //lwrTime(`${hrStr}Hrs`);
+    let hrStr = g.t.hour.toString().padStart(2,"0");
     lwrTime(`${hrStr}Hrs`);
+
 
     document.getElementById("command-input").focus();
 
     // sun RISING PHASE
-    if (g.t.passed >= g.t.sunriseStart && g.t.passed <= g.t.sunriseDone ) {
-    //if (g.gameHr < 0) {}
-      sunOrMoon.style.left = ((g.t.passed / g.t.xSpeedInterval) + g.t.xOffset) + 'px';
-      sunOrMoon.style.top = (48 + (g.t.passed / g.t.ySpeedInterval * -1))  + 'px';
+    //if (g.t.passed >= g.t.sunriseStart && g.t.passed <= g.t.sunriseDone ) {
+    if (g.t.hour === 0 && g.t.minute === 0 && g.t.tick === 0) {
+      //sunOrMoon.style.left = "10px";
+      //sunOrMoon.style.top = "110px";
+      sunOrMoon = swapSunMoon("moon");
+      let overlay = document.getElementById("overlay");
+      overlay.classList.remove("overlay");      
+
+    }
+    else if (g.t.hour < 1) {
+      //sunOrMoon.style.left = ((g.t.passed / g.t.xSpeedInterval) + g.t.xOffset) + 'px';
+      //sunOrMoon.style.left = ((g.t.passed / g.t.xSpeedInterval) + g.t.xOffset) + 'px';
+      //sunOrMoon.style.top = (48 + (g.t.passed / g.t.ySpeedInterval * -1))  + 'px';
+      sunOrMoon.style.left = -75 + g.t.minute/2 + "px";
+      sunOrMoon.style.top = 120 + g.t.minute *2.2 * -1 + "px";
       lwr(sunOrMoon.style.top, document.querySelector("#log3"));
     } 
     
     //sun MOVING across the SKY
-    // sun is out there for 16 Hrs, while moon for only 8 Hrs
-    else if (g.t.passed >= g.t.sunriseDone && g.t.passed <= g.t.sunsetStart ) {
-      sunOrMoon.style.left = ((g.t.passed / g.t.xSpeedInterval) + g.t.xOffset) + 'px';
-      lwr(`sun moving right: ${sunOrMoon.style.top}`, document.querySelector("#log3"));
-    } 
-    
-    // sun SETTING PHASE
-    else if ( g.t.passed >= g.t.sunsetStart && g.t.passed <= g.t.sunsetDone ) {
-      var actualSunSetTime = g.t.passed - g.t.sunsetHr * g.t.oneHr;
-      lwln(sunOrMoon.style.top);
-      sunOrMoon.style.left = ((g.t.passed / g.t.xSpeedInterval) + g.t.xOffset) + 'px';
-      //sunOrMoon.style.top = ( (g.t.passed / 75) - 744)  + 'px';
-      sunOrMoon.style.top = -2 + actualSunSetTime / g.t.ySpeedInterval + 'px';
-      lwr(sunOrMoon.style.top, document.querySelector("#log3"));
+        // sun is out there for 16 Hrs, while moon for only 8 Hrs
+        //else if (g.t.passed >= g.t.sunriseDone && g.t.passed <= g.t.sunsetStart ) {
+        //  sunOrMoon.style.left = ((g.t.passed / g.t.xSpeedInterval) + g.t.xOffset) + 'px';
+        //  lwr(`sun moving right: ${sunOrMoon.style.top}`, document.querySelector("#log3"));
+        //} 
+    else if (g.t.hour >= 1 && g.t.hour <  g.t.moonriseHr) {
+      sunOrMoon.style.left = -75 + (60 * g.t.hour + g.t.minute)/2.1 + "px";
     }
 
-    else if (g.t.passed >= g.t.sunsetDone && g.t.passed <= g.t.moonriseStart){
+
+    // sun SETTING PHASE
+          /*     else if ( g.t.passed >= g.t.sunsetStart && g.t.passed <= g.t.sunsetDone ) {
+                var actualSunSetTime = g.t.passed - g.t.sunsetHr * g.t.oneHr;
+                lwln(sunOrMoon.style.top);
+                sunOrMoon.style.left = ((g.t.passed / g.t.xSpeedInterval) + g.t.xOffset) + 'px';
+                //sunOrMoon.style.top = ( (g.t.passed / 75) - 744)  + 'px';
+                sunOrMoon.style.top = 6 + actualSunSetTime / g.t.ySpeedInterval + 'px';
+                lwr(sunOrMoon.style.top, document.querySelector("#log3"));
+              } */
+    else if (g.t.hour == g.t.moonriseHr && g.t.minute === 0 && g.t.tick ) {
+      sunOrMoon = swapSunMoon("sun");
+      let overlay = document.getElementById("overlay");
+      overlay.classList.add("overlay");
+    }
+    else if (g.t.hour >  g.t.moonriseHr && g.t.hour < 24) {
+      sunOrMoon.style.left = -75 + (60 * (g.t.hour - g.t.moonriseHr) + g.t.minute)/1 + "px";
+    }
+
+
+ /*    else if (g.t.passed >= g.t.sunsetDone && g.t.passed <= g.t.moonriseStart){
     //else if (g.t.passed == g.t.moonriseStart) {
       if (!didSwapRecently) {
         //sunOrMoon = swapSunMoon(sunOrMoon);
@@ -158,15 +240,15 @@ function moveSunOrMoon(sunOrMoon){
     } 
 
     
-    else if (g.t.passed >= g.t.moonriseStart && g.t.passed <= g.t.moonriseDone) {
+    else if (g.t.passed >= g.t.moonriseStart && g.t.passed <= g.t.moonriseDone + 1000) {
       didSwapRecently = false;
 
-      lwr(sunOrMoon.style.top, document.querySelector("#log3"));
+      //lwr(sunOrMoon.style.top, document.querySelector("#log3"));
       sunOrMoon.style.left = ((g.t.passed / g.t.xSpeedInterval) + g.t.xOffset) + 'px';
-      //sunOrMoon.style.top = (110 + (g.t.passed / g.t.ySpeedInterval * -1))  + 'px';
+      sunOrMoon.style.top = (376 + (g.t.passed / g.t.ySpeedInterval * -1))  + 'px';
       lwr(sunOrMoon.style.top, document.querySelector("#log3"));
     } 
-/*
+
     else if (g.t.passed >= (g.t.moonriseDone) && (g.t.passed <= g.t.moonsetStart) ) {
       
       sunOrMoon.style.left = ((g.t.passed / g.t.xSpeedInterval) + g.t.xOffset) + 'px';
@@ -179,11 +261,11 @@ function moveSunOrMoon(sunOrMoon){
       lwln(sunOrMoon.style.top);
       sunOrMoon.style.left = ((g.t.passed / g.t.xSpeedInterval) + g.t.xOffset) + 'px';
       //sunOrMoon.style.top = ( (g.t.passed / 75) - 744)  + 'px';
-      //sunOrMoon.style.top = -2 + actualSunSetTime / g.t.ySpeedInterval + 'px';
+      sunOrMoon.style.top = -2 + actualSunSetTime / g.t.ySpeedInterval + 'px';
       lwr(sunOrMoon.style.top, document.querySelector("#log3"));
     } */
 
-    else if ( g.t.passed >= g.t.oneHr *24) {
+/*     else if ( g.t.passed >= g.t.oneHr *24) {
       //clearInterval(timer);
       g.t.start = Date.now();
       g.t.gameDay++;
@@ -192,7 +274,12 @@ function moveSunOrMoon(sunOrMoon){
       dayStr = g.t.gameDay.toString().padStart(3,"0");
       lwrDay(`DAY:${dayStr}`);
 
-    }
+    } */
 
-  }, 100);
+      dayStr = g.t.day.toString().padStart(3,"0");
+      lwrDay(`DAY:${dayStr}`);
+
+
+
+  }, 5);
 }
