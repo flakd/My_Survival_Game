@@ -8,6 +8,7 @@
 }
 #game {
   height: 618px;
+  position: relative;
 }
 top {
   height:600px;
@@ -16,9 +17,13 @@ top {
   height: 300px;
 }
 #overlay  {
-  position: relative;
-  background-color: white;
+  position: absolute;
+  height: 510px;
+  width: 600px;
   z-index: 11;
+}
+.overlay {
+  background-color: rgba(0,0,0,0.5);
 }
 #statuses-container{
   width: 200px;
@@ -82,7 +87,8 @@ top {
   cursor: pointer;
   width: 100px;
   height: 100px;
-  /*top: 110px;*/
+  left: -100px;
+  top: 200px;
 }
 #sky-box {
   background-color: skyblue; 
@@ -147,9 +153,11 @@ top {
 
 .player {
   position: relative;
-  top: 12;
+  padding: 0;
   left: 40;
   width: 100%;
+  vertical-align:text-bottom;
+  text-align: right;
   z-index: 10;
   float: right; 
   visibility: visible;   
