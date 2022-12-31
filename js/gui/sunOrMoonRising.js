@@ -90,6 +90,7 @@ function moveSunOrMoon(sunOrMoon){
   g.whatImDoing = {};
   g.whatImDoing.timeLeft = 0;
   g.whatImDoing.activity = null;
+  g.whatImDoing.onActivityCompleted = handle_activityCompleted;
   g.whatImDoing.startActivity = function startActivity(action){ 
     //  Is a procedure that MUST perform the start of the activity if 
     //  possible.  It is possible if I am NOT BUSY doing anything else.
@@ -101,6 +102,7 @@ function moveSunOrMoon(sunOrMoon){
     if (g.whatImDoing.activity === null) return;
     g.whatImDoing.timeLeft--;
     if (g.whatImDoing.timeLeft <= 0) {
+      g.whatImDoing.onActivityCompleted(g.whatImDoing, g.whatImDoing.activity);
       g.whatImDoing.activity = null;
       g.whatImDoing.timeLeft = 0;
     }
@@ -139,13 +141,22 @@ function moveSunOrMoon(sunOrMoon){
 
 
 
+
   let timer = setInterval(function() {
-    g.t.tick++;
-    g.t.totalTicks++;
-    if (g.t.tick > 1) {   // TimerInterval = 50ms right now
+    g.timePaused = false;
+    if (!timePaused) {
+      g.t.tick++;
+      g.t.totalTicks++;
+    }
+    if (g.t.tick > 10) {   // TimerInterval = 50ms right now
       g.t.tick = 0;
       g.t.minute++;
-      g.whatImDoing.passMinute();
+/*       let wasIbusy = g.whatImDoing.isBusy();
+ */      g.whatImDoing.passMinute();
+/*       if (g.whatImDoing.isBusy()===false && wasIbusy===true) {
+        stopActivityMedia();
+      } */
+    
       g.t.totalMinutes++;
       if (g.t.minute > 59) {
         g.t.minute = 0;
@@ -187,8 +198,8 @@ function moveSunOrMoon(sunOrMoon){
       //sunOrMoon.style.left = "10px";
       //sunOrMoon.style.top = "110px";
       sunOrMoon = swapSunMoon("moon");
-      let overlay = document.getElementById("overlay");
-      overlay.classList.remove("overlay");      
+      let overlay = document.getElementById("shadow-overlay");
+      overlay.classList.remove("shadow");      
 
     }
     else if (g.t.hour < 1) {
@@ -222,8 +233,8 @@ function moveSunOrMoon(sunOrMoon){
               } */
     else if (g.t.hour == g.t.moonriseHr && g.t.minute === 0 && g.t.tick ) {
       sunOrMoon = swapSunMoon("sun");
-      let overlay = document.getElementById("overlay");
-      overlay.classList.add("overlay");
+      let overlay = document.getElementById("shadow-overlay");
+      overlay.classList.add("shadow");
     }
     else if (g.t.hour >  g.t.moonriseHr && g.t.hour < 24) {
       sunOrMoon.style.left = -75 + (60 * (g.t.hour - g.t.moonriseHr) + g.t.minute)/1 + "px";
