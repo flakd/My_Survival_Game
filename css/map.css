@@ -16,13 +16,42 @@ top {
 #logs-container {
   height: 300px;
 }
-#overlay  {
+#RAoG-image {
+  width:400px; 
+  height:400px;
+  padding: 50px;
+}
+#RAoG-image-modal {
+  background-color: rgba(200,0,0,.85);
+  visibility: visible;
+  position: absolute;
+  height: 500px;
+  width: 500px;
+  top: 100px;
+  left: 85px;
+  z-index: 13;
+}
+#activity-image {
+  width:300px; 
+  height:300px;  
+}
+#activity-image-modal {
+  background-color: rgba(0,0,0,0.5);
+  visibility: visible;
+  position: absolute;
+  height: 300px;
+  width: 300px;
+  top: 300px;
+  left: 300px;
+  z-index: 12;
+}
+#shadow-overlay  {
   position: absolute;
   height: 510px;
   width: 600px;
   z-index: 11;
 }
-.overlay {
+.shadow {
   background-color: rgba(0,0,0,0.5);
 }
 #statuses-container{
