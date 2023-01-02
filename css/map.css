@@ -4,45 +4,60 @@
   margin-bottom: 0px;
   margin-left: auto;
   margin-right: auto;  
-  width: 602px;  
+  width: 1024px;  
 }
 #game {
-  height: 618px;
+  background-color: #568303;
+  height: 900px;
   position: relative;
+  z-index:-2;
 }
-top {
-  height:600px;
+#flora-overlay{
+  position: absolute;
+  height: 900px;
+  width: 1024px;
+  z-index: 14;
+}
+#top {
+  position: absolute;
+  height: 900px;
+  width: 800px;
+  left: 70px;
+  float:left
 }
 #logs-container {
-  height: 300px;
+  height: 100px;
 }
 #RAoG-image {
-  width:400px; 
-  height:400px;
+  width:600px; 
+  height:600px;
   padding: 50px;
 }
 #RAoG-image-modal {
-  background-color: rgba(200,0,0,.85);
-  visibility: visible;
+/*   background-color: rgba(200,0,0,.85); */
+ /*  visibility: hidden; */
+  display: none;
   position: absolute;
-  height: 500px;
-  width: 500px;
+  height: 600px;
+  width: 600px;
   top: 100px;
-  left: 85px;
-  z-index: 13;
+  left: 100px;
+  z-index: 15;
 }
 #activity-image {
   width:300px; 
   height:300px;  
 }
 #activity-image-modal {
-  background-color: rgba(0,0,0,0.5);
-  visibility: visible;
+/*   background-color: white;
+ *//*   visibility: hidden;
+ */  
+  display: none;
   position: absolute;
   height: 300px;
   width: 300px;
-  top: 300px;
-  left: 300px;
+  top: 475px;
+  left: 600px;
   z-index: 12;
 }
 #shadow-overlay  {
@@ -152,7 +167,7 @@ top {
 #log, #log2, #log3 {
   float:left;
   width: 198px;
-  height: 200px;
+  height: 100px;
   overflow-wrap: break-word;;
   overflow: auto;
   margin-left: auto;
