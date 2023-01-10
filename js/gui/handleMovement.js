@@ -63,7 +63,10 @@ function handleMovement(){
     let nextPlayerVisible;
     let nextCellName;    
     let playerId;
-    switch (event.key){
+    switch (event.key){      
+      case "Escape":
+        console.log("Esc");
+        handle_btnCloseRAoGImgModal_click();
       case "ArrowUp":
         event.preventDefault()
         if (yPosInt-1 < 0) return;
@@ -93,7 +96,8 @@ function handleMovement(){
         xPosInt++;
         isValidMove = true;
         break;
-      //default:
+      default:
+        console.log("keydown: " + event.key);
       //  return;
     }    
     if (isValidMove){

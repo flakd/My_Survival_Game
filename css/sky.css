@@ -1,0 +1,26 @@
+#sun, #moon, #sunOrMoon {
+  position: relative;
+  cursor: pointer;
+  width: 100px;
+  height: 100px;
+  left: -100px;
+  top: 200px;
+}
+#sky-box {
+  background-color: skyblue; 
+  height:110px; 
+  width:800px; 
+  margin: 0 auto;
+  float:left;
+  position: relative;
+}
+.sky {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  width: 800px;
+  height: 110px;
+  margin-left: auto;
+  margin-right: auto;
+  z-index: -1;
+}

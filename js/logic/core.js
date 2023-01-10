@@ -610,11 +610,11 @@ let core = {
   //==========================================================================>    
   doRandomActOfGod: function doRandomActOfGod(inventory, vitals){
     var actsOfGod = [
-      { event: "had a Bear Attack",    probability: 100,   injury: 5  },       
-      { event: "had a Thunder Storm",   probability: 100,  injury: 10  },
-      { event: "had a Wolf Attack",  probability: 100,  injury: 45  },
-      { event: "Fallen Down badly",    probability: 100,  injury: 25  },
-      { event: "Cut Yourself severely",     probability: 100,  injury: 32  },                        
+      { event: "had a Bear Attack",    probability: 20,   injury: 5  },       
+      { event: "had a Thunder Storm",   probability: 30,  injury: 10  },
+      { event: "had a Wolf Attack",  probability: 20,  injury: 45  },
+      { event: "Fallen Down badly",    probability: 20,  injury: 25  },
+      { event: "Cut Yourself severely",     probability: 20,  injury: 32  },                        
     ];
     function getRandomInt(min, max) {
       min = Math.ceil(min);

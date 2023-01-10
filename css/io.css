@@ -1,0 +1,53 @@
+#input-output {
+  position:absolute;
+  top: 515px;
+  left: 80px;
+  float: left;
+  width: 602px;
+}
+#output, #command-input {
+  overflow-wrap: break-word;
+  overflow: auto;
+  height: 60px;
+  border: 1px solid black;
+}
+#command-input {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  padding:10px;
+  display: inline-block;
+  overflow: auto;
+  width: 95px;
+  font-size: 20pt;
+}
+#output {
+  background-color: sandybrown;
+  position: absolute;
+  left: 100px;
+  top: 0px;
+  float: left;
+  overflow: auto;
+  width: 290px;
+}
+#logs-container {
+  height: 100px;
+}
+#log, #log2, #log3 {
+  float:left;
+  width: 198px;
+  height: 100px;
+  overflow-wrap: break-word;;
+  overflow: auto;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid black;
+}
+#logs-container {
+  padding: 0px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: auto;
+  margin-right: auto;  
+  width: 972px;  
+}

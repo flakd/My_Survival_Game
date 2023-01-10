@@ -34,7 +34,23 @@
       "url": "file:///myDev/js/a_game/index.html",
       "webRoot": "${workspaceFolder}",
       "userDataDir": false,
+      /* "launchBrowser": {
+        "enabled": true,
+        "args": "${auto-detect-url}",
+        "windows": {
+            "command": "cmd.exe",
+            "args": "/C start ${auto-detect-url}"
+        },
+        "osx": {
+            "command": "open -a 'Google Chrome Profile10_VsCode'"
+        },
+        "linux": {
+            "command": "xdg-open"
+        }
+      }, */
       "runtimeArgs": ["--profile-directory=profile 10"],
+      //"runtimeExecutable": "Google Chrome Profile10_VsCode",
+      //"runtimeArgs": ["--profile-directory=Profile10_VsCoden"]
     },
     
     {

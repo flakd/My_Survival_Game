@@ -1,0 +1,67 @@
+#game {
+  padding: 0px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: auto;
+  margin-right: auto;  
+  width: 972px;  
+/*  background-color: #568303; */
+  background-color: #7a9423;
+  height: 850px;
+  position: relative;
+  z-index:-2;
+}
+#flora-overlay{
+  position: absolute;
+  height: 850px;
+  width: 972px;
+  z-index: 16;
+}
+#top {
+  position: absolute;
+  height: 900px;
+  width: 800px;
+  left: 70px;
+  float:left
+}
+#RAoG-image {
+  width:700px; 
+  height:700px;
+  padding: 50px;
+}
+#RAoG-image-modal {
+/*   background-color: rgba(200,0,0,.85); */
+ /*  visibility: hidden; */
+  display: none;
+  position: absolute;
+  height: 700px;
+  width: 700px;
+  top: 100px;
+  left: 100px;
+  z-index: 17;
+}
+#activity-image {
+  width:300px; 
+  height:300px;  
+}
+#activity-image-modal {
+/*   background-color: white;
+ *//*   visibility: hidden;
+ */  
+  display: none;
+  position: absolute;
+  height: 300px;
+  width: 300px;
+  top: 475px;
+  left: 600px;
+  z-index: 12;
+}
+#shadow-overlay  {
+  position: absolute;
+  height: 850px;
+  width: 972px;
+  z-index: 14;
+}
+.shadow {
+  background-color: rgba(0,0,0,0.5);
+}

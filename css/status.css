@@ -1,0 +1,36 @@
+#statuses-container{
+  background-color: sandybrown;
+  width: 400px;
+  float: right;
+}
+.status {
+  width: 398px;
+  margin: auto;
+  overflow: auto;
+  font-family: monospace;
+  border: 1px solid black;
+}
+#time, #day, #score{
+  margin: auto;
+  font-family: monospace;
+  border: 1px solid black;  
+  float: left;
+  height: 30px;
+  padding: 4px; 
+}
+#time, #day {
+  width: 85px;
+}
+#score{
+  width: 95px;
+}
+#status-vitals {
+  background-color: sandybrown;
+  height: 51px;
+}
+#status-inventory {
+  height: 200px;
+}
+#status-actions {
+  height: 200px;
+}
