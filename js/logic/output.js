@@ -3,10 +3,10 @@
 let timeDiv = document.querySelector("#time");
 let dayDiv = document.querySelector("#day");
 let scoreDiv = document.querySelector("#score");
-let sv = document.querySelector("#status-vitals");
-let si = document.querySelector("#status-inventory");
-let sa = document.querySelector("#status-actions");
-let so = document.querySelector("#output");
+let statVitalsDiv = document.querySelector("#status-vitals");
+let statInventoryDiv = document.querySelector("#status-inventory");
+let statActionsDiv = document.querySelector("#status-actions");
+let outputDiv = document.querySelector("#output");
 
 lwrTime = function(msg){ lwr(msg, timeDiv);}
 lwlnTime = function(msg){ lwln(msg, timeDiv);}
@@ -17,17 +17,17 @@ lwlnDay = function(msg){ lwln(msg, dayDiv);}
 lwrScore = function(msg){ lwr(msg, scoreDiv);}
 lwlnScore = function(msg){ lwln(msg, scoreDiv);}
 
-lwrVitals = function(msg, target){ lwr(msg,sv);}
-lwlnVitals = function(msg, target){ lwln(msg,sv);}
+lwrVitals = function(msg, target){ lwr(msg,statVitalsDiv);}
+lwlnVitals = function(msg, target){ lwln(msg,statVitalsDiv);}
 
-lwrInventory = function(msg, target){ lwr(msg,si);}
-lwlnInventory = function(msg, target){ lwln(msg,si);}
+lwrInventory = function(msg, target){ lwr(msg,statInventoryDiv);}
+lwlnInventory = function(msg, target){ lwln(msg,statInventoryDiv);}
 
-lwrActions = function(msg, target){ lwr(msg,sa);}
-lwlnActions = function(msg, target){ lwln(msg,sa);}
+lwrActions = function(msg, target){ lwr(msg,statActionsDiv);}
+lwlnActions = function(msg, target){ lwln(msg,statActionsDiv);}
 
-lwrOutput = function(msg, target){ lwr(msg,so);}
-lwlnOutput = function(msg, target){ lwln(msg,so);}
+lwrOutput = function(msg, target){ lwr(msg,outputDiv);}
+lwlnOutput = function(msg, target){ lwln(msg,outputDiv);}
 
 
 //let output = {
