@@ -33,6 +33,8 @@
       //"url": "file:///Volumes/GoogleDrive/My%20Drive/gdDev/js/a_game/index.html",
       "url": "file:///myDev/js/a_game/index.html",
       "webRoot": "${workspaceFolder}",
+      //"outFiles": [],
+      //"resolveSourceMapLocations": null,
       "userDataDir": false,
       /* "launchBrowser": {
         "enabled": true,
