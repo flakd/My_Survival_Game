@@ -1,10 +1,10 @@
-let g;  //create my global object;
+//let g;  //create my global object;
 //if (global) { 
 //    g=global;
 //} else
-if (window) { 
+/* if (window) { 
   g=window;
-}
+} */
 /* const { exit } = require('process');
 const readline = require('readline');
 const parseJSONs = require('./parseJSONs');
@@ -17,10 +17,7 @@ var rl;
 
 g.isQuit = false;
 
-g.t = {};
-g.t.gameHr = 0;   //12 midnight
-//g.totalGameHrsPlayed = 0;
-//g.gameDay = 0;
+
 g.isGameOver = false;
 g.isDead = false;
 g.isDeadCheck = isDeadCheck;
