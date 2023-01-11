@@ -10,48 +10,7 @@ if (window) {
 const l=console.log; */
 const e=function(msg){console.error("**ERROR**: %s",msg)};
 
-// when it displays, this is the modal that holds the action/activity graphic
-const activityImgModal = document.getElementById("activity-image-modal");
-const activityImg = document.getElementById("activity-image");
-// when it actually plays, this is the action/activity audio clip
-const activityAudioClip = document.createElement("audio");
-// when it displays, this is the modal that holds the RAoG graphic
-const RAoGImgModal = document.getElementById("RAoG-image-modal");   
-const RAoGImg = document.getElementById("RAoG-image");   
-// when it actually plays, this is the RAoG audio clip
-const RAoGAudioClip = document.createElement("audio");  
 
-function playActivityMedia(activityNameStr){
-  let tmpName = activityNameStr.split(" ").join("-");
-  let srcFileName = "images/" + tmpName + ".gif";
-  activityImg.src = srcFileName;
-  activityImgModal.style.display = "block";
-  activityAudioClip.src = "audio/" + tmpName + ".mp3";
-  activityAudioClip.play();
-}
-
-function playRAoGMedia(activityNameStr){
-  let tmpName = activityNameStr.split(" ").join("-");
-  let srcFileName = "images/" + tmpName + ".png";
-  RAoGImg.src = srcFileName;
-  RAoGImgModal.style.display = "block";
-  RAoGAudioClip.src = "audio/" + tmpName + ".mp3";
-  RAoGAudioClip.play();
-}
-
-//function handle_activityCompleted(sender, activity, completionDuration){
-function handle_activityCompleted(sender, activity){  
-  // hide stuff  
-  stopActivityMedia();
-}
-function stopActivityMedia(){
-  activityAudioClip.pause();
-  activityImgModal.style.display = "none";
-}  
-function handle_btnCloseRAoGImgModal_click(sender){
-  RAoGAudioClip.pause();
-  RAoGImgModal.style.display = "none";  
-}
 
 let core = {
   //------------------------------------------------------------------------>
@@ -103,7 +62,8 @@ let core = {
     //    chosen executes along with next line - do GameAction (which performs
     //    calcs)
     //------------------------------------------------------------------------>
-    g.whatImDoing.startActivity(g.c.action);
+    //g.whatImDoing.startActivity(g.c.action);
+    g.waid.startActivity(g.c.action);
     playActivityMedia(g.c.action.gerund);
 
     //------------------------------------------------------------------------>

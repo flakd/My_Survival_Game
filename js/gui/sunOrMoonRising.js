@@ -1,3 +1,182 @@
+  // when it displays, this is the modal that holds the action/activity graphic
+const activityImgModal = document.getElementById("activity-image-modal");
+const activityImg = document.getElementById("activity-image");
+// when it actually plays, this is the action/activity audio clip
+const activityAudioClip = document.createElement("audio");
+// when it displays, this is the modal that holds the RAoG graphic
+const RAoGImgModal = document.getElementById("RAoG-image-modal");   
+const RAoGImg = document.getElementById("RAoG-image");   
+// when it actually plays, this is the RAoG audio clip
+const RAoGAudioClip = document.createElement("audio");  
+
+function playActivityMedia(activityNameStr){
+  let tmpName = activityNameStr.split(" ").join("-");
+  let srcFileName = "images/" + tmpName + ".gif";
+  activityImg.src = srcFileName;
+  activityImgModal.style.display = "block";
+  activityAudioClip.src = "audio/" + tmpName + ".mp3";
+  activityAudioClip.play();
+}
+
+function playRAoGMedia(activityNameStr){
+  let tmpName = activityNameStr.split(" ").join("-");
+  let srcFileName = "images/" + tmpName + ".png";
+  RAoGImg.src = srcFileName;
+  RAoGImgModal.style.display = "block";
+  RAoGAudioClip.src = "audio/" + tmpName + ".mp3";
+  RAoGAudioClip.play();
+}
+
+//function handle_activityCompleted(sender, activity, completionDuration){
+function handle_activityCompleted(sender, activity){  
+  // hide stuff  
+  stopActivityMedia();
+}
+function stopActivityMedia(){
+  activityAudioClip.pause();
+  activityImgModal.style.display = "none";
+}  
+function handle_btnCloseRAoGImgModal_click(sender){
+  RAoGAudioClip.pause();
+  RAoGImgModal.style.display = "none";  
+}
+  
+  
+  g.whatImDoing = class {
+    constructor() {
+      return (
+        {}
+      );
+    }
+    static startActivity(action) {
+      //  Is a procedure that MUST perform the start of the activity if 
+      //  possible.  It is possible if I am NOT BUSY doing anything else.
+      //  RETURNS: a boolean if the activity started 
+      g.whatImDoing.timeLeft = action.numHrs * 60;
+      g.whatImDoing.activity = action;
+    }
+    static isBusy() {
+      if (g.whatImDoing.activity !== null) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    static getActivityName() {
+      if (g.whatImDoing.isBusy()) {
+        return g.whatImDoing.activity.key;
+      }
+    }
+    static getActivityGerund() {
+      if (g.whatImDoing.isBusy()) {
+        return g.whatImDoing.activity.gerund;
+      }
+    }
+    static getBusyMessage(message) {
+      if (g.whatImDoing.isBusy()) {
+        return `You can't do that right now, you're busy ${g.whatImDoing.getActivityGerund()} for the next ${g.whatImDoing.getTimeLeft()} minutes`;
+      } else {
+        return "sure thing... you're not busy";
+      }
+    }
+    static getTimeLeft() {
+      if (g.whatImDoing.isBusy()) {
+        return g.whatImDoing.timeLeft;
+      } else {
+        return 0;
+      }
+    }
+  };
+  g.whatImDoing.timeLeft = 0;
+  g.whatImDoing.activity = null;
+  g.whatImDoing.onActivityCompleted = handle_activityCompleted;
+  g.whatImDoing.passMinute = function passMinute(){
+    if (g.whatImDoing.activity === null) return;
+    g.whatImDoing.timeLeft--;
+    if (g.whatImDoing.timeLeft <= 0) {
+      g.whatImDoing.onActivityCompleted(g.whatImDoing, g.whatImDoing.activity);
+      g.whatImDoing.activity = null;
+      g.whatImDoing.timeLeft = 0;
+    }
+  };
+
+
+
+  class WhatAmIDoing {
+    constructor() {
+      //return (
+        //{
+        this._timeLeft = 0;
+        //timeLeft = 0;
+        this._activity = null;
+        //activity = null;
+        this._onActivityCompleted = handle_activityCompleted;          
+        //onActivityCompleted = handle_activityCompleted;
+        //}
+      //);
+    }
+    startActivity(action) {
+      //  Is a procedure that MUST perform the start of the activity if 
+      //  possible.  It is possible if I am NOT BUSY doing anything else.
+      //  RETURNS: a boolean if the activity started 
+      this._timeLeft = action.numHrs * 60;
+      this._activity = action;
+    }
+    isBusy() {
+      if (this._activity !== null) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    getActivityName() {
+      if (this.isBusy()) {
+        return this._activity.key;
+      }
+    }
+    getActivityGerund() {
+      if (this.isBusy()) {
+        return this._activity.gerund;
+      }
+    }
+    getBusyMessage(message) {
+      if (this.isBusy()) {
+        return `You can't do that right now, you're busy ${this.getActivityGerund()} for the next ${this.getTimeLeft()} minutes`;
+      } else {
+        return "sure thing... you're not busy";
+      }
+    }
+    get timeLeft() {
+      if (this.isBusy()) {
+        return this._timeLeft;
+      } else {
+        return 0;
+      }
+    }
+    getTimeLeft() {
+      if (this.isBusy()) {
+        return this._timeLeft;
+      } else {
+        return 0;
+      }
+    }    
+    passMinute(){
+      if (this._activity === null) return;
+      this._timeLeft--;
+      if (this._timeLeft <= 0) {
+        this._onActivityCompleted(this, this._activity);
+        this._activity = null;
+        this._timeLeft = 0;
+      }
+    }
+  }
+  //const waid = new WhatAmIDoing();
+
+  (function(){
+    g.waid = new WhatAmIDoing();
+  })();
+  
+
 
 function swapSunMoon(sunMoon){
   let sun = document.getElementById("sun");
@@ -35,6 +214,8 @@ function swapSunMoon(sunMoon){
   }
   return sunOrMoon;
 }
+
+
 
 
 
@@ -88,58 +269,7 @@ function moveSunOrMoon(sunOrMoon){
 
 
 
-  g.whatImDoing = {};
-  g.whatImDoing.timeLeft = 0;
-  g.whatImDoing.activity = null;
-  g.whatImDoing.onActivityCompleted = handle_activityCompleted;
-  g.whatImDoing.startActivity = function startActivity(action){ 
-    //  Is a procedure that MUST perform the start of the activity if 
-    //  possible.  It is possible if I am NOT BUSY doing anything else.
-    //  RETURNS: a boolean if the activity started 
-    g.whatImDoing.timeLeft = action.numHrs * 60;
-    g.whatImDoing.activity = action;
-  }
-  g.whatImDoing.passMinute = function passMinute(){
-    if (g.whatImDoing.activity === null) return;
-    g.whatImDoing.timeLeft--;
-    if (g.whatImDoing.timeLeft <= 0) {
-      g.whatImDoing.onActivityCompleted(g.whatImDoing, g.whatImDoing.activity);
-      g.whatImDoing.activity = null;
-      g.whatImDoing.timeLeft = 0;
-    }
-  }
-  g.whatImDoing.isBusy = function isBusy(){
-    if (g.whatImDoing.activity !== null) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-  g.whatImDoing.getActivityName = function getActivityName(){
-    if (g.whatImDoing.isBusy()) {
-      return g.whatImDoing.activity.key;
-    }
-  }
-  g.whatImDoing.getActivityGerund = function getActivityGerund(){
-    if (g.whatImDoing.isBusy()) {
-      return g.whatImDoing.activity.gerund;
-    }
-  }
-  g.whatImDoing.getBusyMessage = function getBusyMessage(message){
-    if (g.whatImDoing.isBusy()) {
-      return `You can't do that right now, you're busy ${g.whatImDoing.getActivityGerund()} for the next ${g.whatImDoing.getTimeLeft()} minutes`;
-    } else {
-      return "sure thing... you're not busy";
-    }
-  }
-  g.whatImDoing.getTimeLeft = function getTimeLeft(){
-    if (g.whatImDoing.isBusy()) {
-      return g.whatImDoing.timeLeft;
-    } else {
-      return 0;
-    }
-  }
-
+  
 
 
 
@@ -213,7 +343,13 @@ function timerIncrementHour(numticks) {
     g.t.tick = 0;
     g.t.minute++;
     /*       let wasIbusy = g.whatImDoing.isBusy();
-     */ g.whatImDoing.passMinute();
+     */ 
+    
+    //g.whatImDoing.passMinute();
+    //g.waid = new WhatAmIDoing();
+    g.waid.passMinute();
+    //WhatAmIDoing.passMinute();
+    
     /*       if (g.whatImDoing.isBusy()===false && wasIbusy===true) {
             stopActivityMedia();
           } */
@@ -244,3 +380,5 @@ function logTimeForDebugging() {
   ), document.querySelector("#log2")
   );
 }
+
+
