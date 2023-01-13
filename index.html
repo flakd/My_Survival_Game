@@ -21,6 +21,7 @@
   </head>
   <body>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+    <script src="./js/libs/bootbox.js"></script>
 
  <!-- Button trigger modal -->
  <!--
@@ -52,7 +53,7 @@
     </div>   
 
     <div id="music_off_div" style="z-index:20; position: absolute;">
-      <button type="button" id="music_off2" class="btn btn-dark">Music Off</button>        
+      <button type="button" id="music_off_btn" class="btn btn-dark">Music Off</button>        
     </div> 
     <div id="game">
 
@@ -115,6 +116,7 @@
       <div id="log"></div>
       <div id="log2"></div>        
       <div id="log3"></div>
+      <div id="log4"></div>
     </div><!-- CLOSE id="logs-container"--> 
         
   </body>
@@ -160,30 +162,23 @@
       myModal.addEventListener('shown.bs.modal', () => {
         myInput.focus();
       });        
-      myModal.addEventListener("hidden.bs.modal", function () {
+
+      function handleMyModalClose_BeginGame(){
         gameLoadMusic.play();
-        console.log("closed modal");
-        const sunOrMoon = document.getElementById("sunOrMoon");
-        moveSunOrMoon(sunOrMoon);          
-      });
+        console.log("closed modal - begin game");
+        runMainGameLoop();          
+      }
+      myModal.addEventListener("hidden.bs.modal", handleMyModalClose_BeginGame);
       
       $(".modal").modal('show');
-/*       $('#music_off1').on('click', function(){
-        alert('dude1');
-      }); */
-      $(document).on('click','#music_off2', function(evt){
+
+      $(document).on('click','#music_off_btn', function(evt){
         //alert('dude2');
-        //console.log(evt.currentTarget);
+        //console.log("evt.currentTarget=" + evt.currentTarget);
         console.log(evt);
         toggleMusicPlay(gameLoadMusic, evt.currentTarget);
       });
-/*       $(document).on('click','#music_off_div', function(){
-        alert('dude3');
-        
-      });
-      $(document).on('click',function(){
-        alert('wtf');
-      });  */     
+   
 
       var isPlaying = function (audioClip) {
       return audioClip

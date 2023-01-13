@@ -30,11 +30,6 @@ let core = {
     return core.doCommandWithResult(userInput.toLowerCase());
 
 
-    if (g.whatImDoing.isBusy()) {
-      lwr(`Current Activity: ${g.whatImDoing.activity}`, document.querySelector("#log"));
-      lwrOutput(g.whatImDoing.getBusyMessage());
-      return true;
-    }
     //------------------------------------------------------------------------>
     //  2.b. check to see if this is a valid Game play ACTIONS
     //------------------------------------------------------------------------>
@@ -64,53 +59,53 @@ let core = {
     //------------------------------------------------------------------------>
     //g.whatImDoing.startActivity(g.c.action);
     g.waid.startActivity(g.c.action);
-    playActivityMedia(g.c.action.gerund);
+ 
 
     //------------------------------------------------------------------------>
-    //  4.b. DoGameAction() - else do not return and we continue to the next 
+    //  4.a. DoGameAction() - else do not return and we continue to the next 
     //      line of code...  which is to ACTUALLY executes the GAME ACTION 
     //      i.e. it performs all the calculations and changes the amounts of
     //      inventory items.
     //------------------------------------------------------------------------>
     core.doGameAction(g.c.action, inventory, vitals);
 
-    //------------------------------------------------------------------------>    
+/*     //------------------------------------------------------------------------>    
     //  5. passTime() increases Hrs by action.numHrs and...
     //      increases vitals by vitals.takePerHr * action.numHrs    
     //------------------------------------------------------------------------>    
-    core.doPassTime(g.c.action, inventory, vitals);
+    core.doPassTime(g.c.action, inventory, vitals); */
 
-    //------------------------------------------------------------------------>
+/*     //------------------------------------------------------------------------>
     //  6.  print status at the end... AFTER the command is executed, 
     //  so we can see the results/new numbers, otherwise we are always looking
     //  at the previous numbers each time we execute a command
     //------------------------------------------------------------------------>
-    output.printStats1(g.t.gameHr,g.c);
+    output.printStats1(g.t.gameHr,g.c); */
 
     //------------------------------------------------------------------------>
     //  7. doRandomActOfGod() randomly adds elements like storms, bears, falls, etc.
     //  that cause injury (or maybe later damage to equipment as well)
     //  increases vitals by vitals.takePerHr * action.numHrs    
     //------------------------------------------------------------------------>
-    if ( core.doRandomActOfGod(inventory, vitals) ) {
+/*     if ( core.doRandomActOfGod(inventory, vitals) ) {
       output.printStats1(g.t.gameHr,g.c);
-    }
+    } */
 
-    //------------------------------------------------------------------------>
+/*     //------------------------------------------------------------------------>
     //  8. function isDead() to check if any of the VITALS are above 100
     //------------------------------------------------------------------------>
     if (core.isDead(vitals))  { // if you're dead, then RETURN FALSE, which triggers 
       return false;             //  an rl.close() of the main  game READLINE loop
-    } 
+    }  */
 
-    //------------------------------------------------------------------------>
+/*     //------------------------------------------------------------------------>
     //  9. haveIBeenRescued() performs a random function check to see if you 
     //  have been rescued
     //------------------------------------------------------------------------>
     if (core.haveIBeenRescued()){    // similar to above (the previous if-else 
       return false;             //  with isDead()), RETURN FALSE here, which 
     }                           //  triggers an rl.close() of the main game 
-                                //  READLINE loop
+                                //  READLINE loop */
           
 
     //------------------------------------------------------------------------>

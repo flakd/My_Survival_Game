@@ -16,6 +16,8 @@ function playActivityMedia(activityNameStr){
   activityImgModal.style.display = "block";
   activityAudioClip.src = "audio/" + tmpName + ".mp3";
   activityAudioClip.play();
+  lwr(`Current Activity: ${waid.getActivityGerund()}`, document.querySelector("#log4"));
+  lwrOutput(waid.getBusyMessage());  
 }
 
 function playRAoGMedia(activityNameStr){
@@ -31,6 +33,12 @@ function playRAoGMedia(activityNameStr){
 function handle_activityCompleted(sender, activity){  
   // hide stuff  
   stopActivityMedia();
+
+  //------------------------------------------------------------------------>    
+  //  5. passTime() increases Hrs by action.numHrs and...
+  //      increases vitals by vitals.takePerHr * action.numHrs    
+  //------------------------------------------------------------------------>    
+  core.doPassTime(g.c.action, g.c.inventory, g.c.vitals);  
 }
 function stopActivityMedia(){
   activityAudioClip.pause();
@@ -40,144 +48,81 @@ function handle_btnCloseRAoGImgModal_click(sender){
   RAoGAudioClip.pause();
   RAoGImgModal.style.display = "none";  
 }
-  
-  
-  g.whatImDoing = class {
-    constructor() {
-      return (
-        {}
-      );
-    }
-    static startActivity(action) {
-      //  Is a procedure that MUST perform the start of the activity if 
-      //  possible.  It is possible if I am NOT BUSY doing anything else.
-      //  RETURNS: a boolean if the activity started 
-      g.whatImDoing.timeLeft = action.numHrs * 60;
-      g.whatImDoing.activity = action;
-    }
-    static isBusy() {
-      if (g.whatImDoing.activity !== null) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-    static getActivityName() {
-      if (g.whatImDoing.isBusy()) {
-        return g.whatImDoing.activity.key;
-      }
-    }
-    static getActivityGerund() {
-      if (g.whatImDoing.isBusy()) {
-        return g.whatImDoing.activity.gerund;
-      }
-    }
-    static getBusyMessage(message) {
-      if (g.whatImDoing.isBusy()) {
-        return `You can't do that right now, you're busy ${g.whatImDoing.getActivityGerund()} for the next ${g.whatImDoing.getTimeLeft()} minutes`;
-      } else {
-        return "sure thing... you're not busy";
-      }
-    }
-    static getTimeLeft() {
-      if (g.whatImDoing.isBusy()) {
-        return g.whatImDoing.timeLeft;
-      } else {
-        return 0;
-      }
-    }
-  };
-  g.whatImDoing.timeLeft = 0;
-  g.whatImDoing.activity = null;
-  g.whatImDoing.onActivityCompleted = handle_activityCompleted;
-  g.whatImDoing.passMinute = function passMinute(){
-    if (g.whatImDoing.activity === null) return;
-    g.whatImDoing.timeLeft--;
-    if (g.whatImDoing.timeLeft <= 0) {
-      g.whatImDoing.onActivityCompleted(g.whatImDoing, g.whatImDoing.activity);
-      g.whatImDoing.activity = null;
-      g.whatImDoing.timeLeft = 0;
-    }
-  };
 
 
-
-  class WhatAmIDoing {
-    constructor() {
-      //return (
-        //{
-        this._timeLeft = 0;
-        //timeLeft = 0;
-        this._activity = null;
-        //activity = null;
-        this._onActivityCompleted = handle_activityCompleted;          
-        //onActivityCompleted = handle_activityCompleted;
-        //}
-      //);
-    }
-    startActivity(action) {
-      //  Is a procedure that MUST perform the start of the activity if 
-      //  possible.  It is possible if I am NOT BUSY doing anything else.
-      //  RETURNS: a boolean if the activity started 
-      this._timeLeft = action.numHrs * 60;
-      this._activity = action;
-    }
-    isBusy() {
-      if (this._activity !== null) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-    getActivityName() {
-      if (this.isBusy()) {
-        return this._activity.key;
-      }
-    }
-    getActivityGerund() {
-      if (this.isBusy()) {
-        return this._activity.gerund;
-      }
-    }
-    getBusyMessage(message) {
-      if (this.isBusy()) {
-        return `You can't do that right now, you're busy ${this.getActivityGerund()} for the next ${this.getTimeLeft()} minutes`;
-      } else {
-        return "sure thing... you're not busy";
-      }
-    }
-    get timeLeft() {
-      if (this.isBusy()) {
-        return this._timeLeft;
-      } else {
-        return 0;
-      }
-    }
-    getTimeLeft() {
-      if (this.isBusy()) {
-        return this._timeLeft;
-      } else {
-        return 0;
-      }
-    }    
-    passMinute(){
-      if (this._activity === null) return;
-      this._timeLeft--;
-      if (this._timeLeft <= 0) {
-        this._onActivityCompleted(this, this._activity);
-        this._activity = null;
-        this._timeLeft = 0;
-      }
+class WhatAmIDoing {
+  constructor() {
+    //return (
+      //{
+      this._timeLeft = 0;
+      //timeLeft = 0;
+      this._activity = null;
+      //activity = null;
+      this._onActivityCompleted = handle_activityCompleted;          
+      //onActivityCompleted = handle_activityCompleted;
+      //}
+    //);
+  }
+  startActivity(action) {
+    //  Is a procedure that MUST perform the start of the activity if 
+    //  possible.  It is possible if I am NOT BUSY doing anything else.
+    //  RETURNS: a boolean if the activity started 
+    this._timeLeft = action.numHrs * 60;
+    this._activity = action;
+  }
+  isBusy() {
+    if (this._activity !== null) {
+      return true;
+    } else {
+      return false;
     }
   }
-  //const waid = new WhatAmIDoing();
+  getActivityName() {
+    if (this.isBusy()) {
+      return this._activity.key;
+    }
+  }
+  getActivityGerund() {
+    if (this.isBusy()) {
+      return this._activity.gerund;
+    }
+  }
+  getBusyMessage(message) {
+    if (this.isBusy()) {
+      return `You can't do that right now, you're busy ${this.getActivityGerund()} for the next ${this.getTimeLeft()} minutes`;
+    } else {
+      return "sure thing... you're not busy";
+    }
+  }
+  get timeLeft() {
+    if (this.isBusy()) {
+      return this._timeLeft;
+    } else {
+      return 0;
+    }
+  }
+  getTimeLeft() {
+    if (this.isBusy()) {
+      return this._timeLeft;
+    } else {
+      return 0;
+    }
+  }    
+  passMinute(){
+    if (this._activity === null) return;
+    this._timeLeft--;
+    if (this._timeLeft <= 0) {
+      this._onActivityCompleted(this, this._activity);
+      this._activity = null;
+      this._timeLeft = 0;
+    }
+  }
+}
 
-  (function(){
-    g.waid = new WhatAmIDoing();
-  })();
+(function(){
+  g.waid = new WhatAmIDoing();
+})();
   
-
-
 function swapSunMoon(sunMoon){
   let sun = document.getElementById("sun");
   let moon = document.getElementById("moon");
@@ -215,13 +160,96 @@ function swapSunMoon(sunMoon){
   return sunOrMoon;
 }
 
+function runMainGameLoop(sunOrMoon){
+  g.c.isDead = false;
+  g.c.justDied = false;
 
-
-
-
-function moveSunOrMoon(sunOrMoon){
   let didSwapRecently = false;
 
+  initGameTimeDefaults();
+  updateDayUI();
+  
+  initMoveSunOrMoonDefaults(); 
+
+
+
+  let RAoGOccurredRecently = false;
+  // compiler complaining that the next line - sunOrMoon is already declard, but where???
+  //const sunOrMoon = document.getElementById("sunOrMoon");
+  sunOrMoon = document.getElementById("sunOrMoon");
+
+  let timer = setInterval(function() {
+
+    incrementGameHour(10);    
+
+
+    // (re)focus the cursor upong EVERY timer click/event 
+    focusCommandInputCursor();
+
+    // sun RISING PHASE
+    moveSunOrMoon(sunOrMoon);
+    
+    // check to see a RAoG will/did occur EVERY HOUR otherwise, it will 
+    //  happen too often and it's constantly killing the player
+    if (g.t.minute ===0 && g.t.tick ===0) {
+      RAoGOccurredRecently = core.doRandomActOfGod(g.c.inventory, g.c.vitals);
+    }
+
+    // keep Vitals and Inventory stats updated each tick (timer interval)
+    output.printStats1(g.t.gameHr,g.c);
+
+    // keep Game Day updated each tick (timer interval)
+    updateDayUI();
+
+    // keep Game Hour updated each tick (timer nterval)
+    updateHourUI();
+
+    // keep log of all time/day/tick changes updated on each tick
+    logTimeForDebugging();      
+
+    // If I've made it this far in this iteration of the loop, then how 
+    //  do my vitals look??  => Am I still alive?
+    if (core.isDead(g.c.vitals))  { 
+      if (!g.justDied){
+        handleDeath();    // message & do you want to play again modal?
+        g.justDied = true;
+      }
+    }
+
+    // If I'm still alive, let's check to see if I've been rescued
+    if (core.haveIBeenRescued()) {
+      if (!g.justRescued){
+        handleRescue();   // message - congrats & do you want to play again
+        g.justRescued = true;
+      }
+    }      
+
+  }, 5);  // END: let timer = setInterval(function()
+
+} // END: function moveSunOrMoon(sunOrMoon)
+
+
+function initMoveSunOrMoonDefaults() {
+  g.t.sunriseHr = 0;
+  g.t.sunsetHr = 5;
+  g.t.moonriseHr = 16;
+  g.t.moonsetHr = 12;
+
+  g.t.sunMoonHeight = 3;
+  g.t.sunMoonHeightStr = g.t.sunMoonHeight + "px";
+  g.t.xSpeedInterval = 300;
+  g.t.ySpeedInterval = 30;
+  //g.t.xOffset = -70;
+  g.t.xOffset = 0;
+  //g.t.yOffset = -110; 
+  g.t.yOffset = 0;
+}
+
+function focusCommandInputCursor() {
+  document.getElementById("command-input").focus();
+} // END: function focusCommandInputCursor
+
+function initGameTimeDefaults() {
   g.t.todayStart = g.t.start = Date.now();
   g.t.tick = 0;
   g.t.totalTicks = 0;
@@ -230,110 +258,52 @@ function moveSunOrMoon(sunOrMoon){
   g.t.hour = 0;
   g.t.totalHours = 0;
   g.t.day = 0;
+} // END: function initGameTimeDefaults
 
-  g.t.gameDay = 0;
-  g.t.hours = 5;
-  
-  g.t.hours = 0;  
+function moveSunOrMoon(sunOrMoon) {
+  if (g.t.hour === 0 && g.t.minute === 0 && g.t.tick === 0) {
+    sunOrMoon = swapSunMoon("moon");
+    let overlay = document.getElementById("shadow-overlay");
+    overlay.classList.remove("shadow");
 
-  
-  
-  updateDayUI();
+  }
+  else if (g.t.hour < 1) {
+    sunOrMoon.style.left = -75 + g.t.minute / 2 + "px";
+    sunOrMoon.style.top = 120 + g.t.minute * 2.2 * -1 + "px";
+    lwr(sunOrMoon.style.top, document.querySelector("#log3"));
+  }
 
+  //sun MOVING across the SKY
+  // sun is out there for 16 Hrs, while moon for only 8 Hrs
+  else if (g.t.hour >= 1 && g.t.hour < g.t.moonriseHr) {
+    sunOrMoon.style.left = -75 + (60 * g.t.hour + g.t.minute) / 2.1 + "px";
+  }
 
-  g.t.oneHr = 1500;     
-  g.t.riseSetDur = 1350;
-  g.t.dayStartHr = 0;   
-  g.t.dayEndHr = 24;
-  
-  g.t.sunriseHr = 0;    g.t.sunriseStart = g.t.sunriseHr * g.t.oneHr;
-                        g.t.sunriseDone = (g.t.sunriseHr * g.t.oneHr) + g.t.riseSetDur;    
-  
-  g.t.sunsetHr = 5;    g.t.sunsetStart = g.t.sunsetHr * g.t.oneHr;
-                        g.t.sunsetDone = (g.t.sunsetHr * g.t.oneHr) + g.t.riseSetDur;    
+  // sun SETTING PHASE
+  else if (g.t.hour == g.t.moonriseHr && g.t.minute === 0 && g.t.tick) {
+    sunOrMoon = swapSunMoon("sun");
+    let overlay = document.getElementById("shadow-overlay");
+    overlay.classList.add("shadow");
+  }
 
-  g.t.moonriseHr = 16;  g.t.moonriseStart = g.t.moonriseHr * g.t.oneHr;
-                        g.t.moonriseDone = (g.t.moonriseHr * g.t.oneHr) + g.t.riseSetDur;    
-
-  g.t.moonsetHr = 12;   g.t.moonsetStart = g.t.moonsetHr * g.t.oneHr;
-                        g.t.moonsetDone = (g.t.moonsetHr * g.t.oneHr) + g.t.riseSetDur;
-  
-  g.t.sunMoonHeight = 3;
-  g.t.sunMoonHeightStr = g.t.sunMoonHeight + "px";
-  g.t.xSpeedInterval = 300;
-  g.t.ySpeedInterval = 30;
-  //g.t.xOffset = -70;
-  g.t.xOffset = 0;
-  //g.t.yOffset = -110; 
-  g.t.yOffset = 0; 
-
-
-
-  
-
-
-
-  let timer = setInterval(function() {
-    timerIncrementHour(10);    
-
-
-    // (re)focus the cursor upong EVERY timer click/event 
-    document.getElementById("command-input").focus();
-
-    // sun RISING PHASE
-    if (g.t.hour === 0 && g.t.minute === 0 && g.t.tick === 0) {
-      sunOrMoon = swapSunMoon("moon");
-      let overlay = document.getElementById("shadow-overlay");
-      overlay.classList.remove("shadow");      
-
-    }
-    else if (g.t.hour < 1) {
-      sunOrMoon.style.left = -75 + g.t.minute/2 + "px";
-      sunOrMoon.style.top = 120 + g.t.minute *2.2 * -1 + "px";
-      lwr(sunOrMoon.style.top, document.querySelector("#log3"));
-    } 
-    
-    //sun MOVING across the SKY
-        // sun is out there for 16 Hrs, while moon for only 8 Hrs
-    else if (g.t.hour >= 1 && g.t.hour <  g.t.moonriseHr) {
-      sunOrMoon.style.left = -75 + (60 * g.t.hour + g.t.minute)/2.1 + "px";
-    }
-
-
-    // sun SETTING PHASE
-    else if (g.t.hour == g.t.moonriseHr && g.t.minute === 0 && g.t.tick ) {
-      sunOrMoon = swapSunMoon("sun");
-      let overlay = document.getElementById("shadow-overlay");
-      overlay.classList.add("shadow");
-    }
-
-    else if (g.t.hour >  g.t.moonriseHr && g.t.hour < 24) {
-      sunOrMoon.style.left = -75 + (60 * (g.t.hour - g.t.moonriseHr) + g.t.minute)/1 + "px";
-    }
-
-      updateDayUI();
-      updateHourUI();
-
-      logTimeForDebugging();      
-
-  }, 5);
-
-
-}
-
+  else if (g.t.hour > g.t.moonriseHr && g.t.hour < 24) {
+    sunOrMoon.style.left = -75 + (60 * (g.t.hour - g.t.moonriseHr) + g.t.minute) / 1 + "px";
+  }
+  return sunOrMoon;
+} // END: function moveSunOrMoon(sunOrMoon)
 
 function updateDayUI() {
   let dayStr = g.t.day.toString().padStart(3, "0");
   lwrDay(`DAY:${dayStr}`);
   //return dayStr;
-}
+} // END: function updateDayUI()
 
 function updateHourUI() {
   let hrStr = g.t.hour.toString().padStart(2, "0");
   lwrTime(`${hrStr}Hrs`);
-}
+} // END: function updateHourUI()
 
-function timerIncrementHour(numticks) {
+function incrementGameHour(numticks) {
   g.timePaused = false;
   if (!timePaused) {
     g.t.tick++;
@@ -348,6 +318,10 @@ function timerIncrementHour(numticks) {
     //g.whatImDoing.passMinute();
     //g.waid = new WhatAmIDoing();
     g.waid.passMinute();
+    if (waid.isBusy()){
+      playActivityMedia(g.c.action.gerund);
+
+    }       
     //WhatAmIDoing.passMinute();
     
     /*       if (g.whatImDoing.isBusy()===false && wasIbusy===true) {
@@ -364,7 +338,7 @@ function timerIncrementHour(numticks) {
       }
     }
   }
-}
+} // END: function incrementGameHour
 
 function logTimeForDebugging() {
   g.t.passed = Date.now() - g.t.start;
@@ -379,6 +353,57 @@ function logTimeForDebugging() {
 
   ), document.querySelector("#log2")
   );
+} // END: function logTimeForDebugging
+
+function playDeathMusic() {
+  // add this later
+}
+function handleDeath() {
+  playDeathMusic();
+  console.log("I'm sorry but you died!  Would you like to play again?");
+  if (showConfirmModal("I'm sorry but you died!  Would you like to play again?")) { 
+    runMainGameLoop();          
+  } else {
+    playGameOverAnimation();
+  } 
 }
 
+function handleRescue() {
+  playResuceMusic();
+  //myModal.removeEventListener("hidden.bs.modal", handleMyModalClose_BeginGame);
+  //$(".modal-body").text("Yay!  You've been rescued!  You won the game!");
+  //myModal.addEventListener("hidden.bs.modal", handleMyModalClose_YouWereRescued);  
+  //$(".modal").modal('show');  
+  console.log("closed modal - you were rescued - Would you like to play again?");
+  if ( showConfirmModal("Yay!  You've been rescued!  You won the game!  Would you like to play again?") ) {
+    runMainGameLoop();          
+  } else {
+    playGameOverAnimation();
+  } 
+}
 
+function playGameOverAnimation(){
+  // TODO
+}
+
+function showConfirmModal(msg) {
+  bootbox.confirm({
+      message: msg,
+      centerVertical: true,
+      buttons: {
+          confirm: {
+              label: 'Yes',
+              className: 'btn-success'
+          },
+          cancel: {
+              label: 'No',
+              className: 'btn-danger'
+          }
+      },
+      callback: function (result) {
+          console.log('This was logged in the callback: ' + result);
+          return result;
+      }
+  })
+  return result;
+}
