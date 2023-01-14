@@ -90,8 +90,3 @@ g.c = window.c;
 const myModal = document.getElementsByName("flakModal")[0];
 const myInput = document.getElementById('myInput')
 const gameLoadMusic = document.createElement("audio");
-
-// focus on my one main input for typing commands for the game
-//  we will do this every time we do the main loop anyway, but
-//  I think it's good practice to focus it there to start
-document.getElementById("command-input").focus();

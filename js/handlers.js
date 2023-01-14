@@ -164,25 +164,13 @@ function handleDocumentReady_setupInitialAudio() {
 function handleDeath() {
   playDeathMusic();
   console.log("I'm sorry but you died!  Would you like to play again?");
-  if (showConfirmModal("I'm sorry but you died!  Would you like to play again?")) { 
-    runMainGameLoop();          
-  } else {
-    playGameOverAnimation();
-  } 
+  showConfirmModal("I'm sorry but you died!  Would you like to play again?");
 }
 
 function handleRescue() {
   playResuceMusic();
-  //myModal.removeEventListener("hidden.bs.modal", handleMyModalClose_BeginGame);
-  //$(".modal-body").text("Yay!  You've been rescued!  You won the game!");
-  //myModal.addEventListener("hidden.bs.modal", handleMyModalClose_YouWereRescued);  
-  //$(".modal").modal('show');  
   console.log("closed modal - you were rescued - Would you like to play again?");
-  if ( showConfirmModal("Yay!  You've been rescued!  You won the game!  Would you like to play again?") ) {
-    runMainGameLoop();          
-  } else {
-    playGameOverAnimation();
-  } 
+  showConfirmModal("Yay!  You've been rescued!  You won the game!  Would you like to play again?");
 }
 
 function showConfirmModal(msg) {
