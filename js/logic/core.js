@@ -1,15 +1,7 @@
-/* let g;  //create my global object;
-if (global) { 
-    g=global;
-} else
-if (window) { 
-  g=window;
-} */
-//const { exit } = require('process');
-/* const output =  require('./output');
-const l=console.log; */
-const e=function(msg){console.error("**ERROR**: %s",msg)};
-
+if (g.isBrowserOrNode==="node"){
+  const { exit } = require('process');
+  const output =  require('./output');
+}
 
 
 let core = {
@@ -799,7 +791,8 @@ let core = {
 } //END Core Object
 
 
-
-//module.exports = core;
+if (g.isBrowserOrNode==="node"){
+  module.exports = core;
+}
 
 

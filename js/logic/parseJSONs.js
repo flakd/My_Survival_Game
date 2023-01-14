@@ -1,5 +1,4 @@
 //const fs = require('fs');
-const l = console.log;
 
 window.parseJSONs = {
   path: "./json/",
