@@ -1,6 +1,6 @@
 if (g.isBrowserOrNode==="node"){
   const { exit } = require('process');
-  const output =  require('./output');
+  const output =  require('./output').default;
 }
 
 

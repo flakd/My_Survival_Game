@@ -4,7 +4,7 @@ if (g.isBrowserOrNode==="node"){
   const readline = require('readline');
   const parseJSONs = require('./parseJSONs');
   const core =  require('./core');
-  const output =  require('./output');
+  const output =  require('./output').default;
   var rl;
   window.parseJSONs.loadJSONs();
   g.c.inventory = parseJSONs.Objects.inventory;
@@ -20,12 +20,18 @@ if (g.isBrowserOrNode==="node"){
   g.isDead = false;
   g.isGameOver = false;
   g.diedRecently = false;
+  g.rescuedRecently = false;
+
+  //not sure this is needed
   g.swappedSunOrMoonRecently = false;
+
+  //not sure this is needed - I think it is until I have an object with a "isBusy" blocker
   g.RAoGOccurredRecently = false;
+
   output.printTitleBanner(g.t.gameHr, g.c);
   setAllEventListeners();
   initGameTimeDefaults();
-  initMoveSunOrMoonDefaults(); 
+  //initMoveSunOrMoonDefaults(); 
 
   
   // compiler complaining that the next line - sunOrMoon is already declard, but where???
@@ -42,18 +48,42 @@ if (g.isBrowserOrNode==="node"){
 function runMainGameLoop(){
 
 
+  g.t.sunriseHr = 0;
+  g.t.sunsetHr = 5;
+  g.t.moonriseHr = 16;
+  g.t.moonsetHr = 12;
+
+  g.t.sunMoonHeight = 3;
+  g.t.sunMoonHeightStr = g.t.sunMoonHeight + "px";
+  g.t.xSpeedInterval = 300;
+  g.t.ySpeedInterval = 30;
+  //g.t.xOffset = -70;
+  g.t.xOffset = 0;
+  //g.t.yOffset = -110; 
+  g.t.yOffset = 0;
+
+  sun = new Celestial("sun");
+  moon = new Celestial("moon");
+  sunOrMoon = new Celestial("sunOrMoon");
+
+  mySunOrMoon = new SunOrMoon(["sun", "moon", "sunOrMoon"]);
+  myGameTimer = new GameTimer(10);
+  
+
+
   /************************************************************/  
   //***************  START: MAIN TIMER LOOP *******************/  
   /************************************************************/
   let timer = setInterval(function() {
 
     incrementGameHour(10);    
+    //myGameTimer.increment();
 
     // (re)focus the cursor upong EVERY timer tick/interval event 
     focusCommandInputCursor();
 
     // sun RISING PHASE
-    moveSunOrMoon(sunOrMoon);
+    moveSunOrMoon(mySunOrMoon);
     
     everyHourDoCheck();
     // check to see a RAoG will/did occur EVERY HOUR otherwise, it will 
@@ -77,6 +107,7 @@ function runMainGameLoop(){
     // If I've made it this far in this iteration of the loop, then how 
     //  do my vitals look??  => Am I still alive?
     if (core.isDead(g.c.vitals))  { 
+      // check for diedRecently so that I don't get stuck in a loop once I am dead
       if (!g.diedRecently){
         handleDeath();    // message & do you want to play again modal?
         g.diedRecently = true;
@@ -85,9 +116,10 @@ function runMainGameLoop(){
 
     // If I'm still alive, let's check to see if I've been rescued
     if (core.haveIBeenRescued()) {
-      if (!g.justRescued){
+      // check for diedRecently so that I don't get stuck in a loop once I am dead
+      if (!g.rescuedRecently){
         handleRescue();   // message - congrats & do you want to play again
-        g.justRescued = true;
+        g.rescuedRecently = true;
       }
     }      
 
@@ -107,7 +139,7 @@ function resetAllStats(vitals, inventory) {
 
 function everyHourDoCheck(){
 /*  
-  - UpdateHour
+  - UpdateHourUI/UpdateDayUI
   - IncrementVitals
   - RAoG?
   - printstats everyHour (vitals def change)

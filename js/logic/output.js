@@ -159,4 +159,4 @@ lwlnOutput = function(msg, target){ lwln(msg,outputDiv);}
 }
 
 
-//module.exports = output;
+//export default output;

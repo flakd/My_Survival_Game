@@ -1,15 +1,8 @@
 class WhatAmIDoing {
   constructor() {
-    //return (
-      //{
-      this._timeLeft = 0;
-      //timeLeft = 0;
-      this._activity = null;
-      //activity = null;
-      this._onActivityCompleted = handle_activityCompleted;          
-      //onActivityCompleted = handle_activityCompleted;
-      //}
-    //);
+    this._timeLeft = 0;
+    this._activity = null;
+    this._onActivityCompleted = handle_activityCompleted;          
   }
   startActivity(action) {
     //  Is a procedure that MUST perform the start of the activity if 

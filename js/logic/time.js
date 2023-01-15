@@ -9,9 +9,47 @@ function initGameTimeDefaults() {
   g.t.day = 0;
 } // END: function initGameTimeDefaults
 
+class GameTimer {
+  constructor(numticks /*number*/){
+    this.numticks = numticks;
+    this.timePaused = false;
+    this.todayStart = this.start = Date.now();
+    this.tick = 0;
+    this.totalTicks = 0;
+    this.minute = 0;
+    this.totalMinutes = 0;
+    this.hour = 0;
+    this.totalHours = 0;
+    this.day = 0;    
+  }
+  increment() {
+    if (!this.timePaused) {
+      this.tick++;
+      this.totalTicks++;
+    }
+    if (this.tick > this.numticks){
+      this.tick = 0;
+      this.minute ++;
+      g.waid.passMinute();
+      if (waid.isBusy()){
+        playActivityMedia(g.c.action.gerund);
+      }
+      this.totalMinutes++;
+      if (this.minute > 59) {
+        this.minute = 0;
+        this.hour++;
+        this.totalHours++;
+        if (this.hour > 23){
+          this.hour = 0;
+          this.day++;
+        }
+      }
+    }
+  }
+}
 function incrementGameHour(numticks) {
   g.timePaused = false;
-  if (!timePaused) {
+  if (!g.timePaused) {
     g.t.tick++;
     g.t.totalTicks++;
   }
