@@ -20,11 +20,11 @@ class Heavens {
   }
 
   passTime(hour, minute, tick){
-    if (minute === 0 && tick === 0) {
+    //if (minute === 0 && tick === 0) {
       for (var i = 0; i < this.Celestials.length - 1; i++) {
         this.Celestials[i].calculateState(hour, minute);
       }
-    }
+    //}
   }
 }
 
@@ -80,14 +80,15 @@ class Heavens {
 
 function moveHeavens(){
   var sun = new Celestial("sun",null,"skyblue")
-  sun.riseStart = 5; // 5am
-  sun.moveStart = 6;
-  sun.setStart = 20; //8pm
-  sun.setEnd = 21;
+  sun.riseStart = 0; // 5am
+  sun.moveStart = 1;
+  sun.setStart = 6; //8pm
+  sun.setEnd = 7;
   sun.xOffset = -75;
   sun.yRiseOffset = 120;
   sun.ySetOffset = -160;
-  sun.show();
+  sun.bgColor = "skyblue";
+  //sun.show();
   //sun.state = CELESTIAL_SHOWN_MIDDLE;
 
   var moon = new Celestial("moon","moon-overlay","7777FF")
@@ -98,6 +99,7 @@ function moveHeavens(){
   moon.xOffset = -75;
   moon.yRiseOffset = 100;
   moon.ySetOffset = -180;
+  moon.bgColor = "#7777FF";
   //moon.state = CELESTIAL_SHOWN_MIDDLE;
 
   var celestials = [sun,moon];
@@ -170,12 +172,12 @@ class Celestial {
       l("sky-box found, but it's not a DIV element - please correct this");
       return null;
     }
-    skybox.style.backgroundColor = "skyblue";    
+    skybox.style.backgroundColor = this.bgColor;
   }
   hide(){
-    this.#celestialEl.element.setAttribute("style", "display: none;");
+    this.#celestialEl.style.display = "none";
     if (this.#overlayEl) {
-      this.#overlayEl.element.setAttribute("style", "display: none;");
+      this.#overlayEl.style.display = "none";
     } else {
       l("overlay doesn't exist for CELESTIAL: %s", this.celestialId);
     }
@@ -188,7 +190,7 @@ class Celestial {
       l("sky-box found, but it's not a DIV element - please correct this");
       return null;
     }
-    skybox.setAttribute("style", "background-color: #7777FF;");    
+    skybox.style.backgroundColor = "white";    
   }  
 
   resetPosition(){
@@ -196,7 +198,8 @@ class Celestial {
   }
 
   calculateState(hour, minute){
-    if (hour === this.riseStart) {
+    if (hour === this.riseStart && minute === 0) {
+      this.show();
       this.state = CELESTIAL_RISING;
       //myHeavens.swapCelestials("moon");
       //let overlay = document.getElementById("shadow-overlay");
@@ -204,16 +207,17 @@ class Celestial {
       //else console.log("Can't remove OVERLAY, it's missing.")
     }
     //sun RISING phase
-    else if (hour < this.moveStart) {
-      this.#celestialEl.element.style.left = this.xOffset + minute / 2 + "px";
-      this.#celestialEl.element.style.top = this.yRiseOffset + minute * 2.2 * -1 + "px";
-      lwr(this.#celestialEl.element.style.top, document.querySelector("#log3"));
+    else if (hour > this.riseStart && hour < this.moveStart) {
+      //this.#celestialEl.style.left = this.xOffset + minute / 2 + "px";
+      //this.#celestialEl.style.top = this.yRiseOffset + minute * 2.2 * -1 + "px";
+      this.#celestialEl.style.left = this.xOffset + (60 * hour + minute) / 2.1 + "px";
+      lwr(this.#celestialEl.style.top, document.querySelector("#log3"));
     }
   
     //sun MOVING across the SKY
     // sun is out there for 16 Hrs, while moon for only 8 Hrs
     else if (hour >= this.moveStart && hour < this.setStart) {
-      this.#celestialEl.element.style.left = this.xOffset + (60 * hour + minute) / 2.1 + "px";
+      this.#celestialEl.style.left = this.xOffset + (60 * hour + minute) / 2.1 + "px";
     }
   
     // sun SETTING phase
@@ -222,9 +226,9 @@ class Celestial {
       //let overlay = document.getElementById("shadow-overlay");
       //if (overlay) overlay.classList.add("shadow");
       //else console.log("Can't add OVERLAY, it's missing.")
-      this.#celestialEl.element.style.left = this.xOffset + minute / 2 + "px";
-      this.#celestialEl.element.style.top = this.ySetOffset + minute * 2.2 * -1 + "px";
-      lwr(this.#celestialEl.element.style.top, document.querySelector("#log3"));
+      this.#celestialEl.style.left = this.xOffset + minute / 2 + "px";
+      this.#celestialEl.style.top = this.ySetOffset + minute * 2.2 * -1 + "px";
+      lwr(this.#celestialEl.style.top, document.querySelector("#log3"));
     }
   
     // sun HIDDEN phase
@@ -234,7 +238,7 @@ class Celestial {
     }
       
     else if (hour > this.setEnd) {      
-      //this.#celestialEl.element.style.left = -75 + (60 * (g.t.hour - g.t.moonriseHr) + g.t.minute) / 1 + "px";
+      //this.#celestialEl.style.left = -75 + (60 * (g.t.hour - g.t.moonriseHr) + g.t.minute) / 1 + "px";
     }
   }
 } // END: class Celestial

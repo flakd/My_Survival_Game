@@ -3,8 +3,10 @@
   cursor: pointer;
   width: 100px;
   height: 100px;
-  left: -100px;
-  top: 200px;
+/*   left: -100px;
+  top: 200px; */
+  left: 100px;
+  top: 10px;
 }
 #sky-box {
   background-color: skyblue; 

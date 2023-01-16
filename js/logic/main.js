@@ -77,7 +77,7 @@ function runMainGameLoop(){
   /************************************************************/
   let timer = setInterval(function() {
 
-    incrementGameHour(10);    
+    incrementGameHour(1);    
     //myGameTimer.increment();
 
     // (re)focus the cursor upong EVERY timer tick/interval event 

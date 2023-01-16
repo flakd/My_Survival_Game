@@ -59,6 +59,7 @@ function incrementGameHour(numticks) {
   }
   if (g.t.tick > numticks) { // TimerInterval = 50ms right now
     g.t.tick = 0;
+    g.myHeavens.passTime(g.t.hour, g.t.minute, g.t.tick);
     g.t.minute++;
     /*       let wasIbusy = g.whatImDoing.isBusy();
      */ 
@@ -66,8 +67,6 @@ function incrementGameHour(numticks) {
     //g.whatImDoing.passMinute();
     //g.waid = new WhatAmIDoing();
     g.waid.passMinute();
-    g.myHeavens.passTime();
-
     if (waid.isBusy()){
       playActivityMedia(g.c.action.gerund);
     }       
