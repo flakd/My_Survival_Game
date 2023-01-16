@@ -22,7 +22,8 @@
   height: 900px;
   width: 800px;
   left: 70px;
-  float:left
+  float:left;
+  z-index:-2;  
 }
 #RAoG-image {
   width:700px; 
@@ -56,12 +57,9 @@
   left: 600px;
   z-index: 12;
 }
-#shadow-overlay  {
+#music_off_div {
+  z-index:20; 
   position: absolute;
-  height: 850px;
-  width: 972px;
-  z-index: 14;
 }
-.shadow {
-  background-color: rgba(0,0,0,0.5);
-}
+
+

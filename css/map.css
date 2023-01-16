@@ -1,3 +1,8 @@
+#map {
+  position: relative; 
+  float:left;  
+}
+
 #grid {
   /* left:600px;top:-110px;position: absolute; */
   width: 400px;

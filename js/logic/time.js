@@ -31,6 +31,7 @@ class GameTimer {
       this.tick = 0;
       this.minute ++;
       g.waid.passMinute();
+      myHeavens.passTime();
       if (waid.isBusy()){
         playActivityMedia(g.c.action.gerund);
       }
@@ -47,6 +48,9 @@ class GameTimer {
     }
   }
 }
+
+moveHeavens();
+
 function incrementGameHour(numticks) {
   g.timePaused = false;
   if (!g.timePaused) {
@@ -62,6 +66,8 @@ function incrementGameHour(numticks) {
     //g.whatImDoing.passMinute();
     //g.waid = new WhatAmIDoing();
     g.waid.passMinute();
+    g.myHeavens.passTime();
+
     if (waid.isBusy()){
       playActivityMedia(g.c.action.gerund);
     }       

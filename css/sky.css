@@ -1,4 +1,4 @@
-#sun, #moon, #sunOrMoon {
+#sun, #moon, #Heavens {
   position: relative;
   cursor: pointer;
   width: 100px;
@@ -23,4 +23,15 @@
   margin-left: auto;
   margin-right: auto;
   z-index: -1;
+}
+.shadow{
+  background-color: rgba(0,0,0,0.5);
+}
+#moon-overlay  {
+  display:none;
+  background-color: rgba(0,0,0,0.5);
+  position: absolute;
+  height: 850px;
+  width: 972px;
+  z-index: 14;
 }

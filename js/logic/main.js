@@ -23,7 +23,7 @@ if (g.isBrowserOrNode==="node"){
   g.rescuedRecently = false;
 
   //not sure this is needed
-  g.swappedSunOrMoonRecently = false;
+  //g.swappedHeavensRecently = false;
 
   //not sure this is needed - I think it is until I have an object with a "isBusy" blocker
   g.RAoGOccurredRecently = false;
@@ -31,12 +31,12 @@ if (g.isBrowserOrNode==="node"){
   output.printTitleBanner(g.t.gameHr, g.c);
   setAllEventListeners();
   initGameTimeDefaults();
-  //initMoveSunOrMoonDefaults(); 
+  //initMoveHeavensDefaults(); 
 
   
-  // compiler complaining that the next line - sunOrMoon is already declard, but where???
-  //const sunOrMoon = document.getElementById("sunOrMoon");
-  sunOrMoon = document.getElementById("sunOrMoon");
+  // compiler complaining that the next line - Heavens is already declard, but where???
+  //const Heavens = document.getElementById("Heavens");
+  //Heavens = document.getElementById("Heavens");
 
 })();
 //**********  RIGHT HERE!!!!  ************/    
@@ -62,13 +62,14 @@ function runMainGameLoop(){
   //g.t.yOffset = -110; 
   g.t.yOffset = 0;
 
-  sun = new Celestial("sun");
-  moon = new Celestial("moon");
-  sunOrMoon = new Celestial("sunOrMoon");
+  //sun = new Celestial("sun");
+  //moon = new Celestial("moon");
+  //Heavens = new Celestial("Heavens");
 
-  mySunOrMoon = new SunOrMoon(["sun", "moon", "sunOrMoon"]);
+  //myHeavens = new Heavens(["sun", "moon", "Heavens"]);
   myGameTimer = new GameTimer(10);
-  
+
+
 
 
   /************************************************************/  
@@ -83,7 +84,6 @@ function runMainGameLoop(){
     focusCommandInputCursor();
 
     // sun RISING PHASE
-    moveSunOrMoon(mySunOrMoon);
     
     everyHourDoCheck();
     // check to see a RAoG will/did occur EVERY HOUR otherwise, it will 

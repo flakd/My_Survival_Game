@@ -47,35 +47,54 @@
       </div>
     </div>   
 
-    <div id="music_off_div" style="z-index:20; position: absolute;">
+    <div id="music_off_div">
       <button type="button" id="music_off_btn" class="btn btn-dark">Music Off</button>        
     </div> 
+
+
+
+    <div id="RAoG-image-modal">
+      <img id="RAoG-image" src="images/had-a-bear-attack.png">
+      <div>
+        <button id="btnClose_RAoG-image-modal" onclick="handleBtnCloseRAoGImgModal_click(this);">
+          CLOSE
+        </button>
+      </div>         
+    </div>
+    <!-- CLOSE id="RAoG-image-modal"-->          
+
+
     <div id="game">
 
-      <div id="shadow-overlay">
-      </div><!-- CLOSE id="shadow-overlay"-->
+      <div id="moon-overlay">
+      </div><!-- CLOSE id="moon-overlay"-->
+
       <div id="flora-overlay">
         <img id="flora-backgroud" src="images/flora_background2.png">
       </div>
-<!--       <div id="default-activity-image-modal">
+
+      <!--      
+      <div id="default-activity-image-modal">
         <img id="activity-image" src="images/default-activity-image.png">          
-      </div><!-- CLOSE id="activity-image-modal"--> -->
+      </div>
+      <!-- CLOSE id="activity-image-modal"--> 
+
+      
       <div id="activity-image-modal">
         <img id="activity-image" src="images/default-activity-image.png">          
-      </div><!-- CLOSE id="activity-image-modal"-->      
-      <div id="RAoG-image-modal">
-        <img id="RAoG-image" src="images/had-a-bear-attack.png">
-        <div><button id="btnClose_RAoG-image-modal" onclick="handle_btnCloseRAoGImgModal_click(this);">CLOSE</button></div>         
-      </div><!-- CLOSE id="activity-image-modal"-->        
-      <!-- id="top"-->
-      <div id="top" style="z-index:-2;">
+      </div>
+      <!-- CLOSE id="activity-image-modal"-->        
+      
+      <div id="top">
+        
         <div id="sky-box">
           <div id="sun-or-moon-container" class="sky" style="z-index:0">
             <img id="sun" src="images/hand-drawn-sun2.png" style="display:none;">
             <img id="moon" src="images/moon2.png" style="display:none;">
-            <img id="sunOrMoon" src="images/hand-drawn-sun2.png" style="display:block;">
+<!--             <img id="Heavens" src="images/hand-drawn-sun2.png" style="display:block;"> -->
           </div>
-        </div><!-- CLOSE id="sky-box"-->
+        </div>
+        <!-- CLOSE id="sky-box"-->
 
         <div id="statuses-container">
           <div id="timeDayScore-container">
@@ -86,24 +105,26 @@
           <div id="status-vitals" class="status"></div>
           <div id="status-inventory" class="status"></div>
           <div id="status-actions" class="status"></div>
-        </div><!-- CLOSE id="statuses-container"-->
+        </div>
+        <!-- CLOSE id="statuses-container"-->
 
-        <div id="map" style="position: relative; float:left">
+        <div id="map">
+         
           <div id="grid" style="z-index:3;">
             <!-- Cells will be added here dynamically by JavaScript -->
             <!-- Cells will be added here dynamically by JavaScript -->
             <!-- Cells will be added here dynamically by JavaScript -->
-          </div><!-- CLOSE id="grid"-->
+          </div>
+          <!-- CLOSE id="grid"-->
+        
         </div><!-- CLOSE id="map"-->
 
-      </div>
-      <!-- CLOSE id="top"-->
+      </div><!-- CLOSE id="top"-->
 
       <div id="input-output">        
         <input id="command-input"  class="io" type="text"></input>
         <div id="output" class="io"></div>
       </div><!-- CLOSE id="input-output"-->
-
       
     </div><!-- CLOSE id="game"-->
 
@@ -127,7 +148,7 @@
   <script src="js/ui/setupMap.js" type="text/JavaScript"></script>
   <script src="js/ui/drawMap.js" type="text/JavaScript"></script>
   <script src="js/ui/playerMovement.js" type="text/JavaScript"></script>    
-  <script src="js/ui/sunOrMoonMovement.js" type="text/JavaScript"></script>  
+  <script src="js/ui/heavens.js" type="text/JavaScript"></script>  
   <script src="js/ui/elements.js" type="text/JavaScript"></script>  
 
   <script src="js/logic/output.js" type="text/JavaScript"></script>    
