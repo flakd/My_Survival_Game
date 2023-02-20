@@ -1,4 +1,7 @@
 function initGameTimeDefaults() {
+  //const TICKS_PER_MINUTE = 10;
+  g.TICKS_PER_MINUTE = 1;
+
   g.t.todayStart = g.t.start = Date.now();
   g.t.tick = 0;
   g.t.totalTicks = 0;
@@ -10,7 +13,7 @@ function initGameTimeDefaults() {
 } // END: function initGameTimeDefaults
 
 class GameTimer {
-  constructor(numticks /*number*/){
+  constructor(numticks /*number*/) {
     this.numticks = numticks;
     this.timePaused = false;
     this.todayStart = this.start = Date.now();
@@ -20,19 +23,19 @@ class GameTimer {
     this.totalMinutes = 0;
     this.hour = 0;
     this.totalHours = 0;
-    this.day = 0;    
+    this.day = 0;
   }
   increment() {
     if (!this.timePaused) {
       this.tick++;
       this.totalTicks++;
     }
-    if (this.tick > this.numticks){
+    if (this.tick > this.numticks) {
       this.tick = 0;
-      this.minute ++;
+      this.minute++;
       g.waid.passMinute();
       myHeavens.passTime();
-      if (waid.isBusy()){
+      if (waid.isBusy()) {
         playActivityMedia(g.c.action.gerund);
       }
       this.totalMinutes++;
@@ -40,7 +43,7 @@ class GameTimer {
         this.minute = 0;
         this.hour++;
         this.totalHours++;
-        if (this.hour > 23){
+        if (this.hour > 23) {
           this.hour = 0;
           this.day++;
         }
@@ -57,21 +60,22 @@ function incrementGameHour(numticks) {
     g.t.tick++;
     g.t.totalTicks++;
   }
-  if (g.t.tick > numticks) { // TimerInterval = 50ms right now
+  if (g.t.tick > numticks) {
+    // TimerInterval = 50ms right now
     g.t.tick = 0;
     g.myHeavens.passTime(g.t.hour, g.t.minute, g.t.tick);
     g.t.minute++;
     /*       let wasIbusy = g.whatImDoing.isBusy();
-     */ 
-    
+     */
+
     //g.whatImDoing.passMinute();
     //g.waid = new WhatAmIDoing();
     g.waid.passMinute();
-    if (waid.isBusy()){
+    if (waid.isBusy()) {
       playActivityMedia(g.c.action.gerund);
-    }       
+    }
     //WhatAmIDoing.passMinute();
-    
+
     /*       if (g.whatImDoing.isBusy()===false && wasIbusy===true) {
             stopActivityMedia();
           } */
@@ -90,15 +94,14 @@ function incrementGameHour(numticks) {
 
 function logTimeForDebugging() {
   g.t.passed = Date.now() - g.t.start;
-  lwr((
+  lwr(
     `MINUTE: ${g.t.minute}<br>\n` +
-    `HOUR: ${g.t.hour}<br>\n` +
-    `DAY: ${g.t.day}<br>\n` +
+      `HOUR: ${g.t.hour}<br>\n` +
+      `DAY: ${g.t.day}<br>\n` +
+      `TIME PASSED: ${g.t.passed}<br>\n` +
+      `totMINUTEs: ${g.t.totalMinutes}<br>\n` +
+      `totHOURs: ${g.t.totalHours}<br>\n`,
 
-    `TIME PASSED: ${g.t.passed}<br>\n` +
-    `totMINUTEs: ${g.t.totalMinutes}<br>\n` +
-    `totHOURs: ${g.t.totalHours}<br>\n`
-
-  ), document.querySelector("#log2")
+    document.querySelector('#log2')
   );
 } // END: function logTimeForDebugging

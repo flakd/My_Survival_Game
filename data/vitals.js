@@ -18,7 +18,7 @@ window.c.vitals =
     "vis":          "always",
     "doFailMsg":    "You're not thirsty at all",
     "dieMsg":       "You've died from lack of water!!!",    
-    "takePerHr":    50,
+    "takePerHr":    1,
     "warningLimit": 70,
     "dangerLimit":  85,
     "warningMsg":   "You're really, really thirsty, you might want to fetch/drink some water%s!",

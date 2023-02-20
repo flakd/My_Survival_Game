@@ -1,4 +1,5 @@
 #sun, #moon, #Heavens {
+  display: none;
   position: relative;
   cursor: pointer;
   width: 100px;
@@ -7,6 +8,9 @@
   top: 200px; */
   left: 100px;
   top: 10px;
+}
+#sun-or-moon-container{
+  z-index:0;
 }
 #sky-box {
   background-color: skyblue; 
