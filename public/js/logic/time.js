@@ -52,7 +52,7 @@ class GameTimer {
   }
 }
 
-moveHeavens();
+//moveHeavens();
 
 function incrementGameHour(numticks) {
   g.timePaused = false;

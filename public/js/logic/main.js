@@ -11,6 +11,78 @@ if (g.isBrowserOrNode === 'node') {
   g.c.actions = parseJSONs.Objects.actions;
 }
 
+const runGameLoop = () => {
+  incrementGameHour(g.TICKS_PER_MINUTE); //time.js
+  //myGameTimer.increment();
+
+  // (re)focus the cursor upon EVERY timer tick/interval event
+  focusCommandInputCursor();
+
+  // sun RISING PHASE
+
+  everyHourDoCheck();
+  // check to see a RAoG will/did occur EVERY HOUR otherwise, it will
+  //  happen too often and it's constantly killing the player
+  if (g.t.minute === 0 && g.t.tick === 0) {
+    g.RAoGOccurredRecently = core.doRandomActOfGod(g.c.inventory, g.c.vitals);
+  }
+
+  // keep Vitals and Inventory stats updated each tick (timer interval)
+  output.printStats1(g.t.gameHr, g.c);
+
+  // keep Game Day updated each tick (timer interval)
+  updateDayUI();
+
+  // keep Game Hour updated each tick (timer nterval)
+  updateHourUI();
+
+  // keep log of all time/day/tick changes updated on each tick
+  logTimeForDebugging();
+
+  // If I've made it this far in this iteration of the loop, then how
+  //  do my vitals look??  => Am I still alive?
+  if (core.isDead(g.c.vitals)) {
+    // check for diedRecently so that I don't get stuck in a loop once I am dead
+    if (!g.diedRecently) {
+      handleDeath(); // message & do you want to play again modal?
+      g.diedRecently = true;
+    }
+  }
+
+  // If I'm still alive, let's check to see if I've been rescued
+  if (core.haveIBeenRescued()) {
+    // check for diedRecently so that I don't get stuck in a loop once I am dead
+    if (!g.rescuedRecently) {
+      handleRescue(); // message - congrats & do you want to play again
+      g.rescuedRecently = true;
+    }
+  }
+}; // END:  runGameLoop = () =>
+
+function resetAllStats(vitals, inventory) {
+  objectMap(vitals, (v) => 0);
+  l(vitals);
+  objectMap(inventory, (v) => 0);
+  l(inventory);
+  //const myObject = { a: 1, b: 2, c: 3 }
+  //console.log(objectMap(myObject, v => 2 * v))
+}
+
+function everyHourDoCheck() {
+  /*  
+  - UpdateHourUI/UpdateDayUI
+  - IncrementVitals
+  - RAoG?
+  - printstats everyHour (vitals def change)
+  - AmIDead?
+  - AmIRescued?
+  
+  - doGameAction on ActivityCompletion (calculate inv & vital changes) 
+  - printstats on ActivityCompletion (changes:  inv def, & vitals maybe)
+  
+*/
+}
+
 //******* EVERYTHING STARTS HERE!!! ******/
 (function initGame() {
   //should I be using LOCAL vars anywhere here?
@@ -29,10 +101,6 @@ if (g.isBrowserOrNode === 'node') {
   setAllEventListeners();
   initGameTimeDefaults();
   //initMoveHeavensDefaults();
-
-  // compiler complaining that the next line - Heavens is already declard, but where???
-  //const Heavens = document.getElementById("Heavens");
-  //Heavens = document.getElementById("Heavens");
 })();
 //**********  RIGHT HERE!!!!  ************/
 
@@ -59,76 +127,7 @@ function runMainGameLoop() {
   /************************************************************/
   //***************  START: MAIN TIMER LOOP *******************/
   /************************************************************/
-  let timer = setInterval(function () {
-    incrementGameHour(g.TICKS_PER_MINUTE);
-    //myGameTimer.increment();
-
-    // (re)focus the cursor upon EVERY timer tick/interval event
-    focusCommandInputCursor();
-
-    // sun RISING PHASE
-
-    everyHourDoCheck();
-    // check to see a RAoG will/did occur EVERY HOUR otherwise, it will
-    //  happen too often and it's constantly killing the player
-    if (g.t.minute === 0 && g.t.tick === 0) {
-      g.RAoGOccurredRecently = core.doRandomActOfGod(g.c.inventory, g.c.vitals);
-    }
-
-    // keep Vitals and Inventory stats updated each tick (timer interval)
-    output.printStats1(g.t.gameHr, g.c);
-
-    // keep Game Day updated each tick (timer interval)
-    updateDayUI();
-
-    // keep Game Hour updated each tick (timer nterval)
-    updateHourUI();
-
-    // keep log of all time/day/tick changes updated on each tick
-    logTimeForDebugging();
-
-    // If I've made it this far in this iteration of the loop, then how
-    //  do my vitals look??  => Am I still alive?
-    if (core.isDead(g.c.vitals)) {
-      // check for diedRecently so that I don't get stuck in a loop once I am dead
-      if (!g.diedRecently) {
-        handleDeath(); // message & do you want to play again modal?
-        g.diedRecently = true;
-      }
-    }
-
-    // If I'm still alive, let's check to see if I've been rescued
-    if (core.haveIBeenRescued()) {
-      // check for diedRecently so that I don't get stuck in a loop once I am dead
-      if (!g.rescuedRecently) {
-        handleRescue(); // message - congrats & do you want to play again
-        g.rescuedRecently = true;
-      }
-    }
-  }, 1); // END: let timer = setInterval(function()
+  createHeavens(); //heavens.js
+  let timer = setInterval(runGameLoop, 1); //in this file
   /****************** END: MAIN TIMER LOOP *******************/
 } // END: function runMainGameLoop()
-
-function resetAllStats(vitals, inventory) {
-  objectMap(vitals, (v) => 0);
-  l(vitals);
-  objectMap(inventory, (v) => 0);
-  l(inventory);
-  //const myObject = { a: 1, b: 2, c: 3 }
-  //console.log(objectMap(myObject, v => 2 * v))
-}
-
-function everyHourDoCheck() {
-  /*  
-  - UpdateHourUI/UpdateDayUI
-  - IncrementVitals
-  - RAoG?
-  - printstats everyHour (vitals def change)
-  - AmIDead?
-  - AmIRescued?
-  
-  - doGameAction on ActivityCompletion (calculate inv & vital changes) 
-  - printstats on ActivityCompletion (changes:  inv def, & vitals maybe)
-  
-*/
-}

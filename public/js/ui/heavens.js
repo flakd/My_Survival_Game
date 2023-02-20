@@ -14,15 +14,15 @@ class Heavens {
   }
 
   passTime(hour, minute, tick) {
-    if (tick === 0) {
-      for (let celestial of this.#celestials) {
-        celestial.calculateState(hour, minute, tick);
-      }
+    //if (tick === 0) {
+    for (let celestial of this.#celestials) {
+      celestial.calculateState(hour, minute, tick);
     }
+    //}
   }
 }
 
-function moveHeavens() {
+function createHeavens() {
   var sun = new Celestial('sun', null, 'skyblue');
   sun.riseStart = 0; // 5am
   sun.moveStart = 1;
@@ -30,7 +30,7 @@ function moveHeavens() {
   sun.setEnd = 16;
   sun.speedFactor = 2.1;
   //sun.startOffset_X = -120;
-  sun.startOffset_X = -100;
+  sun.startOffset_X = 0;
   sun.riseOffset_Y = 120;
   sun.setOffset_Y = -160;
   //sun.bgColor = 'skyblue';
@@ -45,7 +45,7 @@ function moveHeavens() {
   moon.setEnd = 24;
   moon.speedFactor = 0.5;
   //moon.startOffset_X = -600;
-  moon.startOffset_X = -100;
+  moon.startOffset_X = 0;
   moon.riseOffset_Y = 100;
   moon.setOffset_Y = -180;
   //moon.bgColor = '#7777FF';
@@ -53,6 +53,7 @@ function moveHeavens() {
 
   //g.myHeavens = new Heavens([sun]);
   g.myHeavens = new Heavens([sun, moon]);
+  let test = true;
 }
 
 class Celestial {
@@ -72,6 +73,8 @@ class Celestial {
   startOffset_X;
   riseOffset_Y;
   setOffset_Y;
+  position_X;
+  position_Y;
 
   constructor(celestialId, overlayId, bgColor) {
     this.celestialId = celestialId;
@@ -86,6 +89,8 @@ class Celestial {
       return null;
     } else {
       this.bgColor = bgColor;
+      this.position_X = 0.0;
+      this.position_Y = 0.0;
 
       /*    this.riseStart = riseStart;
       this.moveStart = moveStart;
@@ -164,8 +169,9 @@ class Celestial {
 
   resetPosition() {
     //if (this.celestialId === 'sun') {
-    this.#celestialEl.style.left =
-      this.startOffset_X + (60 * 0 + 0) / this.speedFactor + 'px';
+
+    this.position_X = this.startOffset_X;
+    this.#celestialEl.style.left = this.position_X + 'px';
 
     //this.#celestialEl.style.top = '20px';
     //}
@@ -175,77 +181,34 @@ class Celestial {
     let totalHoursInSky = this.setEnd - this.riseStart;
     let totalWidthOfSky = 400; //in pixels
     let pixelsPerHour = totalWidthOfSky / totalHoursInSky;
-    //let pixelsPerTick = pixelsPerHour / (60 * g.TICKS_PER_MINUTE);
-
-    let moduloFactor = 2;
-    let pixelsPerTimePeriod = 0;
-    if (this.#celestialEl.id === 'moon') {
-      pixelsPerTimePeriod = 2;
-    } else if (this.#celestialEl.id === 'sun') {
-      pixelsPerTimePeriod = 1;
-    }
-
-    //if (pixelsPerTick < 1) {
-    //  pixelsPerTick = 1;
-    //}
-    let left = this.#celestialEl.style.left;
-    let previousLeft = parseInt(left.substring(0, left.length - 2));
-    let newLeft = 0;
-    let newLeftPx = '';
-
-    let top = this.#celestialEl.style.top;
-    let previousTop = parseInt(top.substring(0, top.length - 2));
-    let newTop = 0;
-    let newTopPx = '';
+    let pixelsPerTick = pixelsPerHour / (60 * g.TICKS_PER_MINUTE);
 
     if (hour === this.riseStart && minute === 0 && tick === 0) {
       this.resetPosition();
       this.show();
       this.state = CELESTIAL_RISING;
-      //myHeavens.swapCelestials("moon");
-      //let overlay = document.getElementById("shadow-overlay");
-      //if (overlay) overlay.classList.remove("shadow");
-      //else console.log("Can't remove OVERLAY, it's missing.")
     }
     //sun RISING phase
-    else if (
-      hour > this.riseStart &&
-      hour < this.moveStart &&
-      minute % moduloFactor === 0 &&
-      tick === 0
-    ) {
-      //this.#celestialEl.style.left = this.xOffset + minute / 2 + "px";
-      //this.#celestialEl.style.top = this.yRiseOffset + minute * 2.2 * -1 + "px";
-      /*       this.#celestialEl.style.left =
-        this.startOffset_X + (60 * hour + minute) / this.speedFactor + 'px'; */
-      newLeft = previousLeft + pixelsPerTimePeriod;
-      newLeftPx = newLeft + 'px';
-      this.#celestialEl.style.left = newLeftPx;
+    else if (hour > this.riseStart && hour < this.moveStart) {
+      this.position_X = this.position_X + pixelsPerTick;
+      this.#celestialEl.style.left =
+        this.startOffset_X + Math.round(this.position_X) + 'px';
 
-      newTop = previousTop + pixelsPerTimePeriod;
-      newTopPx = newTop + 'px';
-      this.#celestialEl.style.top = newTopPx;
       lwr(this.#celestialEl.style.top, document.querySelector('#log3'));
     }
 
     //sun MOVING across the SKY
     // sun is out there for 16 Hrs, while moon for only 8 Hrs
-    else if (
-      hour >= this.moveStart &&
-      hour < this.setStart &&
-      minute % moduloFactor === 0 &&
-      tick === 0
-    ) {
-      newLeft = previousLeft + pixelsPerTimePeriod;
-      newLeftPx = newLeft + 'px';
-      this.#celestialEl.style.left = newLeftPx;
-      //this.startOffset_X + (60 * hour + minute) / 2 + 'px';
+    else if (hour >= this.moveStart && hour < this.setStart) {
+      this.position_X = this.position_X + pixelsPerTick;
+      this.#celestialEl.style.left =
+        this.startOffset_X + Math.round(this.position_X) + 'px';
     }
 
     // sun SETTING phase
     else if (
       hour >= this.setStart &&
-      hour < this.setEnd &&
+      hour < this.setEnd //&&
       /*       (minute === 0 ||
         minute === 5 ||
         minute === 10 ||
@@ -258,18 +221,10 @@ class Celestial {
         minute === 45 ||
         minute === 50 ||
         minute === 55) && */
-      minute % moduloFactor === 0 &&
-      tick === 0
     ) {
-      //myHeavens.swapCelestials("sun");
-      //let overlay = document.getElementById("shadow-overlay");
-      //if (overlay) overlay.classList.add("shadow");
-      //else console.log("Can't add OVERLAY, it's missing.")
-      newLeft = previousLeft + pixelsPerTimePeriod;
-      newLeftPx = newLeft + 'px';
-      this.#celestialEl.style.left = newLeftPx;
-      //this.startOffset_X + (60 * hour + minute) / 2 + 'px';
-      //this.#celestialEl.style.top = this.ySetOffset + minute * 2.2 * -1 + "px";
+      this.position_X = this.position_X + pixelsPerTick;
+      this.#celestialEl.style.left =
+        this.startOffset_X + Math.round(this.position_X) + 'px';
       lwr(this.#celestialEl.style.top, document.querySelector('#log3'));
     }
 
