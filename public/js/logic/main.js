@@ -11,7 +11,7 @@ if (g.isBrowserOrNode === 'node') {
   g.c.actions = parseJSONs.Objects.actions;
 }
 
-const runGameLoop = () => {
+const gameLoop = () => {
   incrementGameHour(g.TICKS_PER_MINUTE); //time.js
   //myGameTimer.increment();
 
@@ -98,36 +98,24 @@ function everyHourDoCheck() {
   g.RAoGOccurredRecently = false;
 
   output.printTitleBanner(g.t.gameHr, g.c);
-  setAllEventListeners();
-  initGameTimeDefaults();
+  setAllEventListeners(); //handlers.js
+  initGameTimeDefaults(); //init.js
+  createHeavens(); //heavens.js
+  //myGameTimer = new GameTimer(g.TICKS_PER_MINUTE); //10 ticks per minute
   //initMoveHeavensDefaults();
 })();
-//**********  RIGHT HERE!!!!  ************/
 
+//**********  RIGHT HERE!!!!  ************/
 // THE FOLLOWING is called from the starting Modal close
 //  event handler: handleMyModalClose_BeginGame()
 // *********************************************************
 function runMainGameLoop() {
-  g.t.sunriseHr = 0;
-  g.t.sunsetHr = 5;
-  g.t.moonriseHr = 16;
-  g.t.moonsetHr = 12;
-
-  g.t.sunMoonHeight = 3;
-  g.t.sunMoonHeightStr = g.t.sunMoonHeight + 'px';
-  g.t.xSpeedInterval = 300;
-  g.t.ySpeedInterval = 30;
-  //g.t.xOffset = -70;
-  g.t.xOffset = 0;
-  //g.t.yOffset = -110;
-  g.t.yOffset = 0;
-
-  //myGameTimer = new GameTimer(g.TICKS_PER_MINUTE); //10 ticks per minute
-
   /************************************************************/
   //***************  START: MAIN TIMER LOOP *******************/
   /************************************************************/
-  createHeavens(); //heavens.js
-  let timer = setInterval(runGameLoop, 1); //in this file
+  //  I'm setting a 1 millisecond timer interval here - which we
+  //  won't get that accurate, but for now, I keep playing
+  //  with numbers and this is the closest to what I want
+  let timer = setInterval(gameLoop, GAMELOOP_TIMER_INTERVAL); //function() gameLoop{} exists in this file (main.js)
   /****************** END: MAIN TIMER LOOP *******************/
 } // END: function runMainGameLoop()

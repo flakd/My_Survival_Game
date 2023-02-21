@@ -1,23 +1,25 @@
-#sun, #moon, #Heavens {
+#sun,
+#moon,
+#Heavens {
   display: none;
   position: relative;
   cursor: pointer;
   width: 100px;
   height: 100px;
-/*   left: -100px;
+  /*   left: -100px;
   top: 200px; */
   left: 100px;
   top: 10px;
 }
-#sun-or-moon-container{
-  z-index:0;
+#sun-or-moon-container {
+  z-index: 0;
 }
 #sky-box {
-  background-color: skyblue; 
-  height:110px; 
-  width:800px; 
+  background-color: skyblue;
+  height: 110px;
+  width: 400px;
   margin: 0 auto;
-  float:left;
+  float: left;
   position: relative;
 }
 .sky {
@@ -30,12 +32,12 @@
   margin-right: auto;
   z-index: -1;
 }
-.shadow{
-  background-color: rgba(0,0,0,0.5);
+.shadow {
+  background-color: rgba(0, 0, 0, 0.5);
 }
-#moon-overlay  {
-  display:none;
-  background-color: rgba(0,0,0,0.5);
+#moon-overlay {
+  display: none;
+  background-color: rgba(0, 0, 0, 0.5);
   position: absolute;
   height: 850px;
   width: 972px;

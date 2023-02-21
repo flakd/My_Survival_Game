@@ -28,30 +28,24 @@ function createHeavens() {
   sun.moveStart = 1;
   sun.setStart = 15; //8pm
   sun.setEnd = 16;
-  sun.speedFactor = 2.1;
-  //sun.startOffset_X = -120;
-  sun.startOffset_X = 0;
-  sun.riseOffset_Y = 120;
-  sun.setOffset_Y = -160;
-  //sun.bgColor = 'skyblue';
-  //sun.show();
-  //sun.state = CELESTIAL_SHOWN_MIDDLE;
+  sun.maxHeight = CELESTIAL_MAXHEIGHT;
+  sun.minHeight = CELESTIAL_MINHEIGHT;
+  sun.startOffset_X = CELESTIAL_OFFSET_X;
+  sun.pxPerTickModifier = CELESTIAL_PXPERTICK_MOD;
+  sun.distanceFactor_Y = CELESTIAL_DIST_MOD_Y * 1.8;
 
   //var moon = new Celestial('moon', 'moon-overlay', '7777FF');
-  var moon = new Celestial('moon', null, '00008B');
+  var moon = new Celestial('moon', null, '#00008B');
   moon.riseStart = 16; // 5am
   moon.moveStart = 17;
   moon.setStart = 23; //8pm
   moon.setEnd = 24;
-  moon.speedFactor = 0.5;
-  //moon.startOffset_X = -600;
-  moon.startOffset_X = 0;
-  moon.riseOffset_Y = 100;
-  moon.setOffset_Y = -180;
-  //moon.bgColor = '#7777FF';
-  //moon.state = CELESTIAL_SHOWN_MIDDLE;
+  moon.maxHeight = CELESTIAL_MAXHEIGHT;
+  moon.minHeight = CELESTIAL_MINHEIGHT;
+  moon.startOffset_X = CELESTIAL_OFFSET_X;
+  moon.pxPerTickModifier = CELESTIAL_PXPERTICK_MOD;
+  moon.distanceFactor_Y = CELESTIAL_DIST_MOD_Y;
 
-  //g.myHeavens = new Heavens([sun]);
   g.myHeavens = new Heavens([sun, moon]);
   let test = true;
 }
@@ -67,14 +61,14 @@ class Celestial {
   state;
   #celestialEl;
   #overlayEl;
-  #maxHeight;
-  #minHeight;
-  speedFactor;
+  maxHeight;
+  minHeight;
+  speedFactor_X;
+  distanceFactor_Y;
   startOffset_X;
-  riseOffset_Y;
-  setOffset_Y;
   position_X;
   position_Y;
+  pxPerTickModifier;
 
   constructor(celestialId, overlayId, bgColor) {
     this.celestialId = celestialId;
@@ -89,22 +83,7 @@ class Celestial {
       return null;
     } else {
       this.bgColor = bgColor;
-      this.position_X = 0.0;
-      this.position_Y = 0.0;
-
-      /*    this.riseStart = riseStart;
-      this.moveStart = moveStart;
-      this.setStart = setStart;
-      this.setEnd = setEnd; 
-*/
-      //this.state = showMiddle();
-      /*    
-      this.#maxHeight = maxHeight;
-      this.#minHeight = minHeight;
-      this.speedFactor = speedFactor;
-      this.#xOffset = xOffset;
-      this.#yOffset = yOffset;
- */
+      //this.distanceFactor = 1.7;  //see above
     }
   }
 
@@ -168,13 +147,11 @@ class Celestial {
   }
 
   resetPosition() {
-    //if (this.celestialId === 'sun') {
-
     this.position_X = this.startOffset_X;
     this.#celestialEl.style.left = this.position_X + 'px';
 
-    //this.#celestialEl.style.top = '20px';
-    //}
+    this.position_Y = this.minHeight;
+    this.#celestialEl.style.top = this.position_Y + 'px';
   }
 
   calculateState(hour, minute, tick) {
@@ -182,17 +159,27 @@ class Celestial {
     let totalWidthOfSky = 400; //in pixels
     let pixelsPerHour = totalWidthOfSky / totalHoursInSky;
     let pixelsPerTick = pixelsPerHour / (60 * g.TICKS_PER_MINUTE);
+    let pixelsPerTickMod = pixelsPerTick * this.pxPerTickModifier;
 
     if (hour === this.riseStart && minute === 0 && tick === 0) {
+      this.state = CELESTIAL_SHOWN;
+
       this.resetPosition();
       this.show();
-      this.state = CELESTIAL_RISING;
+      this.position_Y = this.position_Y;
     }
     //sun RISING phase
-    else if (hour > this.riseStart && hour < this.moveStart) {
-      this.position_X = this.position_X + pixelsPerTick;
+    else if (hour >= this.riseStart && hour < this.moveStart) {
+      this.state = CELESTIAL_RISING;
+      this.position_X = this.position_X + pixelsPerTickMod;
       this.#celestialEl.style.left =
         this.startOffset_X + Math.round(this.position_X) + 'px';
+
+      this.position_Y =
+        this.position_Y - pixelsPerTickMod * this.distanceFactor_Y;
+      this.#celestialEl.style.top =
+        //this.startOffset_Y - Math.round(this.position_Y) + 'px';
+        Math.round(this.position_Y) + 'px';
 
       lwr(this.#celestialEl.style.top, document.querySelector('#log3'));
     }
@@ -200,45 +187,35 @@ class Celestial {
     //sun MOVING across the SKY
     // sun is out there for 16 Hrs, while moon for only 8 Hrs
     else if (hour >= this.moveStart && hour < this.setStart) {
-      this.position_X = this.position_X + pixelsPerTick;
+      this.state = CELESTIAL_MOVING;
+
+      this.position_X = this.position_X + pixelsPerTickMod;
       this.#celestialEl.style.left =
         this.startOffset_X + Math.round(this.position_X) + 'px';
     }
 
     // sun SETTING phase
-    else if (
-      hour >= this.setStart &&
-      hour < this.setEnd //&&
-      /*       (minute === 0 ||
-        minute === 5 ||
-        minute === 10 ||
-        minute === 15 ||
-        minute === 20 ||
-        minute === 25 ||
-        minute === 30 ||
-        minute === 35 ||
-        minute === 40 ||
-        minute === 45 ||
-        minute === 50 ||
-        minute === 55) && */
-    ) {
-      this.position_X = this.position_X + pixelsPerTick;
+    else if (hour >= this.setStart && hour < this.setEnd) {
+      this.state = CELESTIAL_SETTING;
+      this.position_X = this.position_X + pixelsPerTickMod;
       this.#celestialEl.style.left =
         this.startOffset_X + Math.round(this.position_X) + 'px';
+
+      //if (minute === 0 && tick === 0) alert();
+      this.position_Y =
+        this.position_Y + pixelsPerTickMod * this.distanceFactor_Y;
+      this.#celestialEl.style.top =
+        //this.startOffset_Y + Math.round(this.position_Y) + 'px';
+        Math.round(this.position_Y) + 'px';
+
       lwr(this.#celestialEl.style.top, document.querySelector('#log3'));
     }
 
     // sun HIDDEN phase
     else if (hour == this.setEnd && minute === 0 && tick === 0) {
+      this.state = CELESTIAL_HIDDEN;
       this.hide();
       this.resetPosition();
     }
   }
 } // END: class Celestial
-
-const CELESTIAL_RISING = 10;
-const CELESTIAL_SETTING = 20;
-const CELESTIAL_MOVING = 30;
-const CELESTIAL_HIDDEN = 40;
-const CELESTIAL_SHOWN = 50;
-const CELESTIAL_SHOWN_MIDDLE = 60;

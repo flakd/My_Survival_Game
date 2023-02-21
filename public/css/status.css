@@ -1,27 +1,42 @@
-#statuses-container{
+#statuses-container {
   background-color: sandybrown;
   width: 400px;
   float: right;
+  top: 25px;
+  position: sticky;
+  box-shadow: 5px 5px 5px 0px brown;
 }
 .status {
   width: 398px;
-  margin: auto;
+  margin: 5px;
   overflow: auto;
-  font-family: monospace;
-  border: 1px solid black;
+  /* font-family: monospace; */
+  box-shadow: 5px 5px 5px 0px brown;
 }
-#time, #day, #score{
-  margin: auto;
+#time,
+#day,
+#score {
+  margin: 5px;
   font-family: monospace;
-  border: 1px solid black;  
+  /*   border: 1px solid black;
+ */
   float: left;
   height: 30px;
-  padding: 4px; 
+  padding: 4px;
+  box-shadow: 5px 5px 5px 0px brown;
+  /* border-color: grey;
+  border-style: solid; */
+  border-radius: 4px;
 }
-#time, #day {
+#time,
+#day {
   width: 85px;
 }
-#score{
+#time {
+  margin-left: 10px;
+}
+#score {
+  margin-left: 100px;
   width: 95px;
 }
 #status-vitals {
@@ -29,7 +44,7 @@
   height: 51px;
 }
 #status-inventory {
-  height: 200px;
+  height: 100px;
 }
 #status-actions {
   height: 200px;

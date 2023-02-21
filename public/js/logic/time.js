@@ -1,17 +1,3 @@
-function initGameTimeDefaults() {
-  //const TICKS_PER_MINUTE = 10;
-  g.TICKS_PER_MINUTE = 1;
-
-  g.t.todayStart = g.t.start = Date.now();
-  g.t.tick = 0;
-  g.t.totalTicks = 0;
-  g.t.minute = 0;
-  g.t.totalMinutes = 0;
-  g.t.hour = 0;
-  g.t.totalHours = 0;
-  g.t.day = 0;
-} // END: function initGameTimeDefaults
-
 class GameTimer {
   constructor(numticks /*number*/) {
     this.numticks = numticks;
