@@ -2,7 +2,7 @@ import React from 'react';
 
 const InputOutput = () => {
   return (
-    <div id='input-output'>
+    <>
       <input
         id='command-input'
         className='io'
@@ -12,7 +12,7 @@ const InputOutput = () => {
         id='output'
         className='io'
       ></div>
-    </div>
+    </>
   );
 };
 

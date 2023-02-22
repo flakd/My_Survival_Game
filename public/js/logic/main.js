@@ -101,6 +101,10 @@ function everyHourDoCheck() {
   setAllEventListeners(); //handlers.js
   initGameTimeDefaults(); //init.js
   createHeavens(); //heavens.js
+  //setupMap();
+  //drawMap();
+  setupPlayerMovement();
+
   //myGameTimer = new GameTimer(g.TICKS_PER_MINUTE); //10 ticks per minute
   //initMoveHeavensDefaults();
 })();
