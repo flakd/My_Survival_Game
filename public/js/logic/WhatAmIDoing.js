@@ -2,12 +2,12 @@ class WhatAmIDoing {
   constructor() {
     this._timeLeft = 0;
     this._activity = null;
-    this._onActivityCompleted = handle_activityCompleted;          
+    this._onActivityCompleted = handle_activityCompleted;
   }
   startActivity(action) {
-    //  Is a procedure that MUST perform the start of the activity if 
+    //  Is a procedure that MUST perform the start of the activity if
     //  possible.  It is possible if I am NOT BUSY doing anything else.
-    //  RETURNS: a boolean if the activity started 
+    //  RETURNS: a boolean if the activity started
     this._timeLeft = action.numHrs * 60;
     this._activity = action;
   }
@@ -48,8 +48,8 @@ class WhatAmIDoing {
     } else {
       return 0;
     }
-  }    
-  passMinute(){
+  }
+  passMinute() {
     if (this._activity === null) return;
     this._timeLeft--;
     if (this._timeLeft <= 0) {
@@ -60,6 +60,6 @@ class WhatAmIDoing {
   }
 }
 
-(function(){
+(function () {
   g.waid = new WhatAmIDoing();
 })();

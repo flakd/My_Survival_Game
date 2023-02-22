@@ -3,7 +3,7 @@
   width: 400px;
   float: right;
   top: 25px;
-  position: sticky;
+  position: relative;
   box-shadow: 5px 5px 5px 0px brown;
 }
 .status {

@@ -84,8 +84,10 @@ function objectMap(obj, fn) {
 g.t = {};
 g.c = window.c;
 
-const myModal = document.getElementsByName('flakModal')[0];
-const myInput = document.getElementById('myInput');
+/* const myModal = document.getElementsByName('flakModal')[0];*/
+$(document).ready(function () {
+  g.myInput = document.getElementById('myInput');
+});
 const gameLoadMusic = document.createElement('audio');
 
 function initGameTimeDefaults() {
