@@ -8,9 +8,9 @@ import Map from './components/Map';
 function App() {
   return (
     <div>
-      {/*       <WelcomeModal />
+      <WelcomeModal />
       <MusicOff />
-      <RAoGModal /> */}
+      <RAoGModal />
       <Test />
     </div>
   );
