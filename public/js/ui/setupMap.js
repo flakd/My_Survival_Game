@@ -1,3 +1,6 @@
+const misc = require('./../../../src/helpers/misc');
+const g = window;
+
 const createMapModel = () => {
   g.MAP_WIDTH = 10;
   g.MAP_HEIGHT = 10;
@@ -10,9 +13,9 @@ const createMapModel = () => {
 
   // Choose a random starting point for the map
   //let startX = Math.floor(Math.random() * g.MAP_WIDTH);
-  g.startX = 3;
+  g.startX = 2;
   //let startY = Math.floor(Math.random() * g.MAP_HEIGHT);
-  g.startY = 3;
+  g.startY = 2;
 
   // Use a depth-first search to generate the map
   let stack = [[g.startX, g.startY]];
@@ -29,10 +32,18 @@ const createMapModel = () => {
    stack.push([4,5]);
    stack.push([5,5]); */
 
-  g.map[3][3] = 0;
-  g.map[4][3] = 1;
+  g.map[2][2] = 1;
+  g.map[3][2] = 1;
+  g.map[4][2] = 1;
+  g.map[5][2] = 1;
+  g.map[6][2] = 1;
+  g.map[7][2] = 1;
+
+  g.map[2][3] = 1;
+  g.map[3][3] = 1;
+  g.map[4][3] = 2;
   g.map[5][3] = 1;
-  g.map[6][3] = 0;
+  g.map[6][3] = 1;
 
   g.map[3][4] = 1;
   g.map[4][4] = 1;
@@ -41,13 +52,13 @@ const createMapModel = () => {
 
   g.map[3][5] = 1;
   g.map[4][5] = 1;
-  g.map[5][5] = 1;
+  g.map[5][5] = 2;
   g.map[6][5] = 1;
 
-  g.map[3][6] = 0;
+  g.map[3][6] = 1;
   g.map[4][6] = 1;
   g.map[5][6] = 1;
-  g.map[6][6] = 0;
+  g.map[6][6] = 1;
 
   //while (stack.length > 0 ) {
   while (stack.length > 0 && stack.length <= 20) {
@@ -88,16 +99,89 @@ const createMapModel = () => {
   return g.map;
 };
 
-/* const getFlattenedMap = () => {
+const getFlattenedMap = () => {
   const matrix = createMapModel();
   const resultsArray = [];
   for (let y = 0; y < matrix.length; y++) {
     for (let x = 0; x < matrix[y].length; x++) {
-      resultsArray.push(matrix[x]);
+      resultsArray.push([matrix[x][y], x, y]);
     }
   }
+  console.log(resultsArray);
   return resultsArray;
-}; */
+};
 
+const test = () => {
+  console.log('test');
+  console.log(misc.randomIntFromInterval(1, 100));
+};
+
+function getLandResource() {
+  const x = misc.randomIntFromInterval(1, 3);
+  if (x === 1) {
+    //return getFish();
+  } else if (x === 2) {
+    return getTree();
+  } else if (x === 3) {
+    return getMountain();
+  }
+}
+
+function getMountain() {
+  if (numMountains <= maxMountains) {
+    const x = misc.randomIntFromInterval(1, 2);
+    if (x === 1) {
+      //coin toss (50/50) whether to return a Mountain
+      numMountains++;
+      return {
+        id: 'mountain' + numMountains.toString().padStart(2, '0'),
+        className: 'mountain',
+        emoji: '🏔️',
+      };
+    }
+  }
+}
+
+function getTree() {
+  if (numTrees <= maxTrees) {
+    const x = misc.randomIntFromInterval(1, 2);
+    if (x === 1) {
+      //coin toss (50/50) whether to return a tree
+      numTrees++;
+      return {
+        id: 'tree' + numTrees.toString().padStart(2, '0'),
+        className: 'tree',
+        emoji: '🌲',
+      };
+    }
+  }
+}
+function getFish() {
+  if (numFish <= maxFish) {
+    numFish++;
+    return {
+      id: 'fish' + numTrees.toString().padStart(2, '0'),
+      className: 'fish',
+      emoji: '🐟',
+    };
+  }
+}
+g.numFilled = 0;
+
+g.numTrees = 0;
+g.numMountains = 0;
+g.numFish = 0;
+g.numSeafood = 100;
+
+g.maxTrees = 10;
+g.maxMountains = 7;
+g.maxFish = 3;
+g.maxSeafood = 100;
+
+exports.test = test;
+exports.getLandResource = getLandResource;
+exports.getMountain = getMountain;
+exports.getTree = getTree;
+exports.getFish = getFish;
 exports.createMapModel = createMapModel;
-//exports.getFlattenedMap = getFlattenedMap;
+exports.getFlattenedMap = getFlattenedMap;

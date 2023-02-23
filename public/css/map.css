@@ -1,6 +1,6 @@
 #map {
-  position: relative; 
-  float:left;  
+  position: relative;
+  float: left;
 }
 
 #grid {
@@ -9,7 +9,7 @@
   height: 400px;
   display: grid;
   grid-template-columns: repeat(10, 1fr);
-  grid-template-rows: repeat(10, 1fr);    
+  grid-template-rows: repeat(10, 1fr);
   margin-left: auto;
   margin-right: auto;
 }
@@ -17,21 +17,27 @@
 .cell {
   background-color: blue;
   width: 40px;
-  height: 40px; 
+  height: 40px;
   text-align: left;
-  padding: 0px;  
+  padding: 0px;
 }
 
 .cell.filled {
   background-color: green;
 }
+.cell.water {
+  background-color: rgb(0, 127, 207);
+}
 
-.water, .fish, .tree, .mountain {
+.seafood,
+.fish,
+.tree,
+.mountain {
   display: block;
   position: absolute;
-  z-index:2;
+  z-index: 2;
   text-align: left;
-  visibility: visible;    
+  visibility: visible;
 }
 
 .player {
@@ -39,10 +45,10 @@
   padding: 0;
   left: 40;
   width: 100%;
-  vertical-align:text-bottom;
+  vertical-align: text-bottom;
   text-align: right;
   z-index: 10;
-  float: right; 
-  visibility: visible;   
-  font-size: 28pt; 
+  float: right;
+  visibility: visible;
+  font-size: 28pt;
 }
