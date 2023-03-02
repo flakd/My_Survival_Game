@@ -93,8 +93,8 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
 
- <!-- Button trigger modal -->
- <!--
+    <!-- Button trigger modal -->
+    <!--
      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
       Launch static backdrop modal
     </button>
@@ -102,73 +102,115 @@
       <button type="button" id="music_off1" onlick="javascript:alert('dude');" class="btn btn-primary">Primary</button>
 
     </div>
-  -->    
-    <!-- Modal -->    
+  -->
+    <!-- Modal -->
     <div id="root"></div>
 
     <div id="game">
-
-      <div id="moon-overlay">
-      </div><!-- CLOSE id="moon-overlay"-->
+      <div id="moon-overlay"></div>
+      <!-- CLOSE id="moon-overlay"-->
 
       <div id="flora-overlay">
-        <img id="flora-backgroud" src="images/flora_background2.png">
+        <img
+          id="flora-backgroud"
+          src="images/flora_background2.png"
+        />
       </div>
-      
-      <div id="activity-image-modal">
-        <img id="activity-image" src="images/default-activity-image.png">          
+
+      <div
+        id="activity-image-modal"
+        style="position: absolute; display: block"
+      >
+        <img
+          id="activity-image-background"
+          src="images/default-activity-image.png"
+          style="
+            position: absolute;
+            display: block;
+            z-index: 0;
+            width: 300px;
+            height: 300px;
+          "
+        />
+        <img
+          id="activity-image"
+          src="images/chopping-some-wood.gif"
+          style="position: absolute; display: block; z-index: 1"
+        />
       </div>
-      <!-- CLOSE id="activity-image-modal"-->        
-      
+      <!-- CLOSE id="activity-image-modal"-->
+
       <div id="top">
-        
         <div id="sky-box">
-          <div id="sun-or-moon-container" class="sky">
-            <img id="sun" src="images/hand-drawn-sun2.png">
-            <img id="moon" src="images/moon2.png">
-<!--             <img id="Heavens" src="images/hand-drawn-sun2.png" style="display:block;"> -->
-          </div><!-- CLOSE id="sun-or-moon-container"-->
+          <div
+            id="sun-or-moon-container"
+            class="sky"
+          >
+            <img
+              id="sun"
+              src="images/hand-drawn-sun2.png"
+            />
+            <img
+              id="moon"
+              src="images/moon2.png"
+            />
+            <!--             <img id="Heavens" src="images/hand-drawn-sun2.png" style="display:block;"> -->
+          </div>
+          <!-- CLOSE id="sun-or-moon-container"-->
         </div>
         <!-- CLOSE id="sky-box"-->
 
-        <div id="statuses-container">
-          <div id="timeDayScore-container">
+<!--         <div id="statuses-container">
+ -->          <!--           <div id="timeDayScore-container">
             <div id="day"></div>
             <div id="time"></div>
             <div id="score"></div>
           </div>
-          <div id="status-vitals" class="status"></div>
-          <div id="status-inventory" class="status"></div>
-          <div id="status-actions" class="status"></div>
+          <div
+            id="vitals"
+            class="status"
+          ></div>
+          <div
+            id="inventory"
+            class="status"
+          ></div>
+          <div
+            id="actions"
+            class="status"
+          ></div> -->
         </div>
         <!-- CLOSE id="statuses-container"-->
 
-        <div id="map">         
-          <div id="grid" style="z-index:3;">
+        <div id="map">
+          <div
+            id="grid"
+            style="z-index: 3"
+          >
             <!-- Cells will be added here dynamically by JavaScript -->
             <!-- Cells will be added here dynamically by JavaScript -->
             <!-- Cells will be added here dynamically by JavaScript -->
           </div>
-          <!-- CLOSE id="grid"-->        
-        </div><!-- CLOSE id="map"-->
+          <!-- CLOSE id="grid"-->
+        </div>
+        <!-- CLOSE id="map"-->
+      </div>
+      <!-- CLOSE id="top"-->
 
-      </div><!-- CLOSE id="top"-->
-
-      <div id="input-output">        
-        <input id="command-input"  class="io" type="text"></input>
-        <div id="output" class="io"></div>
-      </div><!-- CLOSE id="input-output"-->
-      
-    </div><!-- CLOSE id="game"-->
+      <div
+        id="input-output"
+        style="width: 300px; display: block"
+      ></div>
+      <!-- CLOSE id="input-output"-->
+    </div>
+    <!-- CLOSE id="game"-->
 
     <div id="logs-container">
-      <div id='log'></div>
-      <div id='log2'></div>
-      <div id='log3'></div>
-      <div id='log4'></div>      
-    </div><!-- CLOSE id="logs-container"--> 
-
-    
+      <div id="log"></div>
+      <div id="log2"></div>
+      <div id="log3"></div>
+      <div id="log4"></div>
+    </div>
+    <!-- CLOSE id="logs-container"-->
   </body>
   <script
     src="data/actions.js"

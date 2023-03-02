@@ -214,6 +214,15 @@ let core = {
           calc.changeAmt,
           calc.item
         );
+        let msgArray = [
+          inventory.default.noMeetReqs_msg,
+          g.c.action.key,
+          calc.preCalcBal,
+          calc.item,
+          calc.changeAmt,
+          calc.item,
+        ];
+        g.msgQueue.push(msgArray);
         return false; // return false b/c this calc failed
       }
     } // END:  canDoInvTakeCalc
@@ -579,6 +588,8 @@ let core = {
     lwlnOutput(action.successMsg, messageArray[0], messageArray[1]);
     lwlnOutput();
     lwlnOutput();
+    let msgArray = [action.successMsg, messageArray[0], messageArray[1]];
+    g.msgQueue.push(msgArray);
   }, // END:  function doPassTime(action, inventory, vitals){
 
   /*  6. call to output.printStats1(g.gameHr,g.c); =========================> 
@@ -837,3 +848,4 @@ let core = {
 if (g.isBrowserOrNode === 'node') {
   module.exports = core;
 }
+g.core = core;

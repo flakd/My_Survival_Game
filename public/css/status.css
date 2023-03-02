@@ -3,8 +3,10 @@
   width: 400px;
   float: right;
   top: 25px;
-  position: relative;
+  position: absolute;
+  z-index: 45;
   box-shadow: 5px 5px 5px 0px brown;
+  left: 480px;
 }
 .status {
   width: 398px;
@@ -36,7 +38,7 @@
   margin-left: 10px;
 }
 #score {
-  margin-left: 100px;
+  /*   margin-left: 100px; */
   width: 95px;
 }
 #status-vitals {
@@ -48,4 +50,11 @@
 }
 #status-actions {
   height: 200px;
+}
+#status-bar {
+  position: relative;
+  width: 350px;
+  height: 100px;
+  float: left;
+  top: 100px;
 }

@@ -117,3 +117,4 @@ const CELESTIAL_DIST_MOD_Y = 2.2;
 const GAMELOOP_TIMER_INTERVAL = 10;
 //const TICKS_PER_MINUTE = 10;
 g.TICKS_PER_MINUTE = 5;
+g.msgQueue = [];

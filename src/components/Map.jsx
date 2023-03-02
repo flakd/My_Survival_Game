@@ -102,7 +102,6 @@ const Map = () => {
             key={'player_' + idStr}
             id={'player_' + idStr}
             className='player'
-            style={{display: 'none', zIndex: 100}}
           >
             🚶🏻
           </span>
@@ -155,7 +154,6 @@ const Map = () => {
       <div
         key='grid'
         id='grid'
-        style={{zIndex: '3'}}
       >
         {generateJSXArray(myMap).map((mapSquareAsJSX, idx) => mapSquareAsJSX)}
       </div>
