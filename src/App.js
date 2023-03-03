@@ -6,6 +6,9 @@ import SkyBox from './components/SkyBox';
 import Map from './components/Map';
 import StatusesContainer from './components/status/StatusesContainer';
 import InputOutput from './components/InputOutput';
+import './App.css';
+import Modal from './components/Modal';
+import Backdrop from './components/Backdrop';
 
 function App() {
   return (
@@ -16,6 +19,8 @@ function App() {
       {/* <Test /> */}
       <StatusesContainer />
       <InputOutput />
+      <Modal />
+      <Backdrop />
     </>
   );
 }

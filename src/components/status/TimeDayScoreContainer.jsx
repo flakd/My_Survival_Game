@@ -1,6 +1,6 @@
 import React from 'react';
 import {useState, useEffect} from 'react';
-import MusicOff from '../MusicOff';
+import HelpButton from './HelpButton';
 
 let g = window;
 const TimeDayScoreContainer = () => {
@@ -21,7 +21,7 @@ const TimeDayScoreContainer = () => {
       <div id='day'>Day:{day.toString().padStart(3, '0')}</div>
       <div id='time'>Hour:{timeHour.toString().padStart(2, '0')}</div>
       <div id='score'>0 pts</div>
-      <MusicOff />
+      <HelpButton />
     </div>
   );
 };
