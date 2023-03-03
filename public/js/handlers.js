@@ -14,8 +14,10 @@ function setAllEventListeners() {
     });
   });
   document.addEventListener('keydown', handleKeyDown_ArrowKeys);
-  //let closeButton = document.getElementById("btnClose_RAoG");
-  //closeButton.addEventListener("click", handleBtnCloseRAoGImgModal_click);
+  $(document).ready(function () {
+    let closeButton = document.getElementById('btnClose_RAoG-image-modal');
+    closeButton.addEventListener('click', handleBtnCloseRAoGImgModal_click);
+  });
 }
 
 function handleKeyDown_Esc(event) {

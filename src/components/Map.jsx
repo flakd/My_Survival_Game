@@ -1,85 +1,19 @@
 import React from 'react';
-import {getFlattenedMap, test, getLandResource, getFish} from './../setupMap';
+import {
+  getMapAsList,
+  getSeafood,
+  getLandResource,
+  getFish,
+} from './../setupMap';
 import {randomIntFromInterval} from './../helpers/misc';
 const g = window;
 
 const Map = () => {
-  const myMap = getFlattenedMap();
-  test();
+  const myMap = getMapAsList();
+  //test();
 
   console.log(myMap);
 
-  /* function getMountain() {
-    if (numMountains <= maxMountains) {
-      const x = randomIntFromInterval(1, 2);
-      if (x === 1) {
-        //coin toss (50/50) whether to return a Mountain
-        numMountains++;
-        return (
-          <div
-            id={'mountain' + numMountains.toString().padStart(2, '0')}
-            className='mountain'
-          >
-            🏔️
-          </div>
-        );
-      }
-    }
-  }
-
-  function getTree() {
-    if (numTrees <= maxTrees) {
-      const x = randomIntFromInterval(1, 2);
-      if (x === 1) {
-        //coin toss (50/50) whether to return a tree
-        numTrees++;
-        return (
-          <div
-            id={'tree_' + numTrees.toString().padStart(2, '0')}
-            className='tree'
-          >
-            🌲
-          </div>
-        );
-      }
-    }
-  } */
-
-  /*   function getFish() {
-    if (numFish <= maxFish) {
-      //const x = randomIntFromInterval(1, 100);
-      //if (x < 99) {
-      //coin toss (50/50) whether to return a tree
-      numFish++;
-      return (
-        <div
-          id={'fish_' + numFish.toString().padStart(2, '0')}
-          className='fish'
-        >
-          🐟
-        </div>
-      );
-      //}
-    }
-  } */
-  function getSeafood() {
-    if (g.numSeafood <= g.maxSeafood) {
-      const x = randomIntFromInterval(1, 2);
-      if (x === 1) {
-        //coin toss (50/50) whether to return some Seafood
-        g.numSeafood++;
-        return (
-          <div
-            id={'seafood_' + g.numSeafood.toString().padStart(2, '0')}
-            className='seafood'
-          >
-            🐟
-          </div>
-        );
-        //}
-      }
-    }
-  }
   const generateJSXArray = (gridAsList) => {
     let HTML = [];
     let classList;
@@ -108,10 +42,10 @@ const Map = () => {
         );
       }
       let resource;
-      /*       if (cellValue === 0) {
+      if (cellValue === 0) {
         //classList += ' unwalkable ocean fish';
         resource = getSeafood();
-      } */
+      }
       if (cellValue === 1) {
         classList += ' filled walkable land'; //filled (green/land)
         resource = getLandResource();

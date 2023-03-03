@@ -1,7 +1,7 @@
 const misc = require('./../../../src/helpers/misc');
-const g = window;
+//let g = window;  // apparently already defined somewhere
 
-const createMapModel = () => {
+const genInitMapMatrix = () => {
   g.MAP_WIDTH = 10;
   g.MAP_HEIGHT = 10;
 
@@ -99,8 +99,36 @@ const createMapModel = () => {
   return g.map;
 };
 
-const getFlattenedMap = () => {
-  const matrix = createMapModel();
+const healMap2Sides = () => {
+  const matrix = genInitMapMatrix();
+  let count = 0;
+  for (let y = 1; y < matrix.length - 1; y++) {
+    for (let x = 1; x < matrix[y].length - 1; x++) {
+      if (matrix[x][y] === 0) {
+        if (
+          /*           (matrix[x + 1][y] !== 1 &&
+            matrix[x][y + 1] === 1 &&
+            matrix[x - 1][y] === 1 &&
+            matrix[x][y - 1] === 1) || */
+          (matrix[x + 1][y] === 1 && matrix[x - 1][y] === 1) ||
+          (matrix[x][y + 1] === 1 && matrix[x][y - 1] === 1)
+        ) {
+          matrix[x][y] = 2; // 2 -> (fresh) water
+          console.log('corrected square: %s,%s', x, y);
+        }
+      }
+      count++;
+    }
+  }
+  console.log('finalMatrix:', matrix);
+  return matrix;
+};
+
+const getMapAsList = () => {
+  const matrix = healMap2Sides();
+  //const matrix = genInitMapMatrix();
+  console.log(matrix);
+
   const resultsArray = [];
   for (let y = 0; y < matrix.length; y++) {
     for (let x = 0; x < matrix[y].length; x++) {
@@ -156,6 +184,24 @@ function getTree() {
     }
   }
 }
+
+function getSeafood() {
+  const seafoods = ['🐠', '🐡', '🦈', '🐬', '🐋', '🐳'];
+  if (g.numSeafood <= g.maxSeafood) {
+    const seafoodIdx = misc.randomIntFromInterval(0, 5);
+    const seafood = seafoods[seafoodIdx];
+    const appearFreq = misc.randomIntFromInterval(1, 4);
+    if (appearFreq === 1) {
+      //coin toss (50/50) whether to return some Seafood
+      g.numSeafood++;
+      return {
+        id: 'seafood_' + g.numSeafood.toString().padStart(2, '0'),
+        className: 'seafood',
+        emoji: seafood,
+      };
+    }
+  }
+}
 function getFish() {
   if (numFish <= maxFish) {
     numFish++;
@@ -166,12 +212,13 @@ function getFish() {
     };
   }
 }
+
 g.numFilled = 0;
 
 g.numTrees = 0;
 g.numMountains = 0;
 g.numFish = 0;
-g.numSeafood = 100;
+g.numSeafood = 0;
 
 g.maxTrees = 10;
 g.maxMountains = 7;
@@ -183,5 +230,5 @@ exports.getLandResource = getLandResource;
 exports.getMountain = getMountain;
 exports.getTree = getTree;
 exports.getFish = getFish;
-exports.createMapModel = createMapModel;
-exports.getFlattenedMap = getFlattenedMap;
+exports.getSeafood = getSeafood;
+exports.getMapAsList = getMapAsList;
