@@ -1,7 +1,12 @@
 import React from 'react';
 
-const Backdrop = () => {
-  return <div id='generic_backdrop'></div>;
+const Backdrop = (props) => {
+  return (
+    <div
+      id='generic_backdrop'
+      onClick={props.closeModal}
+    ></div>
+  );
 };
 
 export default Backdrop;
