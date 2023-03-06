@@ -34,22 +34,13 @@ function handleKeyDown_Esc(event) {
 }
 
 function handleKeyDown_ArrowKeys(event) {
-  //player.setAttribute("style","display:inline");
-
-  //lw(event.keyCode);
-  //lw(event.code);
-  //lw(event.key);
-  let xPosInt = g.p.xInt;
-  let yPosInt = g.p.yInt;
   lwln(event.key);
-  lwln('xPosInt: ' + xPosInt);
-  lwln('yPosInt: ' + yPosInt);
-  console.log(xPosInt);
-  console.log(yPosInt);
-  let top = yPosInt * 40 - 20;
-  let left = xPosInt * 40 + 20;
+  lwln('g.p.xInt: ' + g.p.xInt);
+  lwln('g.p.yInt: ' + g.p.yInt);
+  /*   let top = g.p.yInt * 40 - 20;
+  let left = g.p.xInt * 40 + 20;
   let topStr = top + 'px';
-  let leftStr = left + 'px';
+  let leftStr = left + 'px'; */
 
   let isValidMove = false;
   let nextCell;
@@ -59,56 +50,56 @@ function handleKeyDown_ArrowKeys(event) {
   switch (event.key) {
     case 'ArrowUp':
       event.preventDefault();
-      if (yPosInt - 1 < 0) return;
-      if (g.map[yPosInt - 1][xPosInt] === 0) return;
-      yPosInt--;
+      if (g.p.yInt - 1 < 0) return;
+      if (g.map[g.p.yInt - 1][g.p.xInt] === 0) return;
+      g.p.yInt--;
       isValidMove = true;
       break;
     case 'ArrowDown':
       event.preventDefault();
-      if (yPosInt + 1 > g.map_HEIGHT - 1) return;
-      if (g.map[yPosInt + 1][xPosInt] === 0) return;
-      yPosInt++;
+      if (g.p.yInt + 1 > g.MAP_HEIGHT - 1) return;
+      if (g.map[g.p.yInt + 1][g.p.xInt] === 0) return;
+      g.p.yInt++;
       isValidMove = true;
       break;
     case 'ArrowLeft':
       event.preventDefault();
-      if (xPosInt - 1 < 0) return;
-      if (g.map[yPosInt][xPosInt - 1] === 0) return;
-      xPosInt--;
+      if (g.p.xInt - 1 < 0) return;
+      if (g.map[g.p.yInt][g.p.xInt - 1] === 0) return;
+      g.p.xInt--;
       isValidMove = true;
       break;
     case 'ArrowRight':
       event.preventDefault();
-      //if (xPosInt +1 < 0) return;
-      if (xPosInt + 1 > g.map_WIDTH - 1) return;
-      if (g.map[yPosInt][xPosInt + 1] === 0) return;
-      xPosInt++;
+      //if (g.p.xInt +1 < 0) return;
+      if (g.p.xInt + 1 > g.MAP_WIDTH - 1) return;
+      if (g.map[g.p.yInt][g.p.xInt + 1] === 0) return;
+      g.p.xInt++;
       isValidMove = true;
       break;
     default:
     //  return;
   }
   console.log('wtf');
-  g.p.player = document.getElementById(playerId);
-  if (!g.player) console.log("can't find player");
+  //g.p.player = document.getElementById(playerId);
+  g.p.player = document.getElementById('player_65_b');
+  if (!g.p.player) console.log("can't find player");
+
   if (isValidMove) {
-    let top = yPosInt * 40 - 20;
-    let left = xPosInt * 40 + 20;
+    let top = g.p.yInt * 40 + 100;
+    let left = g.p.xInt * 40 + 80;
     let topStr = top + 'px';
     let leftStr = left + 'px';
-    nextCellName = xPosInt + ',' + yPosInt;
-    //playerId = 'player_' + yPosInt + xPosInt;
+
+    nextCellName = g.p.xInt + ',' + g.p.yInt;
     playerId = 'player_65_b';
+
+    console.log(nextCellName);
     lwln(nextCellName);
     lwln(playerId);
-    //nextPlayerVisible = document.getElementById(playerId);
 
-    //nextPlayerVisible.setAttribute('style', 'display:inline');
     g.p.player.style.top = topStr;
     g.p.player.style.left = leftStr;
-    //g.player.setAttribute('style', 'display:none');
-    //g.player = nextPlayerVisible;
   }
   return;
 }

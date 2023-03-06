@@ -1,15 +1,16 @@
 const setupPlayerMovement = () => {
   g.p = {};
-  const startXIdx = 5; // out of 10 squares wide
-  const startYIdx = 6; // out of 10 squares high
-  const playerLabel = `player_${startYIdx}${startXIdx}`;
-  g.p.player = document.getElementById(playerLabel);
-  if (!player) {
+  const startXIdx = 4; // out of 10 squares wide
+  const startYIdx = 4; // out of 10 squares high
+  const playerLabel = `player_${startYIdx}${startXIdx}_b`;
+  /*   g.p.player = document.getElementById(playerLabel);
+  if (!g.p.player) {
     console.log(`ERROR: Can't find **${playerLabel}**`);
     //breakpoint;
   } else {
-    g.p.player.style.display = 'block';
-  }
+    //g.p.player.style.display = 'block';
+    g.p.player.setAttribute('style', 'display: block');
+  } */
   g.p.xInt = startXIdx;
   g.p.yInt = startYIdx;
 };

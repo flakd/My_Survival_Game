@@ -132,7 +132,7 @@ const getMapAsList = () => {
   const resultsArray = [];
   for (let y = 0; y < matrix.length; y++) {
     for (let x = 0; x < matrix[y].length; x++) {
-      resultsArray.push([matrix[x][y], x, y]);
+      resultsArray.push([matrix[y][x], y, x]);
     }
   }
   console.log(resultsArray);
