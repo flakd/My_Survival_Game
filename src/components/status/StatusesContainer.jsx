@@ -5,12 +5,16 @@ import StatusInventory from './StatusInventory';
 import StatusActions from './StatusActions';
 
 const StatusesContainer = (props) => {
+  const groupClass = 'status';
   return (
-    <div id='statuses-container'>
+    <div
+      id='statuses-container'
+      className={groupClass}
+    >
       <TimeDayScoreContainer />
-      <StatusVitals />
-      <StatusInventory />
-      <StatusActions />
+      <StatusVitals className={groupClass} />
+      <StatusInventory className={groupClass} />
+      <StatusActions className={groupClass} />
     </div>
   );
 };

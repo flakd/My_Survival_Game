@@ -27,7 +27,7 @@ function handleKeyDown_Esc(event) {
       console.log('Esc');
       handleBtnCloseRAoGImgModal_click();
     default:
-      console.log('keydown: ' + event.key);
+      console.log('handleKeyDown_Esc: keydown: ' + event.key);
     //  return;
   }
   return;
@@ -39,11 +39,17 @@ function handleKeyDown_ArrowKeys(event) {
   //lw(event.keyCode);
   //lw(event.code);
   //lw(event.key);
-  let xPosInt = g.pos.xInt;
-  let yPosInt = g.pos.yInt;
+  let xPosInt = g.p.xInt;
+  let yPosInt = g.p.yInt;
   lwln(event.key);
   lwln('xPosInt: ' + xPosInt);
   lwln('yPosInt: ' + yPosInt);
+  console.log(xPosInt);
+  console.log(yPosInt);
+  let top = yPosInt * 40 - 20;
+  let left = xPosInt * 40 + 20;
+  let topStr = top + 'px';
+  let leftStr = left + 'px';
 
   let isValidMove = false;
   let nextCell;
@@ -54,44 +60,55 @@ function handleKeyDown_ArrowKeys(event) {
     case 'ArrowUp':
       event.preventDefault();
       if (yPosInt - 1 < 0) return;
-      if (map[yPosInt - 1][xPosInt] === 0) return;
+      if (g.map[yPosInt - 1][xPosInt] === 0) return;
       yPosInt--;
       isValidMove = true;
       break;
     case 'ArrowDown':
       event.preventDefault();
-      if (yPosInt + 1 > MAP_HEIGHT - 1) return;
-      if (map[yPosInt + 1][xPosInt] === 0) return;
+      if (yPosInt + 1 > g.map_HEIGHT - 1) return;
+      if (g.map[yPosInt + 1][xPosInt] === 0) return;
       yPosInt++;
       isValidMove = true;
       break;
     case 'ArrowLeft':
       event.preventDefault();
       if (xPosInt - 1 < 0) return;
-      if (map[yPosInt][xPosInt - 1] === 0) return;
+      if (g.map[yPosInt][xPosInt - 1] === 0) return;
       xPosInt--;
       isValidMove = true;
       break;
     case 'ArrowRight':
       event.preventDefault();
       //if (xPosInt +1 < 0) return;
-      if (xPosInt + 1 > MAP_WIDTH - 1) return;
-      if (map[yPosInt][xPosInt + 1] === 0) return;
+      if (xPosInt + 1 > g.map_WIDTH - 1) return;
+      if (g.map[yPosInt][xPosInt + 1] === 0) return;
       xPosInt++;
       isValidMove = true;
       break;
     default:
     //  return;
   }
+  console.log('wtf');
+  g.p.player = document.getElementById(playerId);
+  if (!g.player) console.log("can't find player");
   if (isValidMove) {
+    let top = yPosInt * 40 - 20;
+    let left = xPosInt * 40 + 20;
+    let topStr = top + 'px';
+    let leftStr = left + 'px';
     nextCellName = xPosInt + ',' + yPosInt;
-    playerId = 'player_' + yPosInt + xPosInt;
+    //playerId = 'player_' + yPosInt + xPosInt;
+    playerId = 'player_65_b';
     lwln(nextCellName);
     lwln(playerId);
-    nextPlayerVisible = document.getElementById(playerId);
-    nextPlayerVisible.setAttribute('style', 'display:inline');
-    g.player.setAttribute('style', 'display:none');
-    g.player = nextPlayerVisible;
+    //nextPlayerVisible = document.getElementById(playerId);
+
+    //nextPlayerVisible.setAttribute('style', 'display:inline');
+    g.p.player.style.top = topStr;
+    g.p.player.style.left = leftStr;
+    //g.player.setAttribute('style', 'display:none');
+    //g.player = nextPlayerVisible;
   }
   return;
 }

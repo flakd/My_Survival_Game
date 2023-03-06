@@ -11,6 +11,7 @@ import './App.css';
 import Modal from './components/Modal';
 import Backdrop from './components/Backdrop';
 import HelpButton from './components/status/HelpButton';
+import getGameHelpContent from './helpers/helpModal';
 
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -30,7 +31,14 @@ function App() {
       {/* <Test /> */}
       <StatusesContainer />
       <InputOutput />
-      {isModalOpen && <Modal closeModal={closeModalHandler} />}
+      {isModalOpen && (
+        <Modal
+          priButton='OK'
+          closeModal={closeModalHandler}
+          title='Game Help'
+          content={getGameHelpContent()}
+        />
+      )}
       {isModalOpen && <Backdrop closeModal={closeModalHandler} />}
     </>
   );

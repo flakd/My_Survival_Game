@@ -6,7 +6,18 @@ const StatusInventory = () => {
 
   useEffect(() => {
     let interval = setInterval(() => {
-      setInventory(Object.values(g.c.inventory));
+      const inventoryValues = Object.values(g.c.inventory);
+      inventoryValues.sort(function (a, b) {
+        if (a.key < b.key) {
+          return -1;
+        }
+        if (a.key > b.key) {
+          return 1;
+        }
+        return 0;
+      });
+      let t = 0;
+      setInventory(Object.values(inventoryValues));
     }, 500);
   }, []);
 
@@ -16,12 +27,17 @@ const StatusInventory = () => {
       className='status'
     >
       {inventory
-        .filter((invItem) => invItem.bal > 0)
+        .filter(
+          (invItem) =>
+            invItem.bal > 0 &&
+            invItem.key !== 'default' &&
+            invItem.key !== 'trees'
+        )
         .map((invItem) => (
           <button
             key={invItem.key}
             type='button'
-            className='vitals'
+            className='inventory'
           >
             {invItem.key}:{invItem.bal}
           </button>

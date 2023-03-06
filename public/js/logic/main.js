@@ -9,6 +9,10 @@ if (g.isBrowserOrNode === 'node') {
   g.c.inventory = parseJSONs.Objects.inventory;
   g.c.vitals = parseJSONs.Objects.vitals;
   g.c.actions = parseJSONs.Objects.actions;
+  /*   g.c.actionsSorted = Object.values(g.c.actions).sort(function (a, b) {
+    return Object.values(a).key - Object.values(b).key;
+  }); */
+  g.c.actionsSorted = Object.values(g.c.actions).sort();
 }
 
 const gameLoop = () => {

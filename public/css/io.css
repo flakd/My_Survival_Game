@@ -13,27 +13,26 @@
   border: 1px solid black;
 }
 #command-input {
-  position: absolute;
+  position: relative;
   top: 0px;
   left: 0px;
   padding: 10px;
-  display: inline-block;
+  display: block;
   overflow: auto;
+  float: left;
   width: 95px;
   font-size: 20pt;
 }
 #output {
   background-color: sandybrown;
-  position: absolute;
-  left: 100px;
+  position: relative;
+  left: 10px;
   top: 0px;
-  float: left;
+  float: right;
   overflow: auto;
   width: 250px;
 }
-#logs-container {
-  height: 100px;
-}
+
 #log,
 #log2,
 #log3,
@@ -53,5 +52,6 @@
   margin-bottom: 0px;
   margin-left: auto;
   margin-right: auto;
+  height: 100px;
   width: 972px;
 }

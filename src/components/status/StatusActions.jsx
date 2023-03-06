@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import {stringSort} from './../../helpers/misc';
 //const core = require('./../../core');
 //const output = require('./../../output');
 
@@ -8,7 +9,18 @@ const StatusActions = () => {
 
   useEffect(() => {
     let interval = setInterval(() => {
-      setActions(Object.values(g.c.actions));
+      const actionValues = Object.values(g.c.actions);
+      actionValues.sort(function (a, b) {
+        if (a.key < b.key) {
+          return -1;
+        }
+        if (a.key > b.key) {
+          return 1;
+        }
+        return 0;
+      });
+      let t = 0;
+      setActions(Object.values(actionValues));
     }, 500);
   }, []);
 
@@ -23,13 +35,17 @@ const StatusActions = () => {
       id='status-actions'
       className='status'
     >
+      <div id='status-actions-header'>
+        {actions.length} ACTIONS AVAILABLE FOR YOU TO TRY
+      </div>
       {actions
         .filter((action) => action.key !== 'default')
         .map((action) => (
           <button
             key={action.key}
             type='button'
-            className='vitals'
+            className='m-1 p-1
+             btn btn-secondary'
             value={action.key}
             onClick={onClickAction}
           >

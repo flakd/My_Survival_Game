@@ -1,4 +1,19 @@
-function setupPlayerMovement() {
+const setupPlayerMovement = () => {
+  g.p = {};
+  const startXIdx = 5; // out of 10 squares wide
+  const startYIdx = 6; // out of 10 squares high
+  const playerLabel = `player_${startYIdx}${startXIdx}`;
+  g.p.player = document.getElementById(playerLabel);
+  if (!player) {
+    console.log(`ERROR: Can't find **${playerLabel}**`);
+    //breakpoint;
+  } else {
+    g.p.player.style.display = 'block';
+  }
+  g.p.xInt = startXIdx;
+  g.p.yInt = startYIdx;
+};
+function setupPlayerMovement_old() {
   // this doesn't seem to get me a reference to the first cell/square
   //        WHY????
   var startXname = (g.startX + 1).toString();

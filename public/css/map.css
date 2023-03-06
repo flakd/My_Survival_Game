@@ -42,7 +42,7 @@
   visibility: visible;
 }
 
-.player {
+.player_old {
   position: relative;
   padding: 0;
   left: 40;
@@ -51,6 +51,18 @@
   text-align: right;
   z-index: 5;
   float: right;
-  visibility: visible;
+  visibility: hidden;
+  display: none;
+  font-size: 28pt;
+}
+.player {
+  position: absolute;
+  padding: 0;
+  left: 240px;
+  top: 260px;
+  text-align: right;
+  z-index: 5;
+  float: right;
+  display: block;
   font-size: 28pt;
 }

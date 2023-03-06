@@ -35,7 +35,7 @@ const Map = () => {
           <span
             key={'player_' + idStr}
             id={'player_' + idStr}
-            className='player'
+            className='player_old'
           >
             🚶🏻
           </span>
