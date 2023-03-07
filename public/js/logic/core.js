@@ -119,6 +119,35 @@ let core = {
     // lets clone these so that we can make changes without
     //  affecting the real/originals
 
+    function didPassTerrainRestrictions() {
+      if (action.key === 'fish' && !amNearWater()) return false;
+      else return true;
+    }
+
+    function amNearWater() {
+      const y = g.p.yInt;
+      const x = g.p.xInt;
+      // if not AT LEAST 1 adjacent sqaure is FRESH WATER or OCEAN
+      if (
+        g.map[y + 1][x] === 0 ||
+        g.map[y + 1][x] === 2 ||
+        g.map[y][x + 1] === 0 ||
+        g.map[y][x + 1] === 2 ||
+        g.map[y - 1][x] === 0 ||
+        g.map[y - 1][x] === 2 ||
+        g.map[y][x - 1] === 0 ||
+        g.map[y][x - 1] === 2
+      ) {
+        return true;
+      } else {
+        g.msgQueue.push('cannot fish here');
+        alert('cannot fish here');
+        return false;
+      }
+    }
+
+    if (!didPassTerrainRestrictions()) return;
+
     if (canDoInvTakeCalcs(action)) {
       canDoGameAction = true;
       return canDoGameAction;

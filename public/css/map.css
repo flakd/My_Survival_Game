@@ -58,8 +58,6 @@
 .player {
   position: absolute;
   padding: 0;
-  left: 240px;
-  top: 260px;
   text-align: right;
   z-index: 5;
   float: right;

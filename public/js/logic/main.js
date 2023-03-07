@@ -14,13 +14,14 @@ if (g.isBrowserOrNode === 'node') {
   }); */
   g.c.actionsSorted = Object.values(g.c.actions).sort();
 }
+//const core = require('./core');
 
 const gameLoop = () => {
   incrementGameHour(g.TICKS_PER_MINUTE); //time.js
   //myGameTimer.increment();
 
   // (re)focus the cursor upon EVERY timer tick/interval event
-  focusCommandInputCursor();
+  //focusCommandInputCursor();
 
   // sun RISING PHASE
 
@@ -32,13 +33,13 @@ const gameLoop = () => {
   }
 
   // keep Vitals and Inventory stats updated each tick (timer interval)
-  output.printStats1(g.t.gameHr, g.c);
+  //output.printStats1(g.t.gameHr, g.c);
 
   // keep Game Day updated each tick (timer interval)
-  updateDayUI();
+  //updateDayUI();
 
   // keep Game Hour updated each tick (timer nterval)
-  updateHourUI();
+  //updateHourUI();
 
   // keep log of all time/day/tick changes updated on each tick
   logTimeForDebugging();

@@ -21,7 +21,7 @@ function setAllEventListeners() {
 }
 
 function handleKeyDown_Esc(event) {
-  lwln(event.key);
+  //lwln(event.key);
   switch (event.key) {
     case 'Escape':
       console.log('Esc');
@@ -34,73 +34,167 @@ function handleKeyDown_Esc(event) {
 }
 
 function handleKeyDown_ArrowKeys(event) {
+  if (g.p.isMoving) return;
+
   lwln(event.key);
   lwln('g.p.xInt: ' + g.p.xInt);
   lwln('g.p.yInt: ' + g.p.yInt);
-  /*   let top = g.p.yInt * 40 - 20;
-  let left = g.p.xInt * 40 + 20;
-  let topStr = top + 'px';
-  let leftStr = left + 'px'; */
+
+  g.p.lastYInt = g.p.yInt;
+  g.p.lastXInt = g.p.xInt;
+  g.p.dirLegend = {
+    up: {
+      key: 'up',
+      char1: 'ArrowUp',
+      char2: 'w',
+      move: -1,
+      axis: 'y',
+      CSS: 'top',
+    },
+    left: {
+      key: 'left',
+      char1: 'ArrowLeft',
+      char2: 'a',
+      move: -1,
+      axis: 'x',
+      CSS: 'left',
+    },
+    down: {
+      key: 'down',
+      char1: 'ArrowDown',
+      char2: 's',
+      move: 1,
+      axis: 'y',
+      CSS: 'top',
+    },
+    right: {
+      key: 'right',
+      char1: 'ArrowRight',
+      char2: 'd',
+      move: 1,
+      axis: 'x',
+      CSS: 'left',
+    },
+  };
 
   let isValidMove = false;
-  let nextCell;
-  let nextPlayerVisible;
   let nextCellName;
-  let playerId;
+  //let playerId = 'player_65_b';
+  let playerIdAnimStr = 'player_anim';
+  let playerIdStaticStr = 'player_static';
+  g.p.playerAnim = document.getElementById(playerIdAnimStr);
+  g.p.playerStatic = document.getElementById(playerIdStaticStr);
+  if (!g.p.playerAnim) console.log("can't find player animated gif");
+  if (!g.p.playerStatic) console.log("can't find player static gif");
   switch (event.key) {
-    case 'ArrowUp':
+    //case 'ArrowUp':
+    case 'w':
+      g.p.dir = 'up';
       event.preventDefault();
       if (g.p.yInt - 1 < 0) return;
       if (g.map[g.p.yInt - 1][g.p.xInt] === 0) return;
-      g.p.yInt--;
+      g.p.yInt = g.p.yInt - move;
       isValidMove = true;
+      axis = 'top';
+      g.p.direction = 'up';
+      g.p.directionCSS_Y = null;
+      squaresMoved = -1;
       break;
-    case 'ArrowDown':
+    //case 'ArrowDown':
+    case 's':
       event.preventDefault();
       if (g.p.yInt + 1 > g.MAP_HEIGHT - 1) return;
       if (g.map[g.p.yInt + 1][g.p.xInt] === 0) return;
       g.p.yInt++;
       isValidMove = true;
+      axis = 'top';
+      g.p.direction = 'down';
+      g.p.directionCSS_Y = null;
+      squaresMoved = 1;
       break;
-    case 'ArrowLeft':
+    //case 'ArrowLeft':
+    case 'a':
       event.preventDefault();
       if (g.p.xInt - 1 < 0) return;
       if (g.map[g.p.yInt][g.p.xInt - 1] === 0) return;
       g.p.xInt--;
       isValidMove = true;
+      axis = 'left';
+      g.p.direction = 'left';
+      g.p.directionCSS_X = 'scaleX(-1)';
+
+      squaresMoved = -1;
+      g.p.playerAnim.style.transform = g.p.directionCSS_X;
+      g.p.playerAnim.style.webkitTransform = g.p.directionCSS_X;
+      g.p.playerStatic.style.transform = g.p.directionCSS_X;
+      g.p.playerStatic.style.webkitTransform = g.p.directionCSS_X;
       break;
-    case 'ArrowRight':
+    //case 'ArrowRight':
+    case 'd':
       event.preventDefault();
       //if (g.p.xInt +1 < 0) return;
       if (g.p.xInt + 1 > g.MAP_WIDTH - 1) return;
       if (g.map[g.p.yInt][g.p.xInt + 1] === 0) return;
       g.p.xInt++;
       isValidMove = true;
+      axis = 'left';
+      g.p.direction = 'right';
+      g.p.directionCSS_X = 'scaleX(1)';
+
+      squaresMoved = 1;
+      g.p.playerAnim.style.transform = g.p.directionCSS_X;
+      g.p.playerAnim.style.webkitTransform = g.p.directionCSS_X;
+      g.p.playerStatic.style.transform = g.p.directionCSS_X;
+      g.p.playerStatic.style.webkitTransform = g.p.directionCSS_X;
       break;
     default:
     //  return;
   }
   console.log('wtf');
   //g.p.player = document.getElementById(playerId);
-  g.p.player = document.getElementById('player_65_b');
-  if (!g.p.player) console.log("can't find player");
 
   if (isValidMove) {
-    let top = g.p.yInt * 40 + 100;
-    let left = g.p.xInt * 40 + 80;
-    let topStr = top + 'px';
-    let leftStr = left + 'px';
+    let lastTop = g.p.lastYInt * 40 + 108;
+    let lastLeft = g.p.lastXInt * 40 + 70;
+    g.p.newTop = lastTop;
+    g.p.newLeft = lastLeft;
+
+    g.p.playerAnim.style.display = 'block';
+    g.p.playerStatic.style.display = 'none';
+    g.p.intervalID = setInterval(function () {
+      if (axis === 'top') {
+        g.p.newTop = g.p.newTop + squaresMoved;
+      } else if (axis === 'left') {
+        g.p.newLeft = g.p.newLeft + squaresMoved;
+      }
+
+      let topStr = `${g.p.newTop}px`;
+      let leftStr = `${g.p.newLeft}px`;
+
+      g.p.playerAnim.style.top = topStr;
+      g.p.playerStatic.style.top = topStr;
+      g.p.playerAnim.style.left = leftStr;
+      g.p.playerStatic.style.left = leftStr;
+
+      g.p.isMoving = true;
+    }, 25);
+    g.p.timeoutID = setTimeout(() => {
+      g.p.isMoving = false;
+      g.p.playerAnim.style.display = 'none';
+      g.p.playerStatic.style.display = 'block';
+      clearInterval(g.p.intervalID);
+    }, 1000);
 
     nextCellName = g.p.xInt + ',' + g.p.yInt;
-    playerId = 'player_65_b';
-
     console.log(nextCellName);
     lwln(nextCellName);
-    lwln(playerId);
-
-    g.p.player.style.top = topStr;
-    g.p.player.style.left = leftStr;
   }
+  var outputDiv = document.getElementById('log');
+  //outputDiv.scrollTop = outputDiv.scrollHeight;
+  outputDiv.scrollIntoView(false);
+  //$('#log').scrollTop($('#log')[0].scrollHeight);
+  //$('#log').scrollTop(99999);
+
   return;
 }
 
