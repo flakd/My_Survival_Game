@@ -2,6 +2,7 @@ import React, {useEffect, useCallback, useState} from 'react';
 import AnimatedImage from './../images/Indy_anim_trans.gif';
 import StaticImage from './../images/Indy_nonanim_trans.gif';
 import FishingRod from './../images/player_fishing_rod--anim--trans.gif';
+import PlayerHelper from '../helpers/PlayerHelper';
 
 let g = window;
 
@@ -9,13 +10,12 @@ const Player = () => {
   const [top, setTop] = useState(270);
   const [left, setLeft] = useState(235);
   const [directionCSS_X, setDirectionCSS_X] = useState(g.p.directionCSS_X);
-  const [directionCSS_Y, setDirectionCSS_Y] = useState(g.p.directionCSS_Y);
 
-  const startXIdx = 5; // out of 10 squares wide
-  const startYIdx = 6; // out of 10 squares high
-  //const playerLabel = `player_${startYIdx}${startXIdx}`;
   const playerLbl1 = `player_anim`;
   const playerLbl2 = `player_static`;
+  PlayerHelper();
+  g.p.dirLegend.fishOffsetRight = 20;
+  g.p.dirLegend.fishOffsetLeft = -15;
 
   const moveKeysHandler = useCallback((event) => {
     console.log('key=', event.key);
@@ -27,7 +27,6 @@ const Player = () => {
       setLeft(newLeft);
 
       setDirectionCSS_X(g.p.directionCSS_X);
-      //setDirectionCSS_Y(g.p.directionCSS_Y);
     }
   }, []);
 
@@ -82,10 +81,10 @@ const Player = () => {
         className='player'
         src={FishingRod}
         style={{
-          top: `${top}px`,
-          left: `${left + 15}px`,
+          top: `${top - 10}px`,
+          left: `${left + 20}px`,
           width: '55px',
-          height: '35px',
+          height: '45px',
           transform: 'rotate(20deg)',
           WebkitTransform: 'rotate(20deg)',
           transform: directionCSS_X,

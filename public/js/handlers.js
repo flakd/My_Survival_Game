@@ -21,7 +21,7 @@ function setAllEventListeners() {
 }
 
 function handleKeyDown_Esc(event) {
-  //lwln(event.key);
+  lwln(event.key);
   switch (event.key) {
     case 'Escape':
       console.log('Esc');
@@ -42,40 +42,9 @@ function handleKeyDown_ArrowKeys(event) {
 
   g.p.lastYInt = g.p.yInt;
   g.p.lastXInt = g.p.xInt;
-  g.p.dirLegend = {
-    up: {
-      key: 'up',
-      char1: 'ArrowUp',
-      char2: 'w',
-      move: -1,
-      axis: 'y',
-      CSS: 'top',
-    },
-    left: {
-      key: 'left',
-      char1: 'ArrowLeft',
-      char2: 'a',
-      move: -1,
-      axis: 'x',
-      CSS: 'left',
-    },
-    down: {
-      key: 'down',
-      char1: 'ArrowDown',
-      char2: 's',
-      move: 1,
-      axis: 'y',
-      CSS: 'top',
-    },
-    right: {
-      key: 'right',
-      char1: 'ArrowRight',
-      char2: 'd',
-      move: 1,
-      axis: 'x',
-      CSS: 'left',
-    },
-  };
+  let axis;
+  let direction;
+  let squaresMoved;
 
   let isValidMove = false;
   let nextCellName;
@@ -87,50 +56,41 @@ function handleKeyDown_ArrowKeys(event) {
   if (!g.p.playerAnim) console.log("can't find player animated gif");
   if (!g.p.playerStatic) console.log("can't find player static gif");
   switch (event.key) {
-    //case 'ArrowUp':
-    case 'w':
-      g.p.dir = 'up';
+    case 'ArrowUp':
       event.preventDefault();
       if (g.p.yInt - 1 < 0) return;
       if (g.map[g.p.yInt - 1][g.p.xInt] === 0) return;
-      g.p.yInt = g.p.yInt - move;
+      g.p.yInt--;
       isValidMove = true;
       axis = 'top';
-      g.p.direction = 'up';
-      g.p.directionCSS_Y = null;
+      direction = 'up';
       squaresMoved = -1;
       break;
-    //case 'ArrowDown':
-    case 's':
+    case 'ArrowDown':
       event.preventDefault();
       if (g.p.yInt + 1 > g.MAP_HEIGHT - 1) return;
       if (g.map[g.p.yInt + 1][g.p.xInt] === 0) return;
       g.p.yInt++;
       isValidMove = true;
       axis = 'top';
-      g.p.direction = 'down';
-      g.p.directionCSS_Y = null;
+      direction = 'down';
       squaresMoved = 1;
       break;
-    //case 'ArrowLeft':
-    case 'a':
+    case 'ArrowLeft':
       event.preventDefault();
       if (g.p.xInt - 1 < 0) return;
       if (g.map[g.p.yInt][g.p.xInt - 1] === 0) return;
       g.p.xInt--;
       isValidMove = true;
       axis = 'left';
-      g.p.direction = 'left';
-      g.p.directionCSS_X = 'scaleX(-1)';
-
+      direction = 'left';
       squaresMoved = -1;
-      g.p.playerAnim.style.transform = g.p.directionCSS_X;
-      g.p.playerAnim.style.webkitTransform = g.p.directionCSS_X;
-      g.p.playerStatic.style.transform = g.p.directionCSS_X;
-      g.p.playerStatic.style.webkitTransform = g.p.directionCSS_X;
+      g.p.playerAnim.style.transform = 'scaleX(-1)';
+      g.p.playerAnim.style.webkitTransform = 'scaleX(-1)';
+      g.p.playerStatic.style.transform = 'scaleX(-1)';
+      g.p.playerStatic.style.webkitTransform = 'scaleX(-1)';
       break;
-    //case 'ArrowRight':
-    case 'd':
+    case 'ArrowRight':
       event.preventDefault();
       //if (g.p.xInt +1 < 0) return;
       if (g.p.xInt + 1 > g.MAP_WIDTH - 1) return;
@@ -138,14 +98,12 @@ function handleKeyDown_ArrowKeys(event) {
       g.p.xInt++;
       isValidMove = true;
       axis = 'left';
-      g.p.direction = 'right';
-      g.p.directionCSS_X = 'scaleX(1)';
-
+      direction = 'right';
       squaresMoved = 1;
-      g.p.playerAnim.style.transform = g.p.directionCSS_X;
-      g.p.playerAnim.style.webkitTransform = g.p.directionCSS_X;
-      g.p.playerStatic.style.transform = g.p.directionCSS_X;
-      g.p.playerStatic.style.webkitTransform = g.p.directionCSS_X;
+      g.p.playerAnim.style.transform = 'scaleX(1)';
+      g.p.playerAnim.style.webkitTransform = 'scaleX(1)';
+      g.p.playerStatic.style.transform = 'scaleX(1)';
+      g.p.playerStatic.style.webkitTransform = 'scaleX(1)';
       break;
     default:
     //  return;
