@@ -200,10 +200,19 @@ function handle_activityCompleted(sender, activity) {
   stopActivityMedia();
 
   //------------------------------------------------------------------------>
+  //  4.a. DoGameAction() - else do not return and we continue to the next
+  //      line of code...  which is to ACTUALLY executes the GAME ACTION
+  //      i.e. it performs all the calculations and changes the amounts of
+  //      inventory items.
+  //------------------------------------------------------------------------>
+  core.doGameAction(g.c.action, g.c.inventory, g.c.vitals);
+
+  //------------------------------------------------------------------------>
   //  5. passTime() increases Hrs by action.numHrs and...
   //      increases vitals by vitals.takePerHr * action.numHrs
   //------------------------------------------------------------------------>
-  core.doPassTime(g.c.action, g.c.inventory, g.c.vitals);
+
+  //core.updateVitals(g.c.action, g.c.inventory, g.c.vitals);
 }
 
 function handleBtnCloseRAoGImgModal_click(sender) {

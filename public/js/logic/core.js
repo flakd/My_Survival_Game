@@ -55,19 +55,11 @@ let core = {
     //g.whatImDoing.startActivity(g.c.action);
     g.waid.startActivity(g.c.action);
 
-    //------------------------------------------------------------------------>
-    //  4.a. DoGameAction() - else do not return and we continue to the next
-    //      line of code...  which is to ACTUALLY executes the GAME ACTION
-    //      i.e. it performs all the calculations and changes the amounts of
-    //      inventory items.
-    //------------------------------------------------------------------------>
-    core.doGameAction(g.c.action, inventory, vitals);
-
     /*     //------------------------------------------------------------------------>    
     //  5. passTime() increases Hrs by action.numHrs and...
     //      increases vitals by vitals.takePerHr * action.numHrs    
-    //------------------------------------------------------------------------>    
-    core.doPassTime(g.c.action, inventory, vitals); */
+    //------------------------------------------------------------------------> */
+    core.updateVitals(g.c.action, inventory, vitals);
 
     /*     //------------------------------------------------------------------------>
     //  6.  print status at the end... AFTER the command is executed, 
@@ -598,7 +590,7 @@ let core = {
     } // END: function doVitGiveCalcs(action, vitals)
   }, // END:  function doGameAction(action, inventory, vitals){
 
-  //  5. doPassTime() ========================================================>
+  //  5. updateVitals() ========================================================>
   //    pass time (update any time-dependent variables )
   //     a. based on action.duration * vitals.COST
   //==========================================================================>
@@ -638,7 +630,7 @@ let core = {
       6. Finally, the function increments the game Hr by the number of Hrs 
           the action took.  
   */
-  doPassTime: function doPassTime(action, inventory, vitals) {
+  updateVitals: function updateVitals(action, inventory, vitals) {
     for (var vitalLbl in vitals) {
       //loop through all vital objects, e.g. thirst, hunger, fatigue
       if (vitalLbl == 'default') continue; // skip the "default" vital, we
@@ -735,7 +727,7 @@ let core = {
     lwlnOutput();
     let msgArray = [action.successMsg, messageArray[0], messageArray[1]];
     g.msgQueue.push(msgArray);
-  }, // END:  function doPassTime(action, inventory, vitals){
+  }, // END:  function updateVitals(action, inventory, vitals){
 
   /*  6. call to output.printStats1(g.gameHr,g.c); =========================> 
   //=========================================================================*/
