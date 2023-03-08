@@ -119,9 +119,25 @@ let core = {
     // lets clone these so that we can make changes without
     //  affecting the real/originals
 
-    function didPassTerrainRestrictions() {
-      if (action.key === 'fish' && !amNearWater()) return false;
-      else return true;
+    function amNearOceanOrWater() {
+      const y = g.p.yInt;
+      const x = g.p.xInt;
+      // if not AT LEAST 1 adjacent sqaure is FRESH WATER or OCEAN
+      if (
+        g.map[y + 1][x] === g.m.OCEAN ||
+        g.map[y + 1][x] === g.m.WATER ||
+        g.map[y][x + 1] === g.m.OCEAN ||
+        g.map[y][x + 1] === g.m.WATER ||
+        g.map[y - 1][x] === g.m.OCEAN ||
+        g.map[y - 1][x] === g.m.WATER ||
+        g.map[y][x - 1] === g.m.OCEAN ||
+        g.map[y][x - 1] === g.m.WATER ||
+        g.map[y][x] === g.m.WATER
+      ) {
+        return true;
+      } else {
+        return false;
+      }
     }
 
     function amNearWater() {
@@ -129,25 +145,116 @@ let core = {
       const x = g.p.xInt;
       // if not AT LEAST 1 adjacent sqaure is FRESH WATER or OCEAN
       if (
-        g.map[y + 1][x] === 0 ||
-        g.map[y + 1][x] === 2 ||
-        g.map[y][x + 1] === 0 ||
-        g.map[y][x + 1] === 2 ||
-        g.map[y - 1][x] === 0 ||
-        g.map[y - 1][x] === 2 ||
-        g.map[y][x - 1] === 0 ||
-        g.map[y][x - 1] === 2 ||
-        g.map[y][x] === 2
+        g.map[y + 1][x] === g.m.WATER ||
+        g.map[y][x + 1] === g.m.WATER ||
+        g.map[y - 1][x] === g.m.WATER ||
+        g.map[y][x - 1] === g.m.WATER ||
+        g.map[y][x] === g.m.WATER
       ) {
         return true;
       } else {
-        g.msgQueue.push('cannot fish here');
-        alert('cannot fish here');
         return false;
       }
     }
 
-    if (!didPassTerrainRestrictions()) return;
+    function amOnWater() {
+      const y = g.p.yInt;
+      const x = g.p.xInt;
+      // if not AT LEAST 1 adjacent sqaure is FRESH WATER or OCEAN
+      if (g.map[y][x] === g.m.WATER) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    function isTerrainRestricted(actionKey) {
+      switch (actionKey) {
+        case 'fish':
+          if (!amNearOceanOrWater()) {
+            g.msgQueue.push('cannot fish here');
+            alert('cannot fish here');
+            return true;
+          }
+          break;
+        case 'drink':
+          if (!amNearWater()) {
+            g.msgQueue.push('cannot drink here');
+            alert('cannot drink here');
+            return true;
+          }
+          break;
+        case 'sleep':
+          if (amOnWater()) {
+            g.msgQueue.push('cannot sleep here');
+            alert('cannot sleep here');
+            return true;
+          }
+          break;
+        case 'light':
+          if (amOnWater()) {
+            g.msgQueue.push('cannot light a fire here');
+            alert('cannot light a fire here');
+            return true;
+          }
+          break;
+        default:
+          return false;
+      }
+    }
+
+    function doActionMapGraphic(actionKey) {
+      switch (actionKey) {
+        case 'fish':
+          let fishingRodOffsetY = -10;
+          let fishingRodOffsetX = null;
+          let fishingRodOffsetXRight = 25;
+          let fishingRodOffsetXLeft = -20;
+          if (
+            g.map[g.p.yInt][g.p.xInt + 1] === g.m.WATER ||
+            g.map[g.p.yInt][g.p.xInt + 1] === g.m.OCEAN
+          ) {
+            g.p.move = 1;
+            fishingRodOffsetX = fishingRodOffsetXRight;
+          } else {
+            g.p.move = -1;
+            fishingRodOffsetX = fishingRodOffsetXLeft;
+          }
+          g.p.directionCSS_X = `scaleX(${g.p.move})`;
+          let fishingRod = document.getElementById('fishing-rod');
+          if (!fishingRod) console.log("can't find fishing rod");
+          fishingRod.style.top = g.p.newTop + fishingRodOffsetY + 'px';
+          fishingRod.style.left = g.p.newLeft + fishingRodOffsetX + 'px';
+          g.p.playerStatic.style.transform = g.p.directionCSS_X;
+          g.p.playerStatic.style.WebkitTransform = g.p.directionCSS_X;
+          fishingRod.style.transform = g.p.directionCSS_X;
+          fishingRod.style.WebkitTransform = g.p.directionCSS_X;
+          fishingRod.style.display = 'block';
+          break;
+        case 'sleep':
+          let sleepOffsetY = 15;
+          let sleepOffsetX = -10;
+          g.p.directionCSS_X = `scaleX(-1)`; //face left
+          g.p.playerStatic.style.top = g.p.newTop + sleepOffsetY + 'px';
+          g.p.playerStatic.style.left = g.p.newLeft + sleepOffsetX + 'px';
+          g.p.playerStatic.style.transform = 'rotate(-90deg)';
+          g.p.playerStatic.style.WebkitTransform = 'rotate(-90deg)';
+          break;
+        case 'light':
+          let campfireOffsetY = 15;
+          let campfireOffsetX = -5;
+          g.p.directionCSS_X = `scaleX(-1)`; //face left
+          let campfire = document.getElementById('campfire');
+          if (!campfire) console.log("can't find campfire");
+          campfire.style.top = g.p.newTop + campfireOffsetY + 'px';
+          campfire.style.left = g.p.newLeft + campfireOffsetX + 'px';
+          g.p.playerStatic.style.transform = g.p.directionCSS_X;
+          g.p.playerStatic.style.WebkitTransform = g.p.directionCSS_X;
+          campfire.style.display = 'block';
+        default:
+          return true;
+      }
+    }
 
     if (canDoInvTakeCalcs(action)) {
       let playerIdAnimStr = 'player_anim';
@@ -156,36 +263,10 @@ let core = {
       g.p.playerStatic = document.getElementById(playerIdStaticStr);
       if (!g.p.playerAnim) console.log("can't find player animated gif");
       if (!g.p.playerStatic) console.log("can't find player static gif");
-      if (action.key === 'fish') {
-        fishingRodOffsetY = -10;
-        let fishingRodOffsetX = null;
-        fishingRodOffsetXRight = 20;
-        fishingRodOffsetXLeft = -20;
-        if (
-          g.map[g.p.yInt][g.p.xInt + 1] === 2 ||
-          g.map[g.p.yInt][g.p.xInt + 1] === 0
-        ) {
-          g.p.faceDirection = 'right';
-          g.p.move = 1;
-          fishingRodOffsetX = fishingRodOffsetXRight;
-        } else {
-          g.p.faceDirection = 'right';
-          g.p.move = -1;
-          fishingRodOffsetX = fishingRodOffsetXLeft;
-        }
-        g.p.directionCSS_X = `scaleX(${g.p.move})`;
-        let fishingRod = document.getElementById('fishing-rod');
-        if (!fishingRod) console.log("can't find fishing rod");
-        fishingRod.style.top = g.p.newTop + fishingRodOffsetY + 'px';
-        fishingRod.style.left = g.p.newLeft + fishingRodOffsetX + 'px';
-        g.p.playerStatic.style.transform = g.p.directionCSS_X;
-        g.p.playerStatic.style.WebkitTransform = g.p.directionCSS_X;
-        fishingRod.style.transform = g.p.directionCSS_X;
-        fishingRod.style.WebkitTransform = g.p.directionCSS_X;
-        fishingRod.style.display = 'block';
-      }
-      canDoGameAction = true;
-      return canDoGameAction;
+      if (!isTerrainRestricted(action.key)) doActionMapGraphic(action.key);
+      //canDoGameAction = true;
+      //return canDoGameAction;
+      return true;
       // we don't return false b/c that means we died
     }
 

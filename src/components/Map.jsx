@@ -30,7 +30,7 @@ const Map = () => {
       const name = cellX + ',' + cellY;
       let classList = 'cell';
 
-      if (cellValue === 1 || cellValue === 2) {
+      if (cellValue === 1 || cellValue === 20) {
         playerJSX.push(
           <span
             key={'player_' + idStr}
@@ -46,11 +46,16 @@ const Map = () => {
         //classList += ' unwalkable ocean fish';
         resource = getSeafood();
       }
-      if (cellValue === 1) {
+      if (cellValue === 10) {
         classList += ' filled walkable land'; //filled (green/land)
         resource = getLandResource();
+        /*         if (resource.className === 'tree') {
+          cellValue = g.m.TREE;
+        } else if (resource.className === 'mountain') {
+          cellValue = g.m.STONE;
+        } */
       }
-      if (cellValue === 2) {
+      if (cellValue === 20) {
         //classList += ' walkable water fish drink'; //filled (green/land)
         classList += ' water'; //filled (green/land)
         resource = getFish();

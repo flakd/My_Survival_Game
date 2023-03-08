@@ -31,15 +31,22 @@
   background-color: rgb(0, 127, 207);
 }
 
-.seafood,
-.fish,
 .tree,
 .mountain {
-  display: block;
+  /* display: block; */
   position: absolute;
   z-index: 2;
   text-align: left;
   visibility: visible;
+  vertical-align: bottom;
+}
+.tree,
+.mountain {
+  font-size: 22pt;
+}
+.seafood,
+.fish {
+  font-size: 12pt;
 }
 
 .player_old {
@@ -55,12 +62,21 @@
   display: none;
   font-size: 28pt;
 }
-.player {
+.player,
+.player-map-items {
   position: absolute;
   padding: 0;
   text-align: right;
-  z-index: 5;
   float: right;
   display: block;
   font-size: 28pt;
+}
+.player {
+  z-index: 6;
+}
+.player-map-items {
+  z-index: 5;
+}
+#fishing-rod {
+  z-index: 7;
 }

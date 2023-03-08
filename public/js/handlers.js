@@ -70,7 +70,7 @@ function handleKeyDown_ArrowKeys(event) {
       break;
     case 'ArrowDown':
       event.preventDefault();
-      if (g.p.yInt + 1 > g.MAP_HEIGHT - 1) return;
+      if (g.p.yInt + 1 > g.m.MAP_HEIGHT - 1) return;
       if (g.map[g.p.yInt + 1][g.p.xInt] === 0) return;
       g.p.yInt++;
       isValidMove = true;
@@ -95,7 +95,7 @@ function handleKeyDown_ArrowKeys(event) {
     case 'ArrowRight':
       event.preventDefault();
       //if (g.p.xInt +1 < 0) return;
-      if (g.p.xInt + 1 > g.MAP_WIDTH - 1) return;
+      if (g.p.xInt + 1 > g.m.MAP_WIDTH - 1) return;
       if (g.map[g.p.yInt][g.p.xInt + 1] === 0) return;
       g.p.xInt++;
       isValidMove = true;

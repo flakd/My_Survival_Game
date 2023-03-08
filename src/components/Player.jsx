@@ -3,12 +3,13 @@ import AnimatedImage from './../images/Indy_anim_trans.gif';
 import StaticImage from './../images/Indy_nonanim_trans.gif';
 import FishingRod from './../images/player_fishing_rod--anim--trans.gif';
 import PlayerHelper from '../helpers/PlayerHelper';
+import Campfire from './../images/Campfire_anim_trans.gif';
 
 let g = window;
 
 const Player = () => {
-  const [top, setTop] = useState(270);
-  const [left, setLeft] = useState(235);
+  const [top, setTop] = useState(268);
+  const [left, setLeft] = useState(230);
   const [directionCSS_X, setDirectionCSS_X] = useState(g.p.directionCSS_X);
 
   const playerLbl1 = `player_anim`;
@@ -52,7 +53,7 @@ const Player = () => {
     <div
     /* style={{top: '160px', left: '180px'}} */
     >
-      🚶🏻
+      {/*  🚶🏻 */}
       <img
         id={playerLbl1}
         className='player'
@@ -78,7 +79,7 @@ const Player = () => {
       />
       <img
         id='fishing-rod'
-        className='player'
+        className='player-map-items'
         src={FishingRod}
         style={{
           top: `${top - 10}px`,
@@ -89,6 +90,19 @@ const Player = () => {
           WebkitTransform: 'rotate(20deg)',
           transform: directionCSS_X,
           WebkitTransform: directionCSS_X,
+          display: 'none',
+        }}
+      />
+      <img
+        id='campfire'
+        className='player-map-items'
+        src={Campfire}
+        style={{
+          top: `${top - 10}px`,
+          left: `${left + 20}px`,
+          width: '30px',
+          height: '30px',
+          display: 'none',
         }}
       />
     </div>
