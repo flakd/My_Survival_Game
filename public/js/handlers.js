@@ -1,3 +1,5 @@
+const {default: PlayerHelper} = require('../../src/helpers/PlayerHelper');
+
 function setAllEventListeners() {
   $(document).ready(handleDocumentReady_setupInitialAudio);
   $(document).ready(handleDocumentReady_setupInitialModal);

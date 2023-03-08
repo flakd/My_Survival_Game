@@ -1,6 +1,12 @@
 let g = window;
 
 const PlayerHelper = () => {
+  let playerIdAnimStr = 'player_anim';
+  let playerIdStaticStr = 'player_static';
+  g.p.playerAnim = document.getElementById(playerIdAnimStr);
+  g.p.playerStatic = document.getElementById(playerIdStaticStr);
+  if (!g.p.playerAnim) console.log("can't find player animated gif");
+  if (!g.p.playerStatic) console.log("can't find player static gif");
   g.p.lastYInt = g.p.yInt;
   g.p.lastXInt = g.p.xInt;
   g.p.dirLegend = {

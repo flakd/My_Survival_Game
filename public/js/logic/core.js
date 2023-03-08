@@ -136,7 +136,8 @@ let core = {
         g.map[y - 1][x] === 0 ||
         g.map[y - 1][x] === 2 ||
         g.map[y][x - 1] === 0 ||
-        g.map[y][x - 1] === 2
+        g.map[y][x - 1] === 2 ||
+        g.map[y][x] === 2
       ) {
         return true;
       } else {
@@ -149,6 +150,40 @@ let core = {
     if (!didPassTerrainRestrictions()) return;
 
     if (canDoInvTakeCalcs(action)) {
+      let playerIdAnimStr = 'player_anim';
+      let playerIdStaticStr = 'player_static';
+      g.p.playerAnim = document.getElementById(playerIdAnimStr);
+      g.p.playerStatic = document.getElementById(playerIdStaticStr);
+      if (!g.p.playerAnim) console.log("can't find player animated gif");
+      if (!g.p.playerStatic) console.log("can't find player static gif");
+      if (action.key === 'fish') {
+        fishingRodOffsetY = -10;
+        let fishingRodOffsetX = null;
+        fishingRodOffsetXRight = 20;
+        fishingRodOffsetXLeft = -20;
+        if (
+          g.map[g.p.yInt][g.p.xInt + 1] === 2 ||
+          g.map[g.p.yInt][g.p.xInt + 1] === 0
+        ) {
+          g.p.faceDirection = 'right';
+          g.p.move = 1;
+          fishingRodOffsetX = fishingRodOffsetXRight;
+        } else {
+          g.p.faceDirection = 'right';
+          g.p.move = -1;
+          fishingRodOffsetX = fishingRodOffsetXLeft;
+        }
+        g.p.directionCSS_X = `scaleX(${g.p.move})`;
+        let fishingRod = document.getElementById('fishing-rod');
+        if (!fishingRod) console.log("can't find fishing rod");
+        fishingRod.style.top = g.p.newTop + fishingRodOffsetY + 'px';
+        fishingRod.style.left = g.p.newLeft + fishingRodOffsetX + 'px';
+        g.p.playerStatic.style.transform = g.p.directionCSS_X;
+        g.p.playerStatic.style.WebkitTransform = g.p.directionCSS_X;
+        fishingRod.style.transform = g.p.directionCSS_X;
+        fishingRod.style.WebkitTransform = g.p.directionCSS_X;
+        fishingRod.style.display = 'block';
+      }
       canDoGameAction = true;
       return canDoGameAction;
       // we don't return false b/c that means we died
