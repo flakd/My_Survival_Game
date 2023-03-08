@@ -2,63 +2,59 @@ const misc = require('./../../../src/helpers/misc');
 //let g = window;  // apparently already defined somewhere
 
 const genInitMapMatrix = () => {
-  g.MAP_WIDTH = 10;
-  g.MAP_HEIGHT = 10;
+  g.m = {};
+  g.m.MAP_WIDTH = 10;
+  g.m.MAP_HEIGHT = 10;
+
+  g.m.OCEAN = 0;
+  g.m.MOUNTAIN = 1;
+  g.m.FLATLAND = 10;
+  g.m.STONE = 11;
+  g.m.TREE = 12;
+  g.m.WATER = 20;
 
   // Initialize the map with all cells set to 0 (empty)
-  g.map = new Array(g.MAP_HEIGHT);
-  for (let i = 0; i < g.MAP_HEIGHT; i++) {
-    g.map[i] = new Array(g.MAP_WIDTH).fill(0);
+  g.map = new Array(g.m.MAP_HEIGHT);
+  for (let i = 0; i < g.m.MAP_HEIGHT; i++) {
+    g.map[i] = new Array(g.m.MAP_WIDTH).fill(0);
   }
 
   // Choose a random starting point for the map
-  //let startX = Math.floor(Math.random() * g.MAP_WIDTH);
+  //let startX = Math.floor(Math.random() * g.m.MAP_WIDTH);
   g.startX = 2;
-  //let startY = Math.floor(Math.random() * g.MAP_HEIGHT);
+  //let startY = Math.floor(Math.random() * g.m.MAP_HEIGHT);
   g.startY = 2;
 
   // Use a depth-first search to generate the map
   let stack = [[g.startX, g.startY]];
-  /*  let stack = [];
-   stack.push([3,3]);
-   stack.push([4,3]);
-   stack.push([5,3]);
- 
-   stack.push([3,4]);
-   stack.push([4,4]);
-   stack.push([5,4]);
- 
-   stack.push([3,5]);
-   stack.push([4,5]);
-   stack.push([5,5]); */
 
-  g.map[2][2] = 1;
-  g.map[3][2] = 1;
-  g.map[4][2] = 1;
-  g.map[5][2] = 1;
-  g.map[6][2] = 1;
-  g.map[7][2] = 1;
+  g.map[2][2] = g.m.FLATLAND;
+  g.map[3][2] = g.m.FLATLAND;
+  g.map[4][2] = g.m.FLATLAND;
+  g.map[5][2] = g.m.FLATLAND;
+  g.map[6][2] = g.m.FLATLAND;
+  g.map[7][2] = g.m.FLATLAND;
 
-  g.map[2][3] = 1;
-  g.map[3][3] = 1;
-  g.map[4][3] = 2;
-  g.map[5][3] = 1;
-  g.map[6][3] = 1;
+  g.map[2][3] = g.m.FLATLAND;
+  g.map[3][3] = g.m.FLATLAND;
+  g.map[4][3] = g.m.WATER;
+  g.map[5][3] = g.m.FLATLAND;
+  g.map[6][3] = g.m.FLATLAND;
 
-  g.map[3][4] = 1;
-  g.map[4][4] = 1;
-  g.map[5][4] = 1;
-  g.map[6][4] = 1;
+  g.map[3][4] = g.m.FLATLAND;
+  g.map[4][4] = g.m.FLATLAND;
+  g.map[5][4] = g.m.FLATLAND;
+  g.map[6][4] = g.m.FLATLAND;
 
-  g.map[3][5] = 1;
-  g.map[4][5] = 1;
-  g.map[5][5] = 2;
-  g.map[6][5] = 1;
+  g.map[3][5] = g.m.FLATLAND;
+  g.map[4][5] = g.m.FLATLAND;
+  g.map[5][5] = g.m.WATER;
+  g.map[6][5] = g.m.FLATLAND;
 
-  g.map[3][6] = 1;
-  g.map[4][6] = 1;
-  g.map[5][6] = 1;
-  g.map[6][6] = 1;
+  g.map[3][6] = g.m.FLATLAND;
+  g.map[4][6] = g.m.FLATLAND;
+  g.map[5][6] = g.m.FLATLAND;
+  g.map[6][6] = g.m.FLATLAND;
 
   //while (stack.length > 0 ) {
   while (stack.length > 0 && stack.length <= 20) {
@@ -68,7 +64,7 @@ const genInitMapMatrix = () => {
     [x, y] = stack.pop();
 
     // Mark the cell as part of the map
-    g.map[y][x] = 1;
+    g.map[y][x] = 10;
     //g.map[y][x] = Math.floor(Math.random() * (i + 1));
 
     // Get a list of neighbors that are not yet part of the map
@@ -82,10 +78,10 @@ const genInitMapMatrix = () => {
   function getUnvisitedNeighbors(x, y, map) {
     let neighbors = [];
     if (y > 0 && g.map[y - 1][x] === 0) neighbors.push([x, y - 1]);
-    if (y < g.MAP_HEIGHT - 1 && g.map[y + 1][x] === 0)
+    if (y < g.m.MAP_HEIGHT - 1 && g.map[y + 1][x] === 0)
       neighbors.push([x, y + 1]);
     if (x > 0 && g.map[y][x - 1] === 0) neighbors.push([x - 1, y]);
-    if (x < g.MAP_WIDTH - 1 && g.map[y][x + 1] === 0)
+    if (x < g.m.MAP_WIDTH - 1 && g.map[y][x + 1] === 0)
       neighbors.push([x + 1, y]);
     return neighbors;
   }
@@ -106,14 +102,12 @@ const healSquares4SideLand = () => {
     for (let x = 1; x < matrix[y].length - 1; x++) {
       if (matrix[x][y] === 0) {
         if (
-          matrix[x + 1][y] === 1 &&
-          matrix[x][y + 1] === 1 &&
-          matrix[x - 1][y] === 1 &&
-          matrix[x][y - 1] === 1
-          /*           (matrix[x + 1][y] === 1 && matrix[x - 1][y] === 1) ||
-          (matrix[x][y + 1] === 1 && matrix[x][y - 1] === 1) */
+          matrix[x + 1][y] === g.m.FLATLAND &&
+          matrix[x][y + 1] === g.m.FLATLAND &&
+          matrix[x - 1][y] === g.m.FLATLAND &&
+          matrix[x][y - 1] === g.m.FLATLAND
         ) {
-          matrix[x][y] = 2; // 2 -> (fresh) water
+          matrix[x][y] = 20; // 2 -> (fresh) water
           console.log('corrected square: %s,%s', x, y);
         }
       }
