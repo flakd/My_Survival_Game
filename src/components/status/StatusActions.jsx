@@ -32,10 +32,10 @@ const StatusActions = () => {
 
   return (
     <div
-      id='status-actions'
+      id='stats-actions'
       className='status'
     >
-      <div id='status-actions-header'>
+      <div id='stats-actions-header'>
         {actions.length} ACTIONS AVAILABLE FOR YOU TO TRY
       </div>
       {actions

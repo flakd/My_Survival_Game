@@ -5,10 +5,13 @@ let g = window;
 const InputOutput = () => {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState([]);
+  const [message, setMessage] = useState([]);
+  const [status, setStatus] = useState([]);
   console.log(g.core);
 
   let currentMsg = '';
   useEffect(() => {
+    g.q.addQueueWrittenEventListener('status', SQWHandler);
     let interval = setInterval(() => {
       if (g.msgQueue.length > 0) {
         currentMsg = g.msgQueue.pop();
@@ -17,6 +20,12 @@ const InputOutput = () => {
     }, 200);
   }, []);
 
+  const SQWHandler = () => {
+    //setOutput([...output, <div>{currentMsg}</div>]);
+    //console.log(g.q.status.pop());
+    //setStatus(g.q.status.pop());
+    setStatus(g.q.status[g.q.status.length - 1]);
+  };
   const onKeyDownHandler = (evt) => {
     if (evt.key === 'Enter') {
       const input = evt.target.value;
@@ -47,16 +56,17 @@ const InputOutput = () => {
       <div
         id='output'
         className='io'
-        style={{width: '250px', float: 'left', height: '200px'}}
       >
         {output.map((msg, idx) => (
           <div key={idx}>{msg}</div>
         ))}
       </div>
       <div
-        id='status-bar'
+        id='status'
         className='io'
-      ></div>
+      >
+        <div>{status}</div>
+      </div>
     </div>
   );
 };

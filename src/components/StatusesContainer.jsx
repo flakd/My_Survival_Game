@@ -9,15 +9,15 @@ const StatusesContainer = () => {
         <div id='score'></div>
       </div>
       <div
-        id='status-vitals'
+        id='stats-vitals'
         className='status'
       ></div>
       <div
-        id='status-inventory'
+        id='stats-inventory'
         className='status'
       ></div>
       <div
-        id='status-actions'
+        id='stats-actions'
         className='status'
       ></div>
     </div>

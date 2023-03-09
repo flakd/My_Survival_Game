@@ -36,8 +36,7 @@ function handleKeyDown_Esc(event) {
 }
 
 function handleKeyDown_ArrowKeys(event) {
-  if (g.p.isMoving) return;
-
+  if (g.p.isMoving || g.waid.isBusy()) return;
   lwln(event.key);
   lwln('g.p.xInt: ' + g.p.xInt);
   lwln('g.p.yInt: ' + g.p.yInt);
@@ -198,7 +197,24 @@ function handleKeyDown_Enter(event) {
 function handle_activityCompleted(sender, activity) {
   // hide stuff
   stopActivityMedia();
+  function resetPlayerStance() {
+    g.p.directionCSS_X = `scaleX(-1)`;
 
+    let fishingRod = document.getElementById('fishing-rod');
+    if (!fishingRod) console.log("RESETTING PLAYER: can't find fishing rod");
+    fishingRod.style.display = 'none';
+
+    let campfire = document.getElementById('campfire');
+    if (!campfire) console.log("RESETTING PLAYER: can't find campfire");
+    campfire.style.display = 'none';
+
+    g.p.playerStatic.style.top = g.p.newTop + 'px';
+    g.p.playerStatic.style.left = g.p.newLeft + 'px';
+    g.p.playerStatic.style.transform = g.p.directionCSS_X;
+    g.p.playerStatic.style.WebkitTransform = g.p.directionCSS_X;
+  }
+
+  resetPlayerStance();
   //------------------------------------------------------------------------>
   //  4.a. DoGameAction() - else do not return and we continue to the next
   //      line of code...  which is to ACTUALLY executes the GAME ACTION

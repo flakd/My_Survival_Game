@@ -23,7 +23,7 @@ const StatusInventory = () => {
 
   return (
     <div
-      id='status-inventory'
+      id='stats-inventory'
       className='status'
     >
       {inventory

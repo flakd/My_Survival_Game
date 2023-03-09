@@ -360,6 +360,8 @@ let core = {
           calc.item,
         ];
         g.msgQueue.push(msgArray);
+        g.q.write('status', msgArray);
+
         return false; // return false b/c this calc failed
       }
     } // END:  canDoInvTakeCalc
@@ -727,6 +729,7 @@ let core = {
     lwlnOutput();
     let msgArray = [action.successMsg, messageArray[0], messageArray[1]];
     g.msgQueue.push(msgArray);
+    g.q.write('status', msgArray);
   }, // END:  function updateVitals(action, inventory, vitals){
 
   /*  6. call to output.printStats1(g.gameHr,g.c); =========================> 

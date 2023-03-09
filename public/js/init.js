@@ -117,4 +117,66 @@ const CELESTIAL_DIST_MOD_Y = 2.2;
 const GAMELOOP_TIMER_INTERVAL = 10;
 //const TICKS_PER_MINUTE = 10;
 g.TICKS_PER_MINUTE = 5;
+
+class Q {
+  //these are the queue events
+  _onStatusWritten = [];
+  _onMessageWritten = [];
+  _onOutputWritten = [];
+
+  //these are the actual queues
+  status = [];
+  message = [];
+  output = [];
+  constructor() {}
+  write(queue, text) {
+    this[queue].push(text);
+    this.triggerQueueWrittenEvent(queue);
+  }
+  triggerQueueWrittenEvent(queue) {
+    let handlerStack = '';
+    if (queue === 'status') handlerStack = '_onStatusWritten';
+    if (queue === 'message') handlerStack = '_onMessageWritten';
+    if (queue === 'output') handlerStack = '_onOutputWritten';
+    for (let i = 0; i < this[handlerStack].length; i++) {
+      this[handlerStack][i]();
+    }
+  }
+  addQueueWrittenEventListener(queue, listenerFunc) {
+    let handlerStack = '';
+    if (queue === 'status') handlerStack = '_onStatusWritten';
+    if (queue === 'message') handlerStack = '_onMessageWritten';
+    if (queue === 'output') handlerStack = '_onOutputWritten';
+    this[handlerStack].push(listenerFunc);
+  }
+
+  removeQueueWrittenEventListener(queue, listenerFunc) {
+    let handlerStack = '';
+    if (queue === 'status') handlerStack = '_onStatusWritten';
+    if (queue === 'message') handlerStack = '_onMessageWritten';
+    if (queue === 'output') handlerStack = '_onOutputWritten';
+    var index = this[handlerStack].indexOf(listenerFunc);
+    if (index >= 0) {
+      this[handlerStack].splice(index, 1);
+    }
+  }
+}
+g.q = new Q();
 g.msgQueue = [];
+g.q.addQueueWrittenEventListener('status', statusQueueWrittenHandler);
+g.q.addQueueWrittenEventListener('message', messageQueueWrittenHandler);
+g.q.addQueueWrittenEventListener('output', outputQueueWrittenHandler);
+
+/* function statusQueueWrittenHandler(sender) {
+  console.log(g.q.status.pop());
+} */
+function messageQueueWrittenHandler(sender) {
+  console.log(g.q.message.pop());
+}
+function outputQueueWrittenHandler(sender) {
+  console.log(g.q.output.pop());
+}
+
+g.q.write('status', 'testing status');
+g.q.write('message', 'testing message');
+g.q.write('output', 'testing output');

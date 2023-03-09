@@ -48,23 +48,17 @@ function incrementGameHour(numticks) {
   }
   if (g.t.tick > numticks) {
     // TimerInterval = 50ms right now
+    /*********************************************************
+     * Place stuff that NEEDS to run EVERY MINUTE or TICK here
+     ********************************************************/
     g.t.tick = 0;
     g.myHeavens.passTime(g.t.hour, g.t.minute, g.t.tick);
     g.t.minute++;
-    /*       let wasIbusy = g.whatImDoing.isBusy();
-     */
-
-    //g.whatImDoing.passMinute();
-    //g.waid = new WhatAmIDoing();
     g.waid.passMinute();
-    /*     if (waid.isBusy()) {
-      playActivityMedia(g.c.action.gerund);
-    } */
-    //WhatAmIDoing.passMinute();
+    /*********************************************************
+     * Place stuff that NEEDS to run EVERY MINUTE or TICK here
+     ********************************************************/
 
-    /*       if (g.whatImDoing.isBusy()===false && wasIbusy===true) {
-            stopActivityMedia();
-          } */
     g.t.totalMinutes++;
     if (g.t.minute > 59) {
       g.t.minute = 0;

@@ -15,7 +15,7 @@ class WhatAmIDoing {
   removeActivityCompletedEventListener(listenerFunc) {
     var index = this._onActivityCompleted.indexOf(listenerFunc);
     if (index >= 0) {
-      arr.splice(index, 1);
+      this._onActivityCompleted.splice(index, 1);
     }
   }
   startActivity(action) {
@@ -74,6 +74,23 @@ class WhatAmIDoing {
       this._timeLeft = 0;
     }
   }
+}
+
+function resetPlayerStance() {
+  g.p.directionCSS_X = `scaleX(-1)`;
+
+  let fishingRod = document.getElementById('fishing-rod');
+  if (!fishingRod) console.log("RESETTING PLAYER: can't find fishing rod");
+  fishingRod.style.display = 'none';
+
+  let campfire = document.getElementById('campfire');
+  if (!campfire) console.log("RESETTING PLAYER: can't find campfire");
+  campfire.style.display = 'none';
+
+  g.p.playerStatic.style.top = g.p.newTop + 'px';
+  g.p.playerStatic.style.left = g.p.newLeft + 'px';
+  g.p.playerStatic.style.transform = g.p.directionCSS_X;
+  g.p.playerStatic.style.WebkitTransform = g.p.directionCSS_X;
 }
 
 (function () {

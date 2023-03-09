@@ -11,7 +11,7 @@ const StatusVitals = () => {
   }, []);
   return (
     <div
-      id='status-vitals'
+      id='stats-vitals'
       className='status'
     >
       {vitals

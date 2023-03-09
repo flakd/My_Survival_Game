@@ -16,8 +16,9 @@ $(document).ready(function () {
 function playActivityMedia(activityNameStr) {
   let tmpName = activityNameStr.split(' ').join('-');
   let srcFileName = 'images/' + tmpName + '.gif';
-  activityImg.src = srcFileName;
-  activityImgModal.style.display = 'block';
+  g.activityImg.src = srcFileName;
+  //activityImgModal.style.display = 'block';
+  g.activityImg.style.display = 'block';
   activityAudioClip.src = 'audio/' + tmpName + '.mp3';
   activityAudioClip.play();
   lwr(
@@ -38,7 +39,8 @@ function playRAoGMedia(activityNameStr) {
 
 function stopActivityMedia() {
   activityAudioClip.pause();
-  activityImgModal.style.display = 'none';
+  //activityImgModal.style.display = 'none';
+  g.activityImg.style.display = ' none';
 }
 
 function toggleMusicPlay(audioClip, btn) {

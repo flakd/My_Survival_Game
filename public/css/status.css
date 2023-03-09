@@ -16,7 +16,7 @@
   box-shadow: 5px 5px 5px 0px rgb(174, 123, 123),
     -5px -5px 5px 1px rgb(174, 123, 123);
 }
-.status-items {
+.stats-items {
   box-shadow: 0px 0px 5px 0px rgba(174, 123, 123, 0.5);
 }
 #time,
@@ -45,28 +45,28 @@
   /*   margin-left: 100px; */
   width: 95px;
 }
-#status-vitals {
+#stats-vitals {
   background-color: sandybrown;
   height: 40px;
   text-align: center;
 }
-#status-inventory {
+#stats-inventory {
   height: 98px;
   overflow: auto;
 }
-#status-actions {
+#stats-actions {
   height: 160px;
   text-align: center;
 }
-#status-actions-header {
+#stats-actions-header {
   background-color: darkslategray;
   color: white;
   border-radius: 3px;
   text-align: center;
 }
-#status-vitals,
-#status-inventory,
-#status-actions {
+#stats-vitals,
+#stats-inventory,
+#stats-actions {
   padding: 5px;
 }
 .vitals {
@@ -76,11 +76,4 @@
 .inventory {
   background-color: lightgreen;
   color: black;
-}
-#status-bar {
-  position: relative;
-  width: 350px;
-  height: 100px;
-  float: left;
-  top: 100px;
 }
