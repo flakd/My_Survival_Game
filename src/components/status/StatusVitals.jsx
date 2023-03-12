@@ -18,6 +18,7 @@ const StatusVitals = () => {
         .filter((vital) => vital.key !== 'default')
         .map((vital) => (
           <button
+            id={vital.key}
             key={vital.key}
             type='button'
             className='vitals'

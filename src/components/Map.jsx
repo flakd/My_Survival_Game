@@ -1,6 +1,5 @@
 import React from 'react';
-import {
-  getMapAsList,
+import getMapAsList, {
   getSeafood,
   getLandResource,
   getFish,

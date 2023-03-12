@@ -41,6 +41,7 @@ function stopActivityMedia() {
   activityAudioClip.pause();
   //activityImgModal.style.display = 'none';
   g.activityImg.style.display = ' none';
+  playActivityMedia('Indy nonanim trans');
 }
 
 function toggleMusicPlay(audioClip, btn) {

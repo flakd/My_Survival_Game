@@ -21,9 +21,6 @@ class GameTimer {
       this.minute++;
       g.waid.passMinute();
       myHeavens.passTime();
-      /*       if (waid.isBusy()) {
-        playActivityMedia(g.c.action.gerund);
-      } */
       this.totalMinutes++;
       if (this.minute > 59) {
         this.minute = 0;

@@ -187,7 +187,7 @@ window.c.actions = {
 
   find: {
     key: 'find',
-    gerund: 'trying to find a stone',
+    gerund: 'finding a stone',
     numHrs: 1,
     successMsg:
       'You found yourself a stone (%s)... what can you use this for? (%s)',
@@ -214,7 +214,7 @@ window.c.actions = {
 
   fashion: {
     key: 'fashion',
-    gerund: 'fashioning',
+    gerund: 'fashioning a bow',
     numHrs: 5,
     successMsg: 'You fashioned a bow (%s), but that was really tiring (%s)',
     calcs: [
@@ -282,7 +282,7 @@ window.c.actions = {
 
   hunt: {
     key: 'hunt',
-    gerund: 'hunting',
+    gerund: 'hunting for meat',
     numHrs: 6,
     successMsg:
       "You caught/killed a rabbit (%s). You feel tired (%s), but accomplished - you're a warrior!",
@@ -338,7 +338,7 @@ window.c.actions = {
 
   build: {
     key: 'build',
-    gerund: 'building',
+    gerund: 'building a hut',
     numHrs: 8,
     successMsg:
       "You built a small hut (%s) - a major accomplishment.  You're exhausted... (%s)",
@@ -433,7 +433,7 @@ window.c.actions = {
 
   dig: {
     key: 'dig',
-    gerund: 'digging',
+    gerund: 'digging for worms',
     numHrs: 1,
     successMsg: "found a worm (%s), That wasn't too tiring (%s)",
     calcs: [
@@ -459,7 +459,7 @@ window.c.actions = {
 
   fetch: {
     key: 'fetch',
-    gerund: 'fetching',
+    gerund: 'fetching some water',
     numHrs: 1,
     successMsg: 'fetched some water (%s). That took some effort (%s)',
     calcs: [
@@ -485,7 +485,7 @@ window.c.actions = {
 
   drink: {
     key: 'drink',
-    gerund: 'drinking',
+    gerund: 'drinking some water',
     numHrs: 1,
     successMsg:
       'have a little less water for yourself (%s). Ahh... that water was refreshing! (%s)',
@@ -588,7 +588,7 @@ window.c.actions = {
 
   skin: {
     key: 'skin',
-    gerund: 'skinning a game animal',
+    gerund: 'skinning an animal',
     numHrs: 2,
     successMsg:
       "You skinned this small animal (%s), but it's no longer edible (%s)!",
@@ -648,7 +648,7 @@ window.c.actions = {
 
   tailor: {
     key: 'tailor',
-    gerund: 'tailoring',
+    gerund: 'tailoring some clothes',
     numHrs: 10,
     successMsg:
       'Wow... you tailored some clothes (%s)! These will help keep you warm (%s)',

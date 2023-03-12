@@ -113,6 +113,8 @@ function handleKeyDown_ArrowKeys(event) {
   //g.p.player = document.getElementById(playerId);
 
   if (isValidMove) {
+    playActivityMedia('walking');
+
     let lastTop = g.p.lastYInt * 40 + 108;
     let lastLeft = g.p.lastXInt * 40 + 70;
     g.p.newTop = lastTop;
@@ -141,6 +143,8 @@ function handleKeyDown_ArrowKeys(event) {
       g.p.isMoving = false;
       g.p.playerAnim.style.display = 'none';
       g.p.playerStatic.style.display = 'block';
+      playActivityMedia('Indy nonanim trans');
+
       clearInterval(g.p.intervalID);
     }, 1000);
 
@@ -212,6 +216,8 @@ function handle_activityCompleted(sender, activity) {
     g.p.playerStatic.style.left = g.p.newLeft + 'px';
     g.p.playerStatic.style.transform = g.p.directionCSS_X;
     g.p.playerStatic.style.WebkitTransform = g.p.directionCSS_X;
+    g.activityImg.style.transform = 'rotate(0deg)';
+    g.activityImg.style.WebkitTransform = 'rotate(0deg)';
   }
 
   resetPlayerStance();

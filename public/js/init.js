@@ -139,7 +139,7 @@ class Q {
     if (queue === 'message') handlerStack = '_onMessageWritten';
     if (queue === 'output') handlerStack = '_onOutputWritten';
     for (let i = 0; i < this[handlerStack].length; i++) {
-      this[handlerStack][i]();
+      this[handlerStack][i](this, this[handlerStack]);
     }
   }
   addQueueWrittenEventListener(queue, listenerFunc) {
@@ -163,7 +163,7 @@ class Q {
 }
 g.q = new Q();
 g.msgQueue = [];
-g.q.addQueueWrittenEventListener('status', statusQueueWrittenHandler);
+//g.q.addQueueWrittenEventListener('status', statusQueueWrittenHandler);
 g.q.addQueueWrittenEventListener('message', messageQueueWrittenHandler);
 g.q.addQueueWrittenEventListener('output', outputQueueWrittenHandler);
 

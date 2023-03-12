@@ -231,6 +231,16 @@ let core = {
           g.p.playerStatic.style.left = g.p.newLeft + sleepOffsetX + 'px';
           g.p.playerStatic.style.transform = 'rotate(-90deg)';
           g.p.playerStatic.style.WebkitTransform = 'rotate(-90deg)';
+
+          let lenTop = g.activityImg.style.top.length;
+          g.activityImg.style.top =
+            g.activityImg.style.top.slice(0, lenTop - 3) + 100 + 'px';
+          let lenLeft = g.activityImg.style.left.length;
+          g.activityImg.style.left =
+            g.activityImg.style.left.slice(0, lenLeft - 3) + 'px';
+
+          g.activityImg.style.transform = 'rotate(-90deg)';
+          g.activityImg.style.WebkitTransform = 'rotate(-90deg)';
           break;
         case 'light':
           let campfireOffsetY = 15;
@@ -746,6 +756,7 @@ let core = {
       {event: 'had a Wolf Attack', probability: 1, injury: 5},
       {event: 'Fallen Down badly', probability: 1, injury: 5},
       {event: 'Cut Yourself severely', probability: 1, injury: 5},
+      //{event: 'Stung By Bees', probability: 1, injury: 5},
     ];
     function getRandomInt(min, max) {
       min = Math.ceil(min);
