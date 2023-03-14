@@ -8,14 +8,19 @@ import {
   getFish,
   fixLakesGPT,
 } from './../helpers/setupMap';
-//import mapLake from './../helpers/mapLake';
+import mapLake from './../helpers/mapLake';
 import {randomIntFromInterval} from './../helpers/misc';
 const g = window;
 
 const Map = () => {
   const initMap = genInitMapMatrix();
+  //const initMap = getTestMapMatrix();
+
   const fixedMap = fixLakesGPT(initMap);
+
   const mapList = getMapAsList(fixedMap);
+  //const mapList = getMapAsList(initMap);
+
   //mapLake();
 
   //test();
@@ -50,7 +55,7 @@ const Map = () => {
         );
       } */
       let resource;
-      if (cellValue === 0) {
+      if (cellValue === 30) {
         classList += ' shoreline';
       }
       if (cellValue === 0) {
@@ -113,5 +118,7 @@ const Map = () => {
     </>
   );
 };
+
+const fixedMap = mapLake();
 
 export default Map;

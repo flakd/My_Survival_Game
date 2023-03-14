@@ -72,6 +72,7 @@ class TAvatar {
     );
     if (this.PotentialNewPosition.value === g.m.OCEAN) {
       this.Position = this.PotentialNewPosition;
+      this.Position.value = 30;
       console.log(this.Position);
       return;
     }
@@ -83,6 +84,7 @@ class TAvatar {
     );
     if ((this.PotentialNewPosition.value = g.m.OCEAN)) {
       this.Position = this.PotentialNewPosition;
+      this.Position.value = 30;
       console.log(this.Position);
       return;
     }
@@ -94,6 +96,7 @@ class TAvatar {
     );
     if ((this.PotentialNewPosition.value = g.m.OCEAN)) {
       this.Position = this.PotentialNewPosition;
+      this.Position.value = 30;
       console.log(this.Position);
       return;
     }
@@ -105,6 +108,7 @@ class TAvatar {
     );
     if ((this.PotentialNewPosition.value = g.m.OCEAN)) {
       this.Position = this.PotentialNewPosition;
+      this.Position.value = 30;
       console.log(this.Position);
       return;
     }
