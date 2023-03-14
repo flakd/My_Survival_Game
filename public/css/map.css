@@ -30,6 +30,9 @@
 .cell.water {
   background-color: rgb(0, 127, 207);
 }
+.cell.shoreling {
+  background-color: red;
+}
 
 .tree,
 .mountain {
@@ -46,6 +49,8 @@
 }
 .seafood,
 .fish {
+  position: relative;
+  float: left;
   font-size: 12pt;
 }
 

@@ -1,9 +1,8 @@
-import {randomIntFromInterval} from './helpers/misc';
+import {randomIntFromInterval} from './misc';
 
 let g = window; // apparently already defined somewhere
 
-const getTestMapMatrix = () => {
-  setMapInits();
+export const getTestMapMatrix = () => {
   g.map = new Array(g.m.MAP_HEIGHT);
   for (let i = 0; i < g.m.MAP_HEIGHT; i++) {
     g.map[i] = new Array(g.m.MAP_WIDTH).fill(g.m.FLATLAND);
@@ -52,7 +51,6 @@ const getTestMapMatrix = () => {
 };
 
 const genInitMapMatrix = () => {
-  setMapInits();
   // Initialize the map with all cells set to 0 (empty)
   g.map = new Array(g.m.MAP_HEIGHT);
   for (let i = 0; i < g.m.MAP_HEIGHT; i++) {
@@ -87,9 +85,9 @@ const genInitMapMatrix = () => {
 
   g.map[1][4] = g.m.FLATLAND;
   g.map[2][4] = g.m.FLATLAND;
-  g.map[3][4] = g.m.OCEAN;
+  g.map[3][4] = g.m.FLATLAND;
   g.map[4][4] = g.m.FLATLAND;
-  g.map[5][4] = g.m.FLATLAND;
+  g.map[5][4] = g.m.OCEAN;
   g.map[6][4] = g.m.FLATLAND;
   g.map[8][4] = g.m.FLATLAND;
 
@@ -209,75 +207,110 @@ const healThinStripSurroundedSquares = () => {
   return matrix;
 };
 
-const mapOutLakeEdge = () => {
-  const matrix = getTestMapMatrix();
-  const startX = 4;
-  const startY = 4;
-  let history = [];
-
-  let current = [startX, startY];
-  let left; //  [x-11][y]
-  let eastValue; //  [x+1][y]
-  //for (let y = matrix.length - 1; y >= 0; y--) {
-  function findShore(startX, startY) {
-    let forwardVal; //  [x][y-1]  -- go north until I find short
-    for (let y = startY - 1; y >= 0; y--) {
-      forwardVal = matrix[startX][y];
-      if (forwardVal === g.m.FLATLAND) {
-        let pt = new MapPoint(startX, y + 1, forwardVal);
-        history.push(pt);
-        return pt;
+export const fixLakesGPT = () => {
+  const findLakeSquares = (x, y, visited, lake) => {
+    // Check if the current square is water and not visited
+    if (map[x][y] === g.m.OCEAN && !visited[x][y]) {
+      // Mark the square as visited and add it to the connected component
+      visited[x][y] = true;
+      lake.push([x, y]);
+      // Recursively visit adjacent squares that are water and not visited
+      if (x > 0) findLakeSquares(x - 1, y, visited, lake); // up
+      if (x < 9) findLakeSquares(x + 1, y, visited, lake); // down
+      if (y > 0) findLakeSquares(x, y - 1, visited, lake); // left
+      if (y < 9) findLakeSquares(x, y + 1, visited, lake); // right
+    }
+    let isOcean = false;
+    for (let i = 0; i < lake.length; i++) {
+      let x, y;
+      [x, y] = lake[i];
+      if (x === 0 || x === 9 || y === 0 || y === 9) {
+        isOcean = true;
       }
     }
-    return false;
-  }
-  class MapPoint {
-    x = 0;
-    y = 0;
-    constructor(x, y, val) {
-      this.x = x;
-      this.y = y;
-      this.val = val;
+    if (isOcean) lake = [];
+  };
+  const getLargestLakeIdx = function indexOfMax(arr) {
+    if (arr.length === 0) {
+      return -1;
     }
-  }
-  function walkEast(point) {
-    for (let x = point.x; x < matrix.length - 1; x++) {
-      let eastValue = matrix[x + 1][point.y];
-      let pt = new MapPoint(x + 1, point.y, eastValue);
-      history.push(pt);
-      if (eastValue === g.m.FLATLAND) turnSouth();
-      if (eastValue === g.m.OCEAN) {
-        let level = 1;
-        function northOrEast(pt, level) {
-          if (isNorthOcean(pt)) {
-            walkNorth(pt);
-          } else {
-            walkEast(pt);
-          }
-          level++;
-          northOrEast(pt, level);
+
+    var max = arr[0];
+    var maxIndex = 0;
+
+    for (var i = 1; i < arr.length; i++) {
+      if (arr[i] > max) {
+        maxIndex = i;
+        max = arr[i];
+      }
+    }
+    return maxIndex;
+  };
+
+  function findLakes() {
+    // Find all the connected components that represent lakes
+    const lakes = [];
+    for (let x = 1; x < 9; x++) {
+      for (let y = 1; y < 9; y++) {
+        // Check if the current square is water and not already visited
+        if (map[x][y] === g.m.OCEAN && !visited[x][y]) {
+          // Initialize a new connected component
+          const lake = [];
+          // Find all the squares that belong to the lake
+          findLakeSquares(x, y, visited, lake);
+          // Add the connected component to the lakes array
+          lakes.push(lake);
         }
       }
     }
+    return lakes;
   }
-  function turnSouth() {}
-  function isNorthOcean(point) {
-    if (matrix[(point.x, point.y - 1)] === g.m.OCEAN) return true;
-    else return false;
+  function printLakeCoordinatesDebug(lakes) {
+    // Print the coordinates of each square that belongs to each lake
+    lakes.forEach((lake, index) => {
+      //for each lake
+      console.log(`Lake ${index + 1}:`);
+      lake.forEach((square) => {
+        //for each square
+        console.log(square); //print the square
+        let x, y;
+        [x, y] = square;
+        map[x][y] = g.m.WATER; //change the water (from OCEAN) to a WATER square
+      });
+    });
   }
-  function walkNorth(point) {
-    if (point.y > 0) {
-      let northValue = matrix[point.x][point.y - 1];
-      let pt = new MapPoint(point.x, point.y - 1, northValue);
-      history.push(pt);
-    }
+  function getLargestLake() {
+    const lakeSizes = []; //an array of all the lakes ACTUAL LENGTHS
+    lakes.forEach((lake, index) => {
+      lakeSizes.push(lake.length);
+    });
+    let idx = getLargestLakeIdx(lakeSizes);
+    return lakes[idx];
   }
+  function backToOcean(biggestLake) {
+    biggestLake.forEach((square) => {
+      console.log('back to ocean:', square);
+      let x, y;
+      [x, y] = square;
+      map[x][y] = g.m.OCEAN;
+    });
+  }
+
+  //const map = getTestMapMatrix();
+  const map = genInitMapMatrix();
+  const visited = Array.from({length: 10}, () =>
+    Array.from({length: 10}, () => false)
+  );
+  const lakes = findLakes();
+  printLakeCoordinatesDebug(lakes);
+  backToOcean(getLargestLake());
+  return map;
 };
 
 const getMapAsList = () => {
   //const matrix = healThinStripSurroundedSquares();
   const matrix = getTestMapMatrix();
-  console.log('matrix', matrix);
+  //const matrix = mapLake();
 
   const resultsArray = [];
   for (let y = 0; y < matrix.length; y++) {
@@ -289,7 +322,7 @@ const getMapAsList = () => {
   return resultsArray;
 };
 
-const test = () => {
+export const test = () => {
   console.log('test');
   console.log(randomIntFromInterval(1, 100));
 };
@@ -376,6 +409,10 @@ const setMapInits = () => {
   g.m.TREE = 12;
   g.m.WATER = 20;
 
+  g.m.NORTH = 1;
+  g.m.EAST = 2;
+  g.m.SOUTH = 3;
+  g.m.WEST = 4;
   g.m.numFilled = 0;
 
   g.m.numTrees = 0;
@@ -388,5 +425,5 @@ const setMapInits = () => {
   g.m.maxFish = 3;
   g.m.maxSeafood = 100;
 };
-
+setMapInits();
 export default getMapAsList;

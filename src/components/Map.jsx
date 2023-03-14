@@ -3,15 +3,19 @@ import getMapAsList, {
   getSeafood,
   getLandResource,
   getFish,
-} from './../setupMap';
+  fixLakesGPT,
+} from './../helpers/setupMap';
+import mapLake from './../helpers/mapLake';
 import {randomIntFromInterval} from './../helpers/misc';
 const g = window;
 
 const Map = () => {
   const myMap = getMapAsList();
+  mapLake();
+  //fixLakesGPT();
   //test();
 
-  console.log(myMap);
+  //console.log(myMap);
 
   const generateJSXArray = (gridAsList) => {
     let HTML = [];
@@ -21,7 +25,7 @@ const Map = () => {
       let playerJSX = [];
 
       const cell = gridAsList[i];
-      const cellValue = cell[0];
+      let cellValue = cell[0];
       const cellX = cell[1];
       const cellY = cell[2];
 
@@ -29,7 +33,7 @@ const Map = () => {
       const name = cellX + ',' + cellY;
       let classList = 'cell';
 
-      if (cellValue === 1 || cellValue === 20) {
+      /*       if (cellValue === 1 || cellValue === 20) {
         playerJSX.push(
           <span
             key={'player_' + idStr}
@@ -39,8 +43,11 @@ const Map = () => {
             🚶🏻
           </span>
         );
-      }
+      } */
       let resource;
+      if (cellValue === 0) {
+        classList += ' shoreline';
+      }
       if (cellValue === 0) {
         //classList += ' unwalkable ocean fish';
         resource = getSeafood();
@@ -48,11 +55,13 @@ const Map = () => {
       if (cellValue === 10) {
         classList += ' filled walkable land'; //filled (green/land)
         resource = getLandResource();
-        /*         if (resource.className === 'tree') {
+        if (resource && resource.className === 'tree') {
           cellValue = g.m.TREE;
-        } else if (resource.className === 'mountain') {
+          console.log('TREE');
+        } else if (resource && resource.className === 'mountain') {
           cellValue = g.m.STONE;
-        } */
+          console.log('STONE');
+        }
       }
       if (cellValue === 20) {
         //classList += ' walkable water fish drink'; //filled (green/land)
@@ -79,7 +88,8 @@ const Map = () => {
           name={name}
           className={classList}
         >
-          {playerJSX}
+          {/*           {playerJSX} */
+          /*since I removed having the player icon in ever square */}
           {resourceJSX}
         </div>
       );
