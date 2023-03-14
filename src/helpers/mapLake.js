@@ -49,22 +49,18 @@ class TAvatar {
         x = Position.x;
         y = Position.y - 1;
         return new TPoint(x, y);
-        break;
       case TDirection.East:
         x = Position.x + 1;
         y = Position.y;
         return new TPoint(x, y);
-        break;
       case TDirection.South:
         x = Position.x;
         y = Position.y + 1;
         return new TPoint(x, y);
-        break;
       case TDirection.West:
         x = Position.x - 1;
         y = Position.y;
         return new TPoint(x, y);
-        break;
     }
   }
 
@@ -116,10 +112,19 @@ class TAvatar {
 }
 
 function mapLake() {
-  let startingPoint = new TPoint(4, 3);
+  let startingPoint = new TPoint(4, 2);
   var Avatar = new TAvatar(TDirection.East, startingPoint);
   Avatar.Move();
   let count = 0;
+  Avatar.Move();
+  Avatar.Move();
+  Avatar.Move();
+  Avatar.Move();
+  Avatar.Move();
+  Avatar.Move();
+  Avatar.Move();
+  Avatar.Move();
+  Avatar.Move();
   /*   while (Avatar.Position !== Avatar.InitialPosition || count > 100) {
     Avatar.Move();
     count++;

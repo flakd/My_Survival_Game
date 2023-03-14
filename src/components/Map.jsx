@@ -1,18 +1,23 @@
 import React from 'react';
-import getMapAsList, {
+import {
+  genInitMapMatrix,
+  getTestMapMatrix,
+  getMapAsList,
   getSeafood,
   getLandResource,
   getFish,
   fixLakesGPT,
 } from './../helpers/setupMap';
-import mapLake from './../helpers/mapLake';
+//import mapLake from './../helpers/mapLake';
 import {randomIntFromInterval} from './../helpers/misc';
 const g = window;
 
 const Map = () => {
-  const myMap = getMapAsList();
-  mapLake();
-  //fixLakesGPT();
+  const initMap = genInitMapMatrix();
+  const fixedMap = fixLakesGPT(initMap);
+  const mapList = getMapAsList(fixedMap);
+  //mapLake();
+
   //test();
 
   //console.log(myMap);
@@ -103,7 +108,7 @@ const Map = () => {
         key='grid'
         id='grid'
       >
-        {generateJSXArray(myMap).map((mapSquareAsJSX, idx) => mapSquareAsJSX)}
+        {generateJSXArray(mapList).map((mapSquareAsJSX, idx) => mapSquareAsJSX)}
       </div>
     </>
   );

@@ -50,7 +50,7 @@ export const getTestMapMatrix = () => {
   return g.map;
 };
 
-const genInitMapMatrix = () => {
+export const genInitMapMatrix = () => {
   // Initialize the map with all cells set to 0 (empty)
   g.map = new Array(g.m.MAP_HEIGHT);
   for (let i = 0; i < g.m.MAP_HEIGHT; i++) {
@@ -207,7 +207,7 @@ const healThinStripSurroundedSquares = () => {
   return matrix;
 };
 
-export const fixLakesGPT = () => {
+export const fixLakesGPT = (map) => {
   const findLakeSquares = (x, y, visited, lake) => {
     // Check if the current square is water and not visited
     if (map[x][y] === g.m.OCEAN && !visited[x][y]) {
@@ -296,8 +296,6 @@ export const fixLakesGPT = () => {
     });
   }
 
-  //const map = getTestMapMatrix();
-  const map = genInitMapMatrix();
   const visited = Array.from({length: 10}, () =>
     Array.from({length: 10}, () => false)
   );
@@ -307,9 +305,9 @@ export const fixLakesGPT = () => {
   return map;
 };
 
-const getMapAsList = () => {
+export const getMapAsList = (matrix) => {
   //const matrix = healThinStripSurroundedSquares();
-  const matrix = getTestMapMatrix();
+  //const matrix = getTestMapMatrix();
   //const matrix = mapLake();
 
   const resultsArray = [];
