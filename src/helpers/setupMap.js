@@ -3,58 +3,63 @@ import {randomIntFromInterval} from './misc';
 let g = window; // apparently already defined somewhere
 
 export const getTestMapMatrix = () => {
-  g.map = new Array(g.m.MAP_HEIGHT);
+  g.m.map = new Array(g.m.MAP_HEIGHT);
   for (let i = 0; i < g.m.MAP_HEIGHT; i++) {
-    g.map[i] = new Array(g.m.MAP_WIDTH).fill(g.m.FLATLAND);
+    g.m.map[i] = new Array(g.m.MAP_WIDTH).fill([g.m.FLATLAND, false]);
   }
 
-  g.map[1][2] = g.m.FLATLAND;
-  g.map[2][2] = g.m.FLATLAND;
-  g.map[3][2] = g.m.OCEAN;
-  g.map[4][2] = g.m.OCEAN;
-  g.map[5][2] = g.m.OCEAN;
-  g.map[6][2] = g.m.OCEAN;
-  g.map[7][2] = g.m.FLATLAND;
-  g.map[8][2] = g.m.FLATLAND;
+  g.m.map[1][2] = [g.m.FLATLAND, false];
+  g.m.map[2][2] = [g.m.OCEAN, false];
+  g.m.map[3][2] = [g.m.OCEAN, false];
+  g.m.map[4][2] = [g.m.OCEAN, false];
+  g.m.map[5][2] = [g.m.FLATLAND, false];
+  g.m.map[6][2] = [g.m.FLATLAND, false];
+  g.m.map[7][2] = [g.m.FLATLAND, false];
+  g.m.map[8][2] = [g.m.FLATLAND, false];
 
-  g.map[2][3] = g.m.FLATLAND;
-  g.map[3][3] = g.m.OCEAN;
-  g.map[4][3] = g.m.OCEAN;
-  g.map[5][3] = g.m.OCEAN;
-  g.map[6][3] = g.m.OCEAN;
-  g.map[7][3] = g.m.FLATLAND;
-  g.map[8][3] = g.m.FLATLAND;
+  g.m.map[2][3] = [g.m.OCEAN, false];
+  g.m.map[3][3] = [g.m.OCEAN, false];
+  g.m.map[4][3] = [g.m.OCEAN, false];
+  g.m.map[5][3] = [g.m.FLATLAND, false];
+  g.m.map[6][3] = [g.m.FLATLAND, false];
+  g.m.map[7][3] = [g.m.FLATLAND, false];
+  g.m.map[8][3] = [g.m.FLATLAND, false];
 
-  g.map[1][4] = g.m.FLATLAND;
-  g.map[2][4] = g.m.FLATLAND;
-  g.map[3][4] = g.m.OCEAN;
-  g.map[4][4] = g.m.OCEAN;
-  g.map[5][4] = g.m.FLATLAND;
-  g.map[6][4] = g.m.OCEAN;
-  g.map[8][4] = g.m.FLATLAND;
+  g.m.map[1][4] = [g.m.FLATLAND, false];
+  g.m.map[2][4] = [g.m.OCEAN, false];
+  g.m.map[3][4] = [g.m.OCEAN, false];
+  g.m.map[4][4] = [g.m.OCEAN, false];
+  g.m.map[5][4] = [g.m.FLATLAND, false];
+  g.m.map[6][4] = [g.m.FLATLAND, false];
+  g.m.map[8][4] = [g.m.FLATLAND, false];
 
-  g.map[1][5] = g.m.FLATLAND;
-  g.map[2][5] = g.m.FLATLAND;
-  g.map[3][5] = g.m.OCEAN;
-  g.map[4][5] = g.m.OCEAN;
-  g.map[5][5] = g.m.OCEAN;
-  g.map[6][5] = g.m.FLATLAND;
+  g.m.map[1][5] = [g.m.FLATLAND, false];
+  g.m.map[2][5] = [g.m.OCEAN, false];
+  g.m.map[3][5] = [g.m.OCEAN, false];
+  g.m.map[4][5] = [g.m.OCEAN, false];
+  g.m.map[5][5] = [g.m.FLATLAND, false];
+  g.m.map[6][5] = [g.m.FLATLAND, false];
 
-  g.map[1][6] = g.m.FLATLAND;
-  g.map[2][6] = g.m.OCEAN;
-  g.map[3][6] = g.m.OCEAN;
-  g.map[4][6] = g.m.OCEAN;
-  g.map[5][6] = g.m.FLATLAND;
-  g.map[6][6] = g.m.FLATLAND;
-  g.map[7][6] = g.m.FLATLAND;
-  return g.map;
+  g.m.map[1][6] = [g.m.OCEAN, false];
+  g.m.map[2][6] = [g.m.OCEAN, false];
+  g.m.map[3][6] = [g.m.OCEAN, false];
+  g.m.map[4][6] = [g.m.OCEAN, false];
+  g.m.map[5][6] = [g.m.FLATLAND, false];
+  g.m.map[6][6] = [g.m.FLATLAND, false];
+  g.m.map[7][6] = [g.m.FLATLAND, false];
+
+  g.m.map[3][7] = [g.m.OCEAN, false];
+
+  g.m.map[3][8] = [g.m.OCEAN, false];
+
+  return g.m.map;
 };
 
 export const genInitMapMatrix = () => {
   // Initialize the map with all cells set to 0 (empty)
-  g.map = new Array(g.m.MAP_HEIGHT);
+  g.m.map = new Array(g.m.MAP_HEIGHT);
   for (let i = 0; i < g.m.MAP_HEIGHT; i++) {
-    g.map[i] = new Array(g.m.MAP_WIDTH).fill(g.m.OCEAN);
+    g.m.map[i] = new Array(g.m.MAP_WIDTH).fill(g.m.OCEAN);
   }
 
   // Choose a random starting point for the map
@@ -66,45 +71,45 @@ export const genInitMapMatrix = () => {
   // Use a depth-first search to generate the map
   let stack = [[g.startX, g.startY]];
 
-  g.map[1][2] = g.m.FLATLAND;
-  g.map[2][2] = g.m.FLATLAND;
-  g.map[3][2] = g.m.FLATLAND;
-  g.map[4][2] = g.m.FLATLAND;
-  g.map[5][2] = g.m.FLATLAND;
-  g.map[6][2] = g.m.FLATLAND;
-  g.map[7][2] = g.m.FLATLAND;
-  g.map[8][2] = g.m.FLATLAND;
+  g.m.map[1][2] = g.m.FLATLAND;
+  g.m.map[2][2] = g.m.FLATLAND;
+  g.m.map[3][2] = g.m.FLATLAND;
+  g.m.map[4][2] = g.m.FLATLAND;
+  g.m.map[5][2] = g.m.FLATLAND;
+  g.m.map[6][2] = g.m.FLATLAND;
+  g.m.map[7][2] = g.m.FLATLAND;
+  g.m.map[8][2] = g.m.FLATLAND;
 
-  g.map[2][3] = g.m.FLATLAND;
-  g.map[3][3] = g.m.OCEAN;
-  g.map[4][3] = g.m.FLATLAND;
-  g.map[5][3] = g.m.FLATLAND;
-  g.map[6][3] = g.m.FLATLAND;
-  g.map[7][3] = g.m.FLATLAND;
-  g.map[8][3] = g.m.FLATLAND;
+  g.m.map[2][3] = g.m.FLATLAND;
+  g.m.map[3][3] = g.m.OCEAN;
+  g.m.map[4][3] = g.m.FLATLAND;
+  g.m.map[5][3] = g.m.FLATLAND;
+  g.m.map[6][3] = g.m.FLATLAND;
+  g.m.map[7][3] = g.m.FLATLAND;
+  g.m.map[8][3] = g.m.FLATLAND;
 
-  g.map[1][4] = g.m.FLATLAND;
-  g.map[2][4] = g.m.FLATLAND;
-  g.map[3][4] = g.m.FLATLAND;
-  g.map[4][4] = g.m.FLATLAND;
-  g.map[5][4] = g.m.OCEAN;
-  g.map[6][4] = g.m.FLATLAND;
-  g.map[8][4] = g.m.FLATLAND;
+  g.m.map[1][4] = g.m.FLATLAND;
+  g.m.map[2][4] = g.m.FLATLAND;
+  g.m.map[3][4] = g.m.FLATLAND;
+  g.m.map[4][4] = g.m.FLATLAND;
+  g.m.map[5][4] = g.m.OCEAN;
+  g.m.map[6][4] = g.m.FLATLAND;
+  g.m.map[8][4] = g.m.FLATLAND;
 
-  g.map[1][5] = g.m.FLATLAND;
-  g.map[2][5] = g.m.FLATLAND;
-  g.map[3][5] = g.m.FLATLAND;
-  g.map[4][5] = g.m.FLATLAND;
-  g.map[5][5] = g.m.FLATLAND;
-  g.map[6][5] = g.m.FLATLAND;
+  g.m.map[1][5] = g.m.FLATLAND;
+  g.m.map[2][5] = g.m.FLATLAND;
+  g.m.map[3][5] = g.m.FLATLAND;
+  g.m.map[4][5] = g.m.FLATLAND;
+  g.m.map[5][5] = g.m.FLATLAND;
+  g.m.map[6][5] = g.m.FLATLAND;
 
-  g.map[1][6] = g.m.FLATLAND;
-  g.map[2][6] = g.m.FLATLAND;
-  g.map[3][6] = g.m.FLATLAND;
-  g.map[4][6] = g.m.FLATLAND;
-  g.map[5][6] = g.m.FLATLAND;
-  g.map[6][6] = g.m.FLATLAND;
-  g.map[7][6] = g.m.FLATLAND;
+  g.m.map[1][6] = g.m.FLATLAND;
+  g.m.map[2][6] = g.m.FLATLAND;
+  g.m.map[3][6] = g.m.FLATLAND;
+  g.m.map[4][6] = g.m.FLATLAND;
+  g.m.map[5][6] = g.m.FLATLAND;
+  g.m.map[6][6] = g.m.FLATLAND;
+  g.m.map[7][6] = g.m.FLATLAND;
 
   //while (stack.length > 0 ) {
   while (stack.length > 0 && stack.length <= 20) {
@@ -114,11 +119,11 @@ export const genInitMapMatrix = () => {
     [x, y] = stack.pop();
 
     // Mark the cell as part of the map
-    g.map[y][x] = g.m.FLATLAND;
-    //g.map[y][x] = Math.floor(Math.random() * (i + 1));
+    g.m.map[y][x] = g.m.FLATLAND;
+    //g.m.map[y][x] = Math.floor(Math.random() * (i + 1));
 
     // Get a list of neighbors that are not yet part of the map
-    neighbors = getUnvisitedNeighbors(x, y, g.map);
+    neighbors = getUnvisitedNeighbors(x, y, g.m.map);
 
     // Add the neighbors to the stack, randomly shuffled
     shuffle(neighbors);
@@ -127,11 +132,11 @@ export const genInitMapMatrix = () => {
 
   function getUnvisitedNeighbors(x, y, map) {
     let neighbors = [];
-    if (y > 0 && g.map[y - 1][x] === 0) neighbors.push([x, y - 1]);
-    if (y < g.m.MAP_HEIGHT - 1 && g.map[y + 1][x] === 0)
+    if (y > 0 && g.m.map[y - 1][x] === 0) neighbors.push([x, y - 1]);
+    if (y < g.m.MAP_HEIGHT - 1 && g.m.map[y + 1][x] === 0)
       neighbors.push([x, y + 1]);
-    if (x > 0 && g.map[y][x - 1] === 0) neighbors.push([x - 1, y]);
-    if (x < g.m.MAP_WIDTH - 1 && g.map[y][x + 1] === 0)
+    if (x > 0 && g.m.map[y][x - 1] === 0) neighbors.push([x - 1, y]);
+    if (x < g.m.MAP_WIDTH - 1 && g.m.map[y][x + 1] === 0)
       neighbors.push([x + 1, y]);
     return neighbors;
   }
@@ -142,7 +147,7 @@ export const genInitMapMatrix = () => {
       [array[i], array[j]] = [array[j], array[i]];
     }
   }
-  return g.map;
+  return g.m.map;
 };
 
 const heal4SidedLandSquares = () => {
@@ -311,9 +316,9 @@ export const getMapAsList = (matrix) => {
   //const matrix = mapLake();
 
   const resultsArray = [];
-  for (let y = 0; y < matrix.length; y++) {
-    for (let x = 0; x < matrix[y].length; x++) {
-      resultsArray.push([matrix[y][x], y, x]);
+  for (let x = 0; x < matrix.length; x++) {
+    for (let y = 0; y < matrix[x].length; y++) {
+      resultsArray.push([x, y, matrix[x][y][0], matrix[x][y][1]]);
     }
   }
   console.log('resultsArray', resultsArray);
