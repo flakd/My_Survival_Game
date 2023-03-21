@@ -1,6 +1,7 @@
-import {getTestMapMatrix} from './setupMap';
+import {getTestMapMatrix, genInitMapMatrix} from './setupMap';
 
 let g = window;
+//const map = genInitMapMatrix();
 const map = getTestMapMatrix();
 class TPoint {
   constructor(x, y) {
@@ -12,7 +13,7 @@ class TPoint {
   }
 }
 
-const TDirection = {
+g.m.TDirection = {
   North: Symbol('North'),
   East: Symbol('East'),
   South: Symbol('South'),
@@ -40,20 +41,24 @@ class TAvatar {
   TurnRight() {
     this.Direction = TR(this.Direction);
     function TR(currrenDirection) {
-      if (currrenDirection === TDirection.North) return TDirection.East;
-      else if (currrenDirection === TDirection.East) return TDirection.South;
-      else if (currrenDirection === TDirection.South) return TDirection.West;
-      else return TDirection.North;
+      if (currrenDirection === g.m.TDirection.North) return g.m.TDirection.East;
+      else if (currrenDirection === g.m.TDirection.East)
+        return g.m.TDirection.South;
+      else if (currrenDirection === g.m.TDirection.South)
+        return g.m.TDirection.West;
+      else return g.m.TDirection.North;
     }
     return this.Direction;
   }
   TurnLeft() {
     this.Direction = TL(this.Direction);
     function TL(currrenDirection) {
-      if (currrenDirection === TDirection.North) return TDirection.West;
-      else if (currrenDirection === TDirection.West) return TDirection.South;
-      else if (currrenDirection === TDirection.South) return TDirection.East;
-      else return TDirection.North;
+      if (currrenDirection === g.m.TDirection.North) return g.m.TDirection.West;
+      else if (currrenDirection === g.m.TDirection.West)
+        return g.m.TDirection.South;
+      else if (currrenDirection === g.m.TDirection.South)
+        return g.m.TDirection.East;
+      else return g.m.TDirection.North;
     }
     return this.Direction;
   }
@@ -67,19 +72,19 @@ class TAvatar {
     function getNextSquareForward(Position, dir) {
       let x, y;
       switch (dir) {
-        case TDirection.North:
+        case g.m.TDirection.North:
           x = Position.x;
           y = Position.y - 1;
           return new TPoint(x, y);
-        case TDirection.East:
+        case g.m.TDirection.East:
           x = Position.x + 1;
           y = Position.y;
           return new TPoint(x, y);
-        case TDirection.South:
+        case g.m.TDirection.South:
           x = Position.x;
           y = Position.y + 1;
           return new TPoint(x, y);
-        case TDirection.West:
+        case g.m.TDirection.West:
           x = Position.x - 1;
           y = Position.y;
           return new TPoint(x, y);
@@ -89,9 +94,9 @@ class TAvatar {
 
   Move() {
     let newPosVal;
-    console.log('TL: OldPos: %o: OldDir: %s', this.Position, this.Direction);
+    //console.log('TL: OldPos: %o: OldDir: %s', this.Position, this.Direction);
     this.TurnLeft();
-    console.log('TL: OldPos: %o: NewDir: %s', this.Position, this.Direction);
+    //console.log('TL: OldPos: %o: NewDir: %s', this.Position, this.Direction);
     this.setNextPossMove();
     console.log(
       'TL: NewPos: %o: NewDir: %s',
@@ -108,11 +113,11 @@ class TAvatar {
     }
 
     this.TurnRight();
-    console.log('TR1: %o: Dir: %s', this.Position, this.Direction);
+    //console.log('TR1: %o: Dir: %s', this.Position, this.Direction);
     this.setNextPossMove();
     this.recordLookHistory();
 
-    console.log('TR1: %o: Dir: %s', this.PotentialNewPosition, this.Direction);
+    //console.log('TR1: %o: Dir: %s', this.PotentialNewPosition, this.Direction);
     if (this.PotentialNewPosition.value.terrain === g.m.OCEAN) {
       this.moveForward();
       return;
@@ -121,11 +126,11 @@ class TAvatar {
     }
 
     this.TurnRight();
-    console.log('TR2: %o: Dir: %s', this.Position, this.Direction);
+    //console.log('TR2: %o: Dir: %s', this.Position, this.Direction);
     this.setNextPossMove();
     this.recordLookHistory();
 
-    console.log('TR2: %o: Dir: %s', this.PotentialNewPosition, this.Direction);
+    //console.log('TR2: %o: Dir: %s', this.PotentialNewPosition, this.Direction);
     if (this.PotentialNewPosition.value.terrain === g.m.OCEAN) {
       this.moveForward();
       return;
@@ -134,11 +139,11 @@ class TAvatar {
     }
 
     this.TurnRight();
-    console.log('TR3: %o: Dir: %s', this.Position, this.Direction);
+    //console.log('TR3: %o: Dir: %s', this.Position, this.Direction);
     this.setNextPossMove();
     this.recordLookHistory();
 
-    console.log('TR3: %o: Dir: %s', this.PotentialNewPosition, this.Direction);
+    //console.log('TR3: %o: Dir: %s', this.PotentialNewPosition, this.Direction);
     if (this.PotentialNewPosition.value.terrain === g.m.OCEAN) {
       console.log('this.PotentialNewPosition.value=0(hc)');
       this.moveForward();
@@ -149,35 +154,37 @@ class TAvatar {
     return this.Position;
   }
 
-  recordStepHistory() {
-    this.moveHistory.push([this.Position.y, this.Position.x]);
-    console.log('moveHistory: ', this.moveHistory);
+  recordMoveHistory() {
+    this.moveHistory.push([this.Position.x, this.Position.y, this.Direction]);
+    //console.log('moveHistory: ', this.moveHistory);
   }
   recordLookHistory() {
     this.lookHistory.push([
-      this.PotentialNewPosition.y,
       this.PotentialNewPosition.x,
+      this.PotentialNewPosition.y,
+      this.Direction,
     ]);
-    console.log('lookHistory: ', this.lookHistory);
+    //console.log('lookHistory: ', this.lookHistory);
   }
   recordLNMoveHistory() {
     this.LNMoveHistory.push([
-      this.PotentialNewPosition.y,
       this.PotentialNewPosition.x,
+      this.PotentialNewPosition.y,
+      this.Direction,
     ]);
-    console.log('LNMoveHistory: ', this.LNMoveHistory);
+    //console.log('LNMoveHistory: ', this.LNMoveHistory);
   }
-  recordAllHistory(pos) {
-    this.allHistory.push([pos.y, pos.x]);
-    console.log('allhistory: ', this.allHistory);
+  recordAllHistory(pos, dir) {
+    this.allHistory.push([pos.x, pos.y, dir]);
+    //console.log('allhistory: ', this.allHistory);
   }
 
   moveForward() {
     let newPosVal;
     console.log('this.PotentialNewPosition.value=0(hc)');
     this.Position = this.PotentialNewPosition;
-    this.recordAllHistory(this.Position);
-    this.recordStepHistory();
+    this.recordAllHistory(this.Position, this.Direction);
+    this.recordMoveHistory();
     newPosVal = ++this.moveCount;
     //this.Position.value = newPosVal;
     //map[this.Position.y][this.Position.x] = newPosVal;
@@ -188,7 +195,7 @@ class TAvatar {
   blockedMustTurn() {
     let newPosVal;
     console.log('this.PotentialNewPosition=blocked(hc)');
-    this.recordAllHistory(this.PotentialNewPosition);
+    this.recordAllHistory(this.PotentialNewPosition, this.Direction);
     this.recordLNMoveHistory();
     newPosVal = ++this.moveCount;
     //this.Position.value = newPosVal;
@@ -203,12 +210,13 @@ class TAvatar {
 }
 
 function mapShoreline() {
-  const countInArray = (arr, arr2) => {
+  const countInHistory = (history, startArr) => {
     let count = 0;
-    let y = arr2[0];
-    let x = arr2[1];
-    arr.forEach((el) => {
-      if (el[0] === y && el[1] === x) {
+    let y = startArr[0];
+    let x = startArr[1];
+    let dir = startArr[2];
+    history.forEach((el) => {
+      if (el[0] === y && el[1] === x && el[2] === dir) {
         count++;
       }
     });
@@ -216,17 +224,27 @@ function mapShoreline() {
   };
 
   console.log('map', map);
-  const startingPoint = new TPoint(2, 2); // (y,x)
-  const start = [startingPoint.y, startingPoint.x];
-  var Avatar = new TAvatar(TDirection.East, startingPoint);
+  const startingPoint = new TPoint(3, 2); // (x,y)  ??  - I thought it was y,x
+  const startingDirection = g.m.TDirection.East;
+  var Avatar = new TAvatar(startingDirection, startingPoint);
+  const start = [
+    Avatar.InitialPosition.x,
+    Avatar.InitialPosition.y,
+    Avatar.InitialDirection,
+  ];
   Avatar.moveHistory.push(start);
 
   let count = 0;
-  while (countInArray(Avatar.moveHistory, start) < 2) {
+  while (countInHistory(Avatar.moveHistory, start) < 2) {
+    //while (count < 20) {
     Avatar.Move();
+    console.log('numMoves: ', count);
+    console.log('allhistory: ', Avatar.allHistory);
+    console.log('moveHistory: ', Avatar.moveHistory);
+    console.log('lookHistory: ', Avatar.lookHistory);
+    console.log('LNMoveHistory: ', Avatar.LNMoveHistory);
     count++;
   }
-  console.log('numMoves: ', count);
 
   return map;
 }

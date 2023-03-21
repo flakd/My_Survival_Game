@@ -13,16 +13,18 @@ import {randomIntFromInterval} from './../helpers/misc';
 const g = window;
 
 const Map = () => {
-  //const initMap = genInitMapMatrix();
+  const initMap = genInitMapMatrix();
   //const initMap = getTestMapMatrix();
 
-  //const fixedMap = fixLakesGPT(initMap);
+  const fixedMap = fixLakesGPT(initMap);
 
-  const fixedMap = mapShoreline();
+  //const fixedMap = mapShoreline();
 
   //const fixedMap = getTestMapMatrix();
   const mapList = getMapAsList(fixedMap);
+  console.log('initMap: ', initMap);
   //const mapList = getMapAsList(initMap);
+  console.log('mapList: ', mapList);
 
   //test();
 
@@ -41,49 +43,55 @@ const Map = () => {
       //let cellValue = cell[2];
       let terrain = cell[2];
       let isShoreline = cell[3];
+      let resourceName = cell[4];
 
       const idStr = i.toString().padStart(2, '0');
       const name = cellX + ',' + cellY;
       let classList = 'cell';
 
-      let resource;
+      let resourceObj;
       //if (terrain >= 500) {
       if (isShoreline) {
         classList += ' shoreline';
       }
       if (terrain === g.m.OCEAN) {
         //classList += ' unwalkable ocean fish';
-        resource = getSeafood();
+        resourceObj = getSeafood();
+        cell[4] = 'Seafood';
       }
       if (terrain === g.m.FLATLAND) {
         classList += ' filled walkable land'; //filled (green/land)
-        resource = getLandResource();
-        if (resource && resource.className === 'tree') {
+        resourceObj = getLandResource();
+        if (resourceObj && resourceObj.className === 'tree') {
           terrain = g.m.TREE;
-          console.log('TREE');
-        } else if (resource && resource.className === 'mountain') {
+          cell[4] = 'Tree';
+          console.log('resourceName:', resourceName);
+        } else if (resourceObj && resourceObj.className === 'mountain') {
           terrain = g.m.STONE;
-          console.log('STONE');
+          cell[4] = 'Stone';
+          console.log('resourceName:', resourceName);
         }
       }
       if (terrain === g.m.WATER) {
         //classList += ' walkable water fish drink'; //filled (green/land)
         classList += ' water'; //filled (green/land)
-        resource = getFish();
+        resourceObj = getFish();
+        cell[4] = 'Fish';
+        console.log('resourceName:', resourceName);
       }
       let resourceJSX;
-      if (resource) {
+      if (resourceObj) {
         resourceJSX = (
           <div
-            id={resource.id}
-            className={resource.className}
+            id={resourceObj.id}
+            className={resourceObj.className}
           >
-            {resource.emoji}
+            {resourceObj.emoji}
           </div>
         );
       } else {
-        //resourceJSX = null;
-        resourceJSX = terrain;
+        resourceJSX = null;
+        //resourceJSX = terrain;
       }
       HTML.push(
         <div
@@ -98,6 +106,7 @@ const Map = () => {
         </div>
       );
     }
+    console.log(gridAsList);
     return HTML;
   };
 

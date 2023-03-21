@@ -5,10 +5,10 @@ let g = window; // apparently already defined somewhere
 export const getTestMapMatrix = () => {
   g.m.map = new Array(g.m.MAP_HEIGHT);
   for (let i = 0; i < g.m.MAP_HEIGHT; i++) {
-    g.m.map[i] = new Array(g.m.MAP_WIDTH).fill([g.m.FLATLAND, false]);
+    g.m.map[i] = new Array(g.m.MAP_WIDTH).fill([g.m.FLATLAND, false, null]);
   }
 
-  g.m.map[1][2] = [g.m.FLATLAND, false];
+  g.m.map[1][2] = [g.m.FLATLAND, false]; //[0]=terrain, [1]=isShoreLine, [2]=resource
   g.m.map[2][2] = [g.m.OCEAN, false];
   g.m.map[3][2] = [g.m.OCEAN, false];
   g.m.map[4][2] = [g.m.OCEAN, false];
@@ -311,6 +311,21 @@ export const fixLakesGPT = (map) => {
 };
 
 export const getMapAsList = (matrix) => {
+  //const matrix = healThinStripSurroundedSquares();
+  //const matrix = getTestMapMatrix();
+  //const matrix = mapLake();
+
+  const resultsArray = [];
+  for (let x = 0; x < matrix.length; x++) {
+    for (let y = 0; y < matrix[x].length; y++) {
+      resultsArray.push([x, y, matrix[x][y]]);
+    }
+  }
+  console.log('resultsArray', resultsArray);
+  return resultsArray;
+};
+
+export const getMapAsList2 = (matrix) => {
   //const matrix = healThinStripSurroundedSquares();
   //const matrix = getTestMapMatrix();
   //const matrix = mapLake();
