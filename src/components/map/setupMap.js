@@ -48,7 +48,7 @@ export const generateMapMatrixGPT = () => {
   // Initialize the map with all cells set to 0 (empty)
   g.m.map = new Array(g.m.MAP_HEIGHT);
   for (let i = 0; i < g.m.MAP_HEIGHT; i++) {
-    g.m.map[i] = new Array(g.m.MAP_WIDTH).fill(g.m.OCEAN);
+    g.m.map[i] = new Array(g.m.MAP_WIDTH).fill([g.m.OCEAN, false, null]);
   }
 
   // Choose a random starting point for the map
@@ -60,45 +60,45 @@ export const generateMapMatrixGPT = () => {
   // Use a depth-first search to generate the map
   let stack = [[g.startX, g.startY]];
 
-  g.m.map[1][2] = g.m.FLATLAND;
-  g.m.map[2][2] = g.m.FLATLAND;
-  g.m.map[3][2] = g.m.FLATLAND;
-  g.m.map[4][2] = g.m.FLATLAND;
-  g.m.map[5][2] = g.m.FLATLAND;
-  g.m.map[6][2] = g.m.FLATLAND;
-  g.m.map[7][2] = g.m.FLATLAND;
-  g.m.map[8][2] = g.m.FLATLAND;
+  g.m.map[1][2] = [g.m.FLATLAND, false];
+  g.m.map[2][2] = [g.m.FLATLAND, false];
+  g.m.map[3][2] = [g.m.FLATLAND, false];
+  g.m.map[4][2] = [g.m.FLATLAND, false];
+  g.m.map[5][2] = [g.m.FLATLAND, false];
+  g.m.map[6][2] = [g.m.FLATLAND, false];
+  g.m.map[7][2] = [g.m.FLATLAND, false];
+  g.m.map[8][2] = [g.m.FLATLAND, false];
 
-  g.m.map[2][3] = g.m.FLATLAND;
-  g.m.map[3][3] = g.m.OCEAN;
-  g.m.map[4][3] = g.m.FLATLAND;
-  g.m.map[5][3] = g.m.FLATLAND;
-  g.m.map[6][3] = g.m.FLATLAND;
-  g.m.map[7][3] = g.m.FLATLAND;
-  g.m.map[8][3] = g.m.FLATLAND;
+  g.m.map[2][3] = [g.m.FLATLAND, false];
+  g.m.map[3][3] = [g.m.OCEAN, false];
+  g.m.map[4][3] = [g.m.FLATLAND, false];
+  g.m.map[5][3] = [g.m.FLATLAND, false];
+  g.m.map[6][3] = [g.m.FLATLAND, false];
+  g.m.map[7][3] = [g.m.FLATLAND, false];
+  g.m.map[8][3] = [g.m.FLATLAND, false];
 
-  g.m.map[1][4] = g.m.FLATLAND;
-  g.m.map[2][4] = g.m.FLATLAND;
-  g.m.map[3][4] = g.m.FLATLAND;
-  g.m.map[4][4] = g.m.FLATLAND;
-  g.m.map[5][4] = g.m.OCEAN;
-  g.m.map[6][4] = g.m.FLATLAND;
-  g.m.map[8][4] = g.m.FLATLAND;
+  g.m.map[1][4] = [g.m.FLATLAND, false];
+  g.m.map[2][4] = [g.m.FLATLAND, false];
+  g.m.map[3][4] = [g.m.FLATLAND, false];
+  g.m.map[4][4] = [g.m.FLATLAND, false];
+  g.m.map[5][4] = [g.m.OCEAN, false];
+  g.m.map[6][4] = [g.m.FLATLAND, false];
+  g.m.map[8][4] = [g.m.FLATLAND, false];
 
-  g.m.map[1][5] = g.m.FLATLAND;
-  g.m.map[2][5] = g.m.FLATLAND;
-  g.m.map[3][5] = g.m.FLATLAND;
-  g.m.map[4][5] = g.m.FLATLAND;
-  g.m.map[5][5] = g.m.FLATLAND;
-  g.m.map[6][5] = g.m.FLATLAND;
+  g.m.map[1][5] = [g.m.FLATLAND, false];
+  g.m.map[2][5] = [g.m.FLATLAND, false];
+  g.m.map[3][5] = [g.m.FLATLAND, false];
+  g.m.map[4][5] = [g.m.FLATLAND, false];
+  g.m.map[5][5] = [g.m.FLATLAND, false];
+  g.m.map[6][5] = [g.m.FLATLAND, false];
 
-  g.m.map[1][6] = g.m.FLATLAND;
-  g.m.map[2][6] = g.m.FLATLAND;
-  g.m.map[3][6] = g.m.FLATLAND;
-  g.m.map[4][6] = g.m.FLATLAND;
-  g.m.map[5][6] = g.m.FLATLAND;
-  g.m.map[6][6] = g.m.FLATLAND;
-  g.m.map[7][6] = g.m.FLATLAND;
+  g.m.map[1][6] = [g.m.FLATLAND, false];
+  g.m.map[2][6] = [g.m.FLATLAND, false];
+  g.m.map[3][6] = [g.m.FLATLAND, false];
+  g.m.map[4][6] = [g.m.FLATLAND, false];
+  g.m.map[5][6] = [g.m.FLATLAND, false];
+  g.m.map[6][6] = [g.m.FLATLAND, false];
+  g.m.map[7][6] = [g.m.FLATLAND, false];
 
   //while (stack.length > 0 ) {
   while (stack.length > 0 && stack.length <= 20) {
@@ -108,7 +108,7 @@ export const generateMapMatrixGPT = () => {
     [x, y] = stack.pop();
 
     // Mark the cell as part of the map
-    g.m.map[y][x] = g.m.FLATLAND;
+    g.m.map[y][x] = [g.m.FLATLAND, false, null];
     //g.m.map[y][x] = Math.floor(Math.random() * (i + 1));
 
     // Get a list of neighbors that are not yet part of the map
@@ -121,12 +121,18 @@ export const generateMapMatrixGPT = () => {
 
   function getUnvisitedNeighbors(x, y, map) {
     let neighbors = [];
-    if (y > 0 && g.m.map[y - 1][x] === 0) neighbors.push([x, y - 1]);
-    if (y < g.m.MAP_HEIGHT - 1 && g.m.map[y + 1][x] === 0)
+    if (y > 0 && g.m.map[y - 1][x][0] === g.m.OCEAN) {
+      neighbors.push([x, y - 1]);
+    }
+    if (y < g.m.MAP_HEIGHT - 1 && g.m.map[y + 1][x][0] === g.m.OCEAN) {
       neighbors.push([x, y + 1]);
-    if (x > 0 && g.m.map[y][x - 1] === 0) neighbors.push([x - 1, y]);
-    if (x < g.m.MAP_WIDTH - 1 && g.m.map[y][x + 1] === 0)
+    }
+    if (x > 0 && g.m.map[y][x - 1][0] === g.m.OCEAN) {
+      neighbors.push([x - 1, y]);
+    }
+    if (x < g.m.MAP_WIDTH - 1 && g.m.map[y][x + 1][0] === g.m.OCEAN) {
       neighbors.push([x + 1, y]);
+    }
     return neighbors;
   }
 

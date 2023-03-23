@@ -13,12 +13,13 @@ import {randomIntFromInterval} from './../../helpers/misc';
 const g = window;
 
 const Map = () => {
-  //const initMap = genInitMapMatrix();
+  //const initMap = generateMapMatrixGPT();
   //const initMap = getTestMapMatrix();
 
   //const fixedMap = fixLakesGPT(initMap);
 
-  const fixedMap = mapShoreline();
+  //const fixedMap = mapShoreline();
+  const fixedMap = generateMapMatrixGPT();
   const mapList = getMapAsList(fixedMap);
   //const mapList = getMapAsList(initMap);
 

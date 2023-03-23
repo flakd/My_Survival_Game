@@ -1,4 +1,4 @@
-import {getTestMapMatrix} from './setupMap';
+import {getTestMapMatrix, generateMapMatrixGPT} from './setupMap';
 
 let g = window;
 
@@ -220,7 +220,8 @@ class TAvatar {
   }
 }
 
-const map = getTestMapMatrix();
+//const map = getTestMapMatrix();
+const map = generateMapMatrixGPT();
 function mapShoreline() {
   console.log('map: ', map);
   const startingPoint = new TPoint(1, 2); // (y,x)
@@ -232,8 +233,8 @@ function mapShoreline() {
   );
 
   let numMoves = 0;
-  while (!Avatar.didRevisitStartingPoint()) {
-    //while (numMoves < 30) {
+  //while (!Avatar.didRevisitStartingPoint()) {
+  while (numMoves < 30) {
     Avatar.Move();
     numMoves++;
   }
