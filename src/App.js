@@ -1,17 +1,15 @@
 import {useState} from 'react';
-import WelcomeModal from './components/WelcomeModal';
+import WelcomeModal from './components/modals/WelcomeModal';
 import MusicOff from './components/MusicOff';
-import RAoGModal from './components/RAoGModal';
-import Test from './components/Test';
-import SkyBox from './components/SkyBox';
-import Map from './components/Map';
+import RAoGModal from './components/modals/RAoGModal';
 import StatusesContainer from './components/status/StatusesContainer';
 import InputOutput from './components/InputOutput';
-import './App.css';
-import Modal from './components/Modal';
-import Backdrop from './components/Backdrop';
+import Modal from './components/modals/Modal';
+import Backdrop from './components/modals/Backdrop';
 import HelpButton from './components/status/HelpButton';
-import getGameHelpContent from './helpers/helpModal';
+import getGameHelpContent from './components/modals/helpModal';
+
+import './App.css';
 
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
