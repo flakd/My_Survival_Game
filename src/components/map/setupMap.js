@@ -1,4 +1,4 @@
-import {randomIntFromInterval} from './misc';
+import {randomIntFromInterval} from '../../helpers/misc';
 
 let g = window; // apparently already defined somewhere
 

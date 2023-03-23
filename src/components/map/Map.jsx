@@ -7,9 +7,9 @@ import {
   getLandResource,
   getFish,
   fixLakesGPT,
-} from './../helpers/setupMap';
-import mapShoreline from './../helpers/mapLake';
-import {randomIntFromInterval} from './../helpers/misc';
+} from './setupMap';
+import mapShoreline from './mapLake';
+import {randomIntFromInterval} from '../../helpers/misc';
 const g = window;
 
 const Map = () => {
