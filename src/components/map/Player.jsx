@@ -1,9 +1,9 @@
 import React, {useEffect, useCallback, useState} from 'react';
-import AnimatedImage from './../images/Indy_anim_trans.gif';
-import StaticImage from './../images/Indy_nonanim_trans.gif';
-import FishingRod from './../images/player_fishing_rod--anim--trans.gif';
+import AnimatedImage from '../../images/Indy_anim_trans.gif';
+import StaticImage from '../../images/Indy_nonanim_trans.gif';
+import FishingRod from '../../images/player_fishing_rod--anim--trans.gif';
 import PlayerHelper from '../../helpers/PlayerHelper';
-import Campfire from './../images/Campfire_anim_trans.gif';
+import Campfire from '../../images/Campfire_anim_trans.gif';
 
 let g = window;
 

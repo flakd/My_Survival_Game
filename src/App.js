@@ -7,7 +7,7 @@ import InputOutput from './components/InputOutput';
 import Modal from './components/modals/Modal';
 import Backdrop from './components/modals/Backdrop';
 import HelpButton from './components/status/HelpButton';
-import getGameHelpContent from './components/modals/helpModal';
+import getGameHelpContent from './components/modals/HelpModal';
 
 import './App.css';
 
