@@ -210,7 +210,7 @@ const healThinStripSurroundedSquares = () => {
 export const fixLakesGPT = (map) => {
   const findLakeSquares = (x, y, visited, lake) => {
     // Check if the current square is water and not visited
-    if (map[x][y] === g.m.OCEAN && !visited[x][y]) {
+    if (map[x][y][0] === g.m.OCEAN && !visited[x][y]) {
       // Mark the square as visited and add it to the connected component
       visited[x][y] = true;
       lake.push([x, y]);
@@ -253,7 +253,7 @@ export const fixLakesGPT = (map) => {
     for (let x = 1; x < 9; x++) {
       for (let y = 1; y < 9; y++) {
         // Check if the current square is water and not already visited
-        if (map[x][y] === g.m.OCEAN && !visited[x][y]) {
+        if (map[x][y][0] === g.m.OCEAN && !visited[x][y]) {
           // Initialize a new connected component
           const lake = [];
           // Find all the squares that belong to the lake
@@ -275,7 +275,7 @@ export const fixLakesGPT = (map) => {
         console.log(square); //print the square
         let x, y;
         [x, y] = square;
-        map[x][y] = g.m.WATER; //change the water (from OCEAN) to a WATER square
+        map[x][y][0] = g.m.WATER; //change the water (from OCEAN) to a WATER square
       });
     });
   }
@@ -292,7 +292,7 @@ export const fixLakesGPT = (map) => {
       console.log('back to ocean:', square);
       let x, y;
       [x, y] = square;
-      map[x][y] = g.m.OCEAN;
+      map[x][y][0] = g.m.OCEAN;
     });
   }
 

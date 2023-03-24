@@ -220,8 +220,8 @@ class TAvatar {
   }
 }
 
-//const map = getTestMapMatrix();
-const map = generateMapMatrixGPT();
+const map = getTestMapMatrix();
+//const map = generateMapMatrixGPT();
 function mapShoreline() {
   console.log('map: ', map);
   const startingPoint = new TPoint(1, 2); // (y,x)

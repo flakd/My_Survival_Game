@@ -13,13 +13,13 @@ import {randomIntFromInterval} from './../../helpers/misc';
 const g = window;
 
 const Map = () => {
-  //const initMap = generateMapMatrixGPT();
-  //const initMap = getTestMapMatrix();
+  const initMap = generateMapMatrixGPT();
+  //const initMap = getTestMapMatrix()
 
-  //const fixedMap = fixLakesGPT(initMap);
+  const fixedMap = fixLakesGPT(initMap);
 
   //const fixedMap = mapShoreline();
-  const fixedMap = generateMapMatrixGPT();
+  //const fixedMap = generateMapMatrixGPT();
   const mapList = getMapAsList(fixedMap);
   //const mapList = getMapAsList(initMap);
 
@@ -81,8 +81,8 @@ const Map = () => {
           </div>
         );
       } else {
-        //resourceJSX = null;
-        resourceJSX = terrain;
+        resourceJSX = null;
+        //resourceJSX = terrain;
       }
       HTML.push(
         <div
