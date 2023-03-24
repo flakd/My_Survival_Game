@@ -18,7 +18,7 @@ const Map = () => {
 
   const fixedMap = fixLakesGPT(initMap);
 
-  //const fixedMap = mapShoreline();
+  //const mappedMap = mapShoreline('OCEAN');
   //const fixedMap = generateMapMatrixGPT();
   const mapList = getMapAsList(fixedMap);
   //const mapList = getMapAsList(initMap);

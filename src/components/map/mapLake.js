@@ -6,9 +6,9 @@ class TPoint {
   constructor(y, x) {
     this.y = y;
     this.x = x;
-    this.terrain = map[y][x][0];
-    this.isShoreline = map[y][x][1];
-    this.resource = map[y][x][2];
+    this.terrain = g.m.map[y][x][0];
+    this.isShoreline = g.m.map[y][x][1];
+    this.resource = g.m.map[y][x][2];
   }
 }
 
@@ -87,14 +87,27 @@ class TAvatar {
       }
     }
   }
-  nextSquareIsOcean() {
+  nextSquareIsWater() {
     return this.PotentialNewPosition.terrain === g.m.OCEAN;
   }
-  Move() {
+  nextSquareIsNotLandOrEdge() {
+    if (
+      this.PotentialNewPosition.terrain !== g.m.FLATLAND &&
+      this.PotentialNewPosition.y > 0 &&
+      this.PotentialNewPosition.x >= 0 &&
+      this.PotentialNewPosition.y <= 9 &&
+      this.PotentialNewPosition.x <= 9
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  tryMoveLake() {
     //----------1------------
     this.TurnLeft();
     this.getNextPossSquare();
-    if (this.nextSquareIsOcean()) {
+    if (this.nextSquareIsWater()) {
       this.moveForward();
       return;
     }
@@ -106,7 +119,7 @@ class TAvatar {
     //----------2------------
     this.TurnRight();
     this.getNextPossSquare();
-    if (this.nextSquareIsOcean()) {
+    if (this.nextSquareIsWater()) {
       this.moveForward();
       return;
     }
@@ -118,7 +131,7 @@ class TAvatar {
     //----------3------------
     this.TurnRight();
     this.getNextPossSquare();
-    if (this.nextSquareIsOcean()) {
+    if (this.nextSquareIsWater()) {
       this.moveForward();
       return;
     }
@@ -130,7 +143,59 @@ class TAvatar {
     //----------4------------
     this.TurnRight();
     this.getNextPossSquare();
-    if (this.nextSquareIsOcean()) {
+    if (this.nextSquareIsWater()) {
+      this.moveForward();
+      return;
+    }
+    this.blockedMustTurn();
+    console.log('TR3: %o: Dir: %s', this.Position, this.Direction);
+    this.recordAllHistory(this.Position);
+    this.recordLookHistory();
+
+    return this.Position;
+  }
+
+  tryMoveOcean() {
+    //----------1------------
+    this.TurnLeft();
+    this.getNextPossSquare();
+    if (this.nextSquareIsNotLandOrEdge()) {
+      this.moveForward();
+      return;
+    }
+    this.blockedMustTurn();
+    console.log('TL: %o: Dir: %s', this.Position, this.Direction);
+    this.recordAllHistory(this.Position);
+    this.recordLookHistory();
+
+    //----------2------------
+    this.TurnRight();
+    this.getNextPossSquare();
+    if (this.nextSquareIsNotLandOrEdge()) {
+      this.moveForward();
+      return;
+    }
+    this.blockedMustTurn();
+    console.log('TR1: %o: Dir: %s', this.Position, this.Direction);
+    this.recordAllHistory(this.Position);
+    this.recordLookHistory();
+
+    //----------3------------
+    this.TurnRight();
+    this.getNextPossSquare();
+    if (this.nextSquareIsNotLandOrEdge()) {
+      this.moveForward();
+      return;
+    }
+    this.blockedMustTurn();
+    console.log('TR2: %o: Dir: %s', this.Position, this.Direction);
+    this.recordAllHistory(this.Position);
+    this.recordLookHistory();
+
+    //----------4------------
+    this.TurnRight();
+    this.getNextPossSquare();
+    if (this.nextSquareIsNotLandOrEdge()) {
       this.moveForward();
       return;
     }
@@ -179,7 +244,7 @@ class TAvatar {
     newPosVal = ++this.moveCount;
     //map[this.Position.y][this.Position.x][0] = newPosVal;
     this.Position.isShoreline = newPosVal;
-    map[this.Position.y][this.Position.x][1] = newPosVal;
+    g.m.map[this.Position.y][this.Position.x][1] = newPosVal;
     console.log('MF: %o: Dir: %s', this.Position, this.Direction);
   }
   blockedMustTurn() {
@@ -188,9 +253,9 @@ class TAvatar {
     this.recordAllHistory(this.PotentialNewPosition);
     this.recordLNMoveHistory();
     newPosVal = ++this.moveCount;
-    //map[this.Position.y][this.Position.x][0] = newPosVal;
+    //g.m.map[this.Position.y][this.Position.x][0] = newPosVal;
     this.Position.isShoreline = newPosVal;
-    map[this.Position.y][this.Position.x][1] = newPosVal;
+    g.m.map[this.Position.y][this.Position.x][1] = newPosVal;
     console.log('NO Move: %o: Dir: %s', this.Position, this.Direction);
   }
   numTimesVisited = (arr, arr2) => {
@@ -220,11 +285,12 @@ class TAvatar {
   }
 }
 
-const map = getTestMapMatrix();
+//const map = getTestMapMatrix();
 //const map = generateMapMatrixGPT();
-function mapShoreline() {
-  console.log('map: ', map);
-  const startingPoint = new TPoint(1, 2); // (y,x)
+function mapShoreline(lakeOrOcean) {
+  if (lakeOrOcean) lakeOrOcean = 'LAKE';
+  console.log('g.m.map: ', g.m.map);
+  const startingPoint = new TPoint(1, 5); // (y,x)
   var Avatar = new TAvatar(startingPoint, TDirection.East);
   Avatar.recordMoveHistory(
     Avatar.InitialPosition.y,
@@ -234,8 +300,12 @@ function mapShoreline() {
 
   let numMoves = 0;
   //while (!Avatar.didRevisitStartingPoint()) {
-  while (numMoves < 30) {
-    Avatar.Move();
+  while (numMoves < 50) {
+    if (lakeOrOcean === 'LAKE') {
+      Avatar.tryMoveLake();
+    } else if (lakeOrOcean === 'OCEAN') {
+      Avatar.tryMoveOcean();
+    }
     numMoves++;
   }
   console.log('numMoves: ', numMoves);
@@ -244,7 +314,7 @@ function mapShoreline() {
   console.log('lookHistory: ', Avatar.lookHistory);
   console.log('moveHistory: ', Avatar.moveHistory);
 
-  return map;
+  return g.m.map;
 }
 
 export default mapShoreline;
